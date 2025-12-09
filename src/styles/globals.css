@@ -1,0 +1,56 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html, body {
+  height: 100%;
+  scroll-behavior: smooth;
+}
+
+body {
+  @apply bg-gradient-to-br from-gray-50 via-white to-gray-50 dark:from-gray-950 dark:via-gray-900 dark:to-gray-950 text-gray-900 dark:text-gray-100 font-sans antialiased selection:bg-brand/20 selection:text-gray-900 dark:selection:text-white;
+}
+
+.container {
+  @apply mx-auto max-w-7xl px-4 sm:px-6 lg:px-8;
+}
+
+.section-title {
+  @apply text-3xl md:text-4xl font-bold tracking-tight mb-6 bg-gradient-to-r from-gray-900 to-gray-700 dark:from-white dark:to-gray-300 bg-clip-text text-transparent;
+}
+
+.section-subtitle {
+  @apply text-base md:text-lg text-gray-600 dark:text-gray-400 mb-8 max-w-2xl;
+}
+
+.card {
+  @apply rounded-2xl border border-gray-200/50 dark:border-gray-800/50 bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm shadow-lg transition-all duration-300 hover:shadow-xl hover:shadow-brand/10 hover:-translate-y-1 will-change-transform;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp 0.6s ease-out;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -1000px 0;
+  }
+  100% {
+    background-position: 1000px 0;
+  }
+}
+
+.gradient-text {
+  @apply bg-gradient-to-r from-brand to-brand-dark bg-clip-text text-transparent;
+}
