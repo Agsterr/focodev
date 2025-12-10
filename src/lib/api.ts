@@ -22,9 +22,9 @@ export function errorResponse(message: string, status = 400, meta?: any) {
 
 export async function requireAuth(_req?: NextRequest) {
   const session = await getServerSession(authOptions)
-  if (!session) return { authorized: false, admin: false }
+  if (!session) return { authorized: false, admin: false, user: null }
   const admin = (session as any).role === 'ADMIN'
-  return { authorized: true, admin }
+  return { authorized: true, admin, user: session.user }
 }
 
 export function parsePagination(req: NextRequest) {

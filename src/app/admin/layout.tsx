@@ -1,10 +1,14 @@
-"use client"
 import Link from 'next/link'
-import { usePathname } from 'next/navigation'
+import { getServerSession } from 'next-auth'
+import { authOptions } from '@/lib/auth'
+import LogoutButton from './logout-button'
+import AdminLayoutClient from './admin-layout-client'
+import AdminLayoutContent from './admin-layout-content'
+import AdminLogo from './admin-logo'
 
-export default function AdminLayout({ children }: { children: React.ReactNode }) {
-  const pathname = usePathname()
-  
+export default async function AdminLayout({ children }: { children: React.ReactNode }) {
+  const session = await getServerSession(authOptions)
+
   const navItems = [
     { href: '/admin', label: 'Dashboard', icon: '📊' },
     { href: '/admin/services', label: 'Serviços', icon: '⚙️' },
@@ -15,65 +19,32 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     { href: '/admin/banner', label: 'Banner Home', icon: '🎨' },
     { href: '/admin/texts', label: 'Textos', icon: '📝' },
     { href: '/admin/users', label: 'Usuários', icon: '👥' },
+    { href: '/admin/profile', label: 'Meu Perfil', icon: '👤' },
   ]
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-950 dark:to-gray-900">
-      <div className="container py-8">
-        <div className="flex items-center justify-between mb-8">
-          <Link href="/admin" className="text-2xl font-bold bg-gradient-to-r from-brand to-brand-dark bg-clip-text text-transparent">
-            Painel Admin
-          </Link>
-          <div className="flex items-center gap-4">
-            <Link 
-              href="/admin/login" 
-              className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-brand transition-colors"
-            >
-              Login
+    <AdminLayoutClient>
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-950">
+        {/* Header */}
+        <header className="sticky top-0 z-50 border-b border-gray-200 dark:border-gray-800 bg-white/95 dark:bg-gray-900/95 backdrop-blur-sm shadow-sm">
+          <div className="container flex h-16 items-center justify-between">
+            <Link href="/admin" className="flex items-center gap-3 group">
+              <AdminLogo />
+              <span className="font-semibold text-lg">Painel Admin</span>
             </Link>
-            <Link 
-              href="/admin/logout" 
-              className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-brand transition-colors"
-            >
-              Logout
-            </Link>
-            <Link 
-              href="/" 
-              className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-brand transition-colors"
-            >
-              ← Voltar ao site
-            </Link>
-          </div>
-        </div>
-        <div className="flex gap-8">
-          <aside className="w-64 shrink-0">
-            <nav className="space-y-2">
-              {navItems.map((item) => {
-                const isActive = pathname === item.href
-                return (
-                  <Link
-                    key={item.href}
-                    href={item.href}
-                    className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 ${
-                      isActive
-                        ? 'bg-gradient-to-r from-brand to-brand-dark text-white shadow-lg'
-                        : 'text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800'
-                    }`}
-                  >
-                    <span className="text-xl">{item.icon}</span>
-                    <span className="font-medium">{item.label}</span>
-                  </Link>
-                )
-              })}
-            </nav>
-          </aside>
-          <div className="flex-1">
-            <div className="card p-8">
-              {children}
+            <div className="flex items-center gap-4">
+              <div className="text-sm text-gray-600 dark:text-gray-400">
+                {session?.user?.name || session?.user?.email}
+              </div>
+              <LogoutButton />
             </div>
           </div>
-        </div>
+        </header>
+
+        <AdminLayoutContent navItems={navItems}>
+          {children}
+        </AdminLayoutContent>
       </div>
-    </div>
+    </AdminLayoutClient>
   )
 }

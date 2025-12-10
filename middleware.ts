@@ -24,7 +24,7 @@ export async function middleware(req: NextRequest) {
       const newCount = now - ts > windowMs ? 1 : count + 1
       if (newCount > limit) return new NextResponse('Too Many Requests', { status: 429 })
       const res = NextResponse.next()
-      res.cookies.set('rl_auth', `${newCount}:${now}`, { httpOnly: true, sameSite: 'lax', path: '/', secure: true })
+      res.cookies.set('rl_auth', `${newCount}:${now}`, { httpOnly: true, sameSite: 'lax', path: '/', secure: process.env.NODE_ENV === 'production' })
       return res
     }
   }
