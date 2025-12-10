@@ -28,7 +28,13 @@ export const authOptions: NextAuthOptions = {
           if (!user) return null
           const ok = await bcrypt.compare(credentials.password, user.passwordHash)
           if (!ok) return null
-          return { id: user.id, name: user.name, email: user.email, role: user.role }
+          console.log('[Auth] Authorize success:', user.email, user.role)
+          return { 
+            id: user.id, 
+            name: user.name, 
+            email: user.email, 
+            role: String(user.role) 
+          }
         } catch (error: any) {
           console.error('Auth error:', error?.message || error)
           return null
@@ -39,20 +45,17 @@ export const authOptions: NextAuthOptions = {
   callbacks: {
     async jwt({ token, user }) {
       if (user) {
-        token.role = (user as any).role
+        console.log('[Auth] JWT Callback - User login:', user.email, user.role)
+        token.role = user.role
         token.id = user.id
       }
       return token
     },
     async session({ session, token }) {
       if (session.user && token) {
-        const tokenAny = token as any
-        if (tokenAny.role) {
-          (session.user as any).role = tokenAny.role
-        }
-        if (tokenAny.id) {
-          (session.user as any).id = tokenAny.id
-        }
+        // console.log('[Auth] Session Callback - Token role:', token.role)
+        session.user.role = token.role
+        session.user.id = token.id
       }
       return session
     },

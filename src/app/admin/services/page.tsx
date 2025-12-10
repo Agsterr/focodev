@@ -10,10 +10,23 @@ export default function AdminServicesPage() {
   const [form, setForm] = useState({ title: '', description: '' })
 
   async function create() {
-    const res = await fetch('/api/services', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(form) })
-    if (res.ok) {
-      setForm({ title: '', description: '' })
-      mutate()
+    try {
+      const res = await fetch('/api/services', { 
+        method: 'POST', 
+        headers: { 'Content-Type': 'application/json' }, 
+        body: JSON.stringify(form) 
+      })
+      
+      if (res.ok) {
+        setForm({ title: '', description: '' })
+        mutate()
+        alert('Serviço criado com sucesso!')
+      } else {
+        const error = await res.json()
+        alert(`Erro ao criar: ${error.error?.message || 'Erro desconhecido'}`)
+      }
+    } catch (e) {
+      alert('Erro de conexão ao criar serviço')
     }
   }
 

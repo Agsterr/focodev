@@ -110,7 +110,9 @@ export default function AdminProfilePage() {
                 Perfil
               </label>
               <div className="px-4 py-2 bg-gray-100 dark:bg-gray-800 rounded-lg text-gray-900 dark:text-white">
-                {(session as any)?.role === 'ADMIN' ? 'Administrador' : 'Usuário'}
+                {(session?.user as any)?.role === 'ADMIN' 
+                  ? 'Administrador' 
+                  : `Usuário (${(session?.user as any)?.role || 'Sem role'})`}
               </div>
             </div>
           </div>
