@@ -37,15 +37,6 @@ export default async function Footer() {
                 Portfólio
               </Link>
             </li>
-            <li>
-              <Link 
-                className="text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-300 inline-flex items-center gap-2 group" 
-                href="/admin"
-              >
-                <span className="w-1.5 h-1.5 rounded-full bg-blue-600 opacity-0 group-hover:opacity-100 transition-opacity"></span>
-                Admin
-              </Link>
-            </li>
           </ul>
         </div>
         

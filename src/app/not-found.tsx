@@ -1,5 +1,15 @@
 import Link from 'next/link'
+import type { Metadata } from 'next'
 import { Button } from '@/components/ui/button'
+
+export const metadata: Metadata = {
+  title: 'Página não encontrada',
+  description: 'A página que você está procurando não foi encontrada.',
+  robots: {
+    index: false,
+    follow: false,
+  },
+}
 
 export default function NotFound() {
   return (
@@ -24,4 +34,5 @@ export default function NotFound() {
     </div>
   )
 }
+
 

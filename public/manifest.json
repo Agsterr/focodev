@@ -1,0 +1,21 @@
+{
+  "name": "FocoDev Sistemas - Soluções Digitais Modernas",
+  "short_name": "FocoDev",
+  "description": "Soluções digitais modernas e seguras para o seu negócio. Desenvolvimento web, aplicativos, sistemas personalizados e muito mais.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#0EA5E9",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/favicon.ico",
+      "sizes": "any",
+      "type": "image/x-icon"
+    }
+  ],
+  "categories": ["business", "technology", "productivity"],
+  "lang": "pt-BR",
+  "dir": "ltr"
+}
+

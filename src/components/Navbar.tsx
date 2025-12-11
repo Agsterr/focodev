@@ -3,12 +3,12 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { useEffect, useState } from 'react'
 import { Button } from '@/components/ui/button'
+import FocoDevLogo from '@/components/FocoDevLogo'
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
-  const [logoError, setLogoError] = useState(false)
-  const logoSrc = process.env.NEXT_PUBLIC_LOGO_URL || '/logo.png'
+  const logoSrc = process.env.NEXT_PUBLIC_LOGO_URL
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 8)
@@ -25,35 +25,26 @@ export default function Navbar() {
     }`}>
       <div className="container flex h-20 items-center justify-between">
         <Link href="/" className="flex items-center gap-3 group">
-          {!logoError ? (
+          {logoSrc ? (
             <div className="relative">
               <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-cyan-600 rounded-lg blur opacity-0 group-hover:opacity-20 transition-opacity duration-300"></div>
               <Image
                 src={logoSrc}
                 alt="FocoDev Sistemas"
-                width={140}
-                height={40}
-                className="relative h-10 w-auto transition-transform duration-300 group-hover:scale-105"
+                width={180}
+                height={50}
+                className="relative h-12 md:h-14 w-auto transition-transform duration-300 group-hover:scale-105"
                 priority
-                onError={() => setLogoError(true)}
               />
             </div>
           ) : (
             <div className="relative">
               <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-cyan-600 rounded-lg blur opacity-0 group-hover:opacity-20 transition-opacity duration-300"></div>
-              <svg viewBox="0 0 240 40" className="relative h-10 w-auto transition-transform duration-300 group-hover:scale-105" aria-hidden>
-                <defs>
-                  <linearGradient id="brandGradient" x1="0" y1="0" x2="1" y2="0">
-                    <stop offset="0%" stopColor="#0EA5E9" />
-                    <stop offset="100%" stopColor="#0284C7" />
-                  </linearGradient>
-                </defs>
-                <g fill="url(#brandGradient)">
-                  <circle cx="20" cy="20" r="12" fill="none" stroke="url(#brandGradient)" strokeWidth="4" />
-                  <rect x="30" y="26" width="12" height="4" rx="2" transform="rotate(45 30 26)" />
-                  <text x="56" y="26" fontSize="18" fontWeight="700">FocoDev</text>
-                </g>
-              </svg>
+              <FocoDevLogo 
+                className="relative h-12 md:h-14 w-auto transition-transform duration-300 group-hover:scale-105"
+                width={180}
+                height={50}
+              />
             </div>
           )}
           <span className="sr-only">FocoDev Sistemas</span>
@@ -65,6 +56,9 @@ export default function Navbar() {
           <NavLink href="/projects">Portfólio</NavLink>
           <NavLink href="/#videos">Vídeos</NavLink>
           <NavLink href="/#contato">Contato</NavLink>
+          <Button asChild size="sm" className="ml-4 bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 text-white font-semibold shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300">
+            <Link href="/#contato">Fale Conosco</Link>
+          </Button>
         </nav>
 
         <div className="flex items-center gap-3">
