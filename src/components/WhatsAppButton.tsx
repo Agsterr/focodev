@@ -9,9 +9,14 @@ export default function WhatsAppButton() {
       href={href}
       target="_blank"
       aria-label="WhatsApp"
-      className="fixed bottom-6 right-6 rounded-full bg-green-500 text-white px-4 py-3 shadow-lg hover:bg-green-600"
+      className="fixed bottom-6 right-6 rounded-full bg-gradient-to-r from-green-500 to-green-600 text-white px-5 py-4 shadow-glow hover:from-green-600 hover:to-green-700 ring-2 ring-white/50 animate-pulse"
     >
-      WhatsApp
+      <span className="inline-flex items-center gap-2 font-semibold">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
+          <path d="M20 3H4a1 1 0 0 0-1 1v16l4-4h13a1 1 0 0 0 1-1V4a1 1 0 0 0-1-1z" />
+        </svg>
+        WhatsApp
+      </span>
     </Link>
   )
 }
