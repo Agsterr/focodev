@@ -3,12 +3,12 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { useEffect, useState } from 'react'
 import { Button } from '@/components/ui/button'
-import FocoDevLogo from '@/components/FocoDevLogo'
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
-  const logoSrc = process.env.NEXT_PUBLIC_LOGO_URL
+  const [logoError, setLogoError] = useState(false)
+  const logoSrc = process.env.NEXT_PUBLIC_LOGO_URL || '/logo.png'
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 8)
@@ -18,52 +18,51 @@ export default function Navbar() {
   }, [])
 
   return (
-    <header className={`sticky top-0 z-50 border-b transition-all duration-300 ${
-      scrolled 
-        ? 'border-gray-200/80 dark:border-gray-800/80 bg-white/95 dark:bg-gray-900/95 backdrop-blur-md shadow-lg' 
-        : 'border-transparent bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm'
-    }`}>
-      <div className="container flex h-20 items-center justify-between">
+    <header className={`sticky top-0 z-50 border-b border-gray-200 dark:border-gray-800 backdrop-blur ${scrolled ? 'bg-white/85 dark:bg-gray-900/85 shadow-soft' : 'bg-white/70 dark:bg-gray-900/70'}`}>
+      <div className="container flex h-16 items-center justify-between">
         <Link href="/" className="flex items-center gap-3 group">
-          {logoSrc ? (
-            <div className="relative">
-              <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-cyan-600 rounded-lg blur opacity-0 group-hover:opacity-20 transition-opacity duration-300"></div>
-              <Image
-                src={logoSrc}
-                alt="FocoDev Sistemas"
-                width={180}
-                height={50}
-                className="relative h-12 md:h-14 w-auto transition-transform duration-300 group-hover:scale-105"
-                priority
-              />
-            </div>
+          {!logoError ? (
+            <Image
+              src={logoSrc}
+              alt="FocoDev Sistemas"
+              width={140}
+              height={40}
+              className="h-8 w-auto transition-transform duration-300 group-hover:scale-105"
+              priority
+              onError={() => setLogoError(true)}
+            />
           ) : (
-            <div className="relative">
-              <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-cyan-600 rounded-lg blur opacity-0 group-hover:opacity-20 transition-opacity duration-300"></div>
-              <FocoDevLogo 
-                className="relative h-12 md:h-14 w-auto transition-transform duration-300 group-hover:scale-105"
-                width={180}
-                height={50}
-              />
-            </div>
+            <svg viewBox="0 0 240 40" className="h-8 w-auto" aria-hidden>
+              <defs>
+                <linearGradient id="brandGradient" x1="0" y1="0" x2="1" y2="0">
+                  <stop offset="0%" stopColor="#0EA5E9" />
+                  <stop offset="100%" stopColor="#0284C7" />
+                </linearGradient>
+              </defs>
+              <g fill="url(#brandGradient)">
+                <circle cx="20" cy="20" r="12" fill="none" stroke="url(#brandGradient)" strokeWidth="4" />
+                <rect x="30" y="26" width="12" height="4" rx="2" transform="rotate(45 30 26)" />
+                <text x="56" y="26" fontSize="18" fontWeight="700">FocoDev</text>
+              </g>
+            </svg>
           )}
           <span className="sr-only">FocoDev Sistemas</span>
         </Link>
 
-        <nav className="hidden md:flex items-center gap-2 text-sm">
+        <nav className="hidden md:flex items-center gap-6 text-sm">
           <NavLink href="/#servicos">Serviços</NavLink>
           <NavLink href="/#sobre">Sobre</NavLink>
           <NavLink href="/projects">Portfólio</NavLink>
           <NavLink href="/#videos">Vídeos</NavLink>
           <NavLink href="/#contato">Contato</NavLink>
-          <Button asChild size="sm" className="ml-4 bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 text-white font-semibold shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300">
-            <Link href="/#contato">Fale Conosco</Link>
-          </Button>
         </nav>
 
         <div className="flex items-center gap-3">
+          <Link href="/admin">
+            <Button variant="outline" size="sm">Admin</Button>
+          </Link>
           <button
-            className="md:hidden inline-flex items-center justify-center rounded-xl border-2 border-gray-200 dark:border-gray-700 p-2.5 text-gray-700 dark:text-gray-300 hover:bg-blue-50 dark:hover:bg-blue-950/30 hover:border-blue-300 dark:hover:border-blue-700 transition-all duration-300"
+            className="md:hidden inline-flex items-center justify-center rounded-md border border-gray-300 dark:border-gray-700 p-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition"
             aria-label="Abrir menu"
             aria-expanded={menuOpen}
             onClick={() => setMenuOpen(!menuOpen)}
@@ -77,8 +76,8 @@ export default function Navbar() {
       </div>
 
       {menuOpen && (
-        <div className="md:hidden border-t border-gray-200 dark:border-gray-800 bg-white/98 dark:bg-gray-900/98 backdrop-blur-md shadow-lg">
-          <nav className="container py-6 flex flex-col gap-2">
+        <div className="md:hidden border-t border-gray-200 dark:border-gray-800 bg-white/95 dark:bg-gray-900/95">
+          <nav className="container py-4 flex flex-col gap-3">
             <MobileLink href="/#servicos" onClick={() => setMenuOpen(false)}>Serviços</MobileLink>
             <MobileLink href="/#sobre" onClick={() => setMenuOpen(false)}>Sobre</MobileLink>
             <MobileLink href="/projects" onClick={() => setMenuOpen(false)}>Portfólio</MobileLink>
@@ -95,21 +94,16 @@ function NavLink({ href, children }: { href: string; children: React.ReactNode }
   return (
     <Link
       href={href}
-      className="relative px-4 py-2 rounded-lg text-gray-700 dark:text-gray-300 font-medium hover:text-blue-600 dark:hover:text-blue-400 transition-all duration-300 hover:bg-blue-50 dark:hover:bg-blue-950/30 group"
+      className="relative text-gray-700 dark:text-gray-300 hover:text-brand transition-colors after:absolute after:-bottom-1 after:left-0 after:h-0.5 after:w-full after:scale-x-0 after:bg-brand after:transition-transform hover:after:scale-x-100"
     >
-      <span className="relative z-10">{children}</span>
-      <span className="absolute inset-0 bg-gradient-to-r from-blue-500/10 to-cyan-500/10 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
+      {children}
     </Link>
   )
 }
 
 function MobileLink({ href, children, onClick }: { href: string; children: React.ReactNode; onClick?: () => void }) {
   return (
-    <Link 
-      href={href} 
-      onClick={onClick} 
-      className="px-4 py-3 rounded-xl text-gray-700 dark:text-gray-300 font-medium hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-950/30 transition-all duration-300"
-    >
+    <Link href={href} onClick={onClick} className="text-gray-700 dark:text-gray-300 hover:text-brand transition-colors">
       {children}
     </Link>
   )
