@@ -3,6 +3,8 @@ import { prisma } from '@/lib/db'
 
 interface Props { params: { slug: string } }
 
+export const dynamic = 'force-dynamic'
+
 export async function generateMetadata({ params }: Props) {
   const project = await prisma.project.findUnique({ where: { slug: params.slug } })
   if (!project) return { title: 'Projeto' }

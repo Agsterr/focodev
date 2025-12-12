@@ -2,6 +2,7 @@ import Link from 'next/link'
 import { prisma } from '@/lib/db'
 
 export const metadata = { title: 'Portfólio' }
+export const dynamic = 'force-dynamic'
 
 export default async function ProjectsPage() {
   const projects = await prisma.project.findMany({ orderBy: { createdAt: 'desc' } })
