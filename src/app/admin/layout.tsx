@@ -6,8 +6,13 @@ import AdminLayoutClient from './admin-layout-client'
 import AdminLayoutContent from './admin-layout-content'
 import AdminLogo from './admin-logo'
 
+export const dynamic = 'force-dynamic'
+
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
   const session = await getServerSession(authOptions)
+
+  // Extrair apenas valores primitivos para evitar problemas de serialização
+  const userName = session?.user?.name || session?.user?.email || ''
 
   const navItems = [
     { href: '/admin', label: 'Dashboard', icon: '📊' },
@@ -34,7 +39,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
             </Link>
             <div className="flex items-center gap-4">
               <div className="text-sm text-gray-600 dark:text-gray-400">
-                {session?.user?.name || session?.user?.email}
+                {userName}
               </div>
               <LogoutButton />
             </div>

@@ -3,8 +3,15 @@ import { getServerSession } from 'next-auth'
 import { prisma } from '@/lib/db'
 import Link from 'next/link'
 
+export const dynamic = 'force-dynamic'
+
 export default async function AdminDashboard() {
   const session = await getServerSession(authOptions)
+  
+  // Extrair apenas valores primitivos para evitar problemas de serialização
+  const userName = session?.user?.name || session?.user?.email || ''
+  const userEmail = session?.user?.email || ''
+  
   let services = 0
   let projects = 0
   let videos = 0
@@ -36,7 +43,7 @@ export default async function AdminDashboard() {
           Dashboard
         </h1>
         <p className="text-gray-600 dark:text-gray-400">
-          Bem-vindo, <span className="font-semibold text-gray-900 dark:text-white">{session?.user?.name || session?.user?.email}</span>
+          Bem-vindo, <span className="font-semibold text-gray-900 dark:text-white">{userName}</span>
         </p>
       </div>
 
@@ -85,7 +92,7 @@ export default async function AdminDashboard() {
           </h2>
           <div className="space-y-3 text-sm text-gray-600 dark:text-gray-400">
             <div>
-              <span className="font-medium text-gray-900 dark:text-white">Email:</span> {session?.user?.email}
+              <span className="font-medium text-gray-900 dark:text-white">Email:</span> {userEmail}
             </div>
             <div>
               <span className="font-medium text-gray-900 dark:text-white">Perfil:</span> Administrador
