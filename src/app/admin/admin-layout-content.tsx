@@ -1,12 +1,15 @@
 "use client"
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
+import useSWR from 'swr'
 
 interface NavItem {
   href: string
   label: string
   icon: string
 }
+
+const fetcher = (url: string) => fetch(url).then((r) => r.json())
 
 export default function AdminLayoutContent({ 
   children, 
@@ -16,6 +19,12 @@ export default function AdminLayoutContent({
   navItems: NavItem[]
 }) {
   const pathname = usePathname()
+  
+  // Buscar contagem de mensagens novas
+  const { data: contactsData } = useSWR('/api/contacts?page=1&pageSize=1&status=NOVO', fetcher, {
+    refreshInterval: 30000, // Atualizar a cada 30 segundos
+  })
+  const newMessagesCount = contactsData?.data?.pagination?.total || 0
 
   return (
     <div className="container py-8">
@@ -26,11 +35,12 @@ export default function AdminLayoutContent({
             {navItems.map((item) => {
               const isActive = pathname === item.href || (item.href !== '/admin' && pathname?.startsWith(item.href))
               const isProfile = item.href === '/admin/profile'
+              const isContacts = item.href === '/admin/contacts'
               return (
                 <Link
                   key={item.href}
                   href={item.href}
-                  className={`flex items-center gap-3 px-4 py-3 rounded-md text-sm font-medium transition-colors cursor-pointer select-none ${
+                  className={`flex items-center gap-3 px-4 py-3 rounded-md text-sm font-medium transition-colors cursor-pointer select-none relative ${
                     isActive
                       ? 'bg-brand/10 text-brand dark:bg-brand/20 font-semibold'
                       : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-brand'
@@ -40,7 +50,12 @@ export default function AdminLayoutContent({
                   }}
                 >
                   <span className="text-lg pointer-events-none">{item.icon}</span>
-                  <span className="pointer-events-none">{item.label}</span>
+                  <span className="pointer-events-none flex-1">{item.label}</span>
+                  {isContacts && newMessagesCount > 0 && (
+                    <span className="px-2 py-0.5 text-xs font-bold text-white bg-red-500 rounded-full animate-pulse pointer-events-none">
+                      {newMessagesCount}
+                    </span>
+                  )}
                   {isProfile && <span className="ml-auto text-xs text-brand pointer-events-none">⚙️</span>}
                 </Link>
               )

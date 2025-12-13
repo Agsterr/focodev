@@ -16,6 +16,8 @@ export default async function AdminDashboard() {
   let projects = 0
   let videos = 0
   let images = 0
+  let newContacts = 0
+  let totalContacts = 0
   let dbWarning: string | null = null
   try {
     const counts = await Promise.all([
@@ -23,13 +25,16 @@ export default async function AdminDashboard() {
       prisma.project.count(),
       prisma.video.count(),
       prisma.image.count(),
+      prisma.contactMessage.count({ where: { status: 'NOVO' } }),
+      prisma.contactMessage.count(),
     ])
-    ;[services, projects, videos, images] = counts
+    ;[services, projects, videos, images, newContacts, totalContacts] = counts
   } catch (e: any) {
     dbWarning = 'DATABASE_URL não está configurada. Defina em .env.local e reinicie o servidor'
   }
   
   const stats = [
+    { title: 'Mensagens', value: totalContacts, icon: '💬', href: '/admin/contacts', color: 'red', badge: newContacts > 0 ? newContacts : undefined },
     { title: 'Serviços', value: services, icon: '⚙️', href: '/admin/services', color: 'blue' },
     { title: 'Projetos', value: projects, icon: '💼', href: '/admin/projects', color: 'green' },
     { title: 'Vídeos', value: videos, icon: '🎥', href: '/admin/videos', color: 'purple' },
@@ -109,16 +114,22 @@ export default async function AdminDashboard() {
   )
 }
 
-function CardStat({ title, value, icon, color }: { title: string; value: number; icon: string; color: string }) {
+function CardStat({ title, value, icon, color, badge }: { title: string; value: number; icon: string; color: string; badge?: number }) {
   const colorClasses = {
     blue: 'from-blue-500 to-blue-600',
     green: 'from-green-500 to-green-600',
     purple: 'from-purple-500 to-purple-600',
     orange: 'from-orange-500 to-orange-600',
+    red: 'from-red-500 to-red-600',
   }
 
   return (
-    <div className="border border-gray-200 dark:border-gray-800 rounded-xl p-6 bg-white dark:bg-gray-900 shadow-sm hover:shadow-md transition-all duration-200 group-hover:-translate-y-1">
+    <div className="border border-gray-200 dark:border-gray-800 rounded-xl p-6 bg-white dark:bg-gray-900 shadow-sm hover:shadow-md transition-all duration-200 group-hover:-translate-y-1 relative">
+      {badge !== undefined && badge > 0 && (
+        <span className="absolute top-4 right-4 px-2.5 py-1 text-xs font-bold text-white bg-red-500 rounded-full animate-pulse">
+          {badge} nova{badge > 1 ? 's' : ''}
+        </span>
+      )}
       <div className="flex items-center justify-between mb-4">
         <span className="text-3xl">{icon}</span>
         <div className={`w-12 h-12 rounded-lg bg-gradient-to-br ${colorClasses[color as keyof typeof colorClasses]} opacity-10 group-hover:opacity-20 transition-opacity`}></div>

@@ -2,7 +2,8 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { prisma } from '@/lib/db'
-import { Smartphone, Server, Cog, Palette, Gauge, Globe, User, Mail, MessageSquare, Send, Info, ShieldCheck, Sparkles } from 'lucide-react'
+import { Smartphone, Server, Cog, Palette, Gauge, Globe, MessageSquare, Info, ShieldCheck, Sparkles } from 'lucide-react'
+import ContactForm from '@/components/ContactForm'
 
 export const dynamic = 'force-dynamic'
 
@@ -39,14 +40,15 @@ export default async function HomePage() {
   return (
     <div className="overflow-hidden">
       {/* Hero Section */}
-      <section className="container py-24 md:py-32 relative">
+      <section className="relative py-24 md:py-32 bg-sky-50 dark:bg-slate-950">
         <div className="absolute -top-24 -left-24 w-72 h-72 bg-brand/20 blur-3xl rounded-full" />
         <div className="absolute top-0 right-0 w-80 h-80 bg-brand-dark/20 blur-3xl rounded-full" />
-        <div className="grid md:grid-cols-2 gap-12 items-center">
-          <div className="space-y-6 animate-fade-in">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand/10 text-brand text-sm font-semibold">
-              Soluções que geram resultado
-            </div>
+        <div className="container relative">
+          <div className="grid md:grid-cols-2 gap-12 items-center">
+            <div className="space-y-6 animate-fade-in">
+              <div className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-brand/10 text-brand text-lg md:text-2xl lg:text-3xl font-semibold">
+                Soluções que geram resultado
+              </div>
             <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight bg-gradient-to-r from-gray-900 to-gray-700 dark:from-white dark:to-gray-300 bg-clip-text text-transparent leading-tight">
               {banner?.title || 'FocoDev Sistemas'}
             </h1>
@@ -64,21 +66,7 @@ export default async function HomePage() {
               </Button>
             </div>
           </div>
-          {banner?.backgroundImageUrl && (
-            <div className="animate-fade-in-delay">
-              <div className="relative rounded-3xl overflow-hidden shadow-2xl transform hover:scale-[1.02] transition-transform duration-500">
-                <Image 
-                  src={banner.backgroundImageUrl} 
-                  alt="Banner" 
-                  width={800} 
-                  height={500} 
-                  className="w-full h-auto object-cover"
-                  priority
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
-              </div>
-            </div>
-          )}
+        </div>
         </div>
       </section>
 
@@ -88,7 +76,9 @@ export default async function HomePage() {
         <div className="absolute -bottom-10 right-0 w-64 h-64 bg-brand-dark/10 blur-3xl rounded-full" />
         <div className="text-center mb-16">
           <h2 className="section-title">Serviços</h2>
-          <p className="section-subtitle max-w-2xl mx-auto">O que fazemos para impulsionar seu negócio</p>
+          <p className="section-subtitle max-w-2xl mx-auto text-gray-800 dark:text-gray-200 font-semibold">
+            O que fazemos para impulsionar seu negócio
+          </p>
         </div>
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
           {services.map((s: typeof services[number], index: number) => (
@@ -131,15 +121,15 @@ export default async function HomePage() {
             </p>
           </div>
           <div className="mt-8 flex flex-wrap justify-center gap-4">
-            <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand/10 text-brand text-sm font-semibold ring-1 ring-brand/20">
+            <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-brand/15 text-brand-dark dark:text-brand text-base md:text-lg font-semibold ring-1 ring-brand/30">
               <Gauge className="w-4 h-4" />
               Performance
             </span>
-            <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand/10 text-brand text-sm font-semibold ring-1 ring-brand/20">
+            <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-brand/15 text-brand-dark dark:text-brand text-base md:text-lg font-semibold ring-1 ring-brand/30">
               <ShieldCheck className="w-4 h-4" />
               Segurança
             </span>
-            <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand/10 text-brand text-sm font-semibold ring-1 ring-brand/20">
+            <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-brand/15 text-brand-dark dark:text-brand text-base md:text-lg font-semibold ring-1 ring-brand/30">
               <Sparkles className="w-4 h-4" />
               UX de Alto Nível
             </span>
@@ -206,43 +196,7 @@ export default async function HomePage() {
             </h2>
             <p className="text-xl md:text-2xl text-gray-800 dark:text-gray-200 font-semibold">Fale com nossa equipe</p>
           </div>
-          <form action="/api/contact" method="post" className="card p-8 md:p-10 space-y-6 ring-1 ring-brand/20 hover:ring-brand/40">
-            <div className="relative">
-              <User className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-brand pointer-events-none" />
-              <input 
-                name="name" 
-                placeholder="Seu nome" 
-                required 
-                className="w-full border-2 border-gray-400 dark:border-gray-600 bg-white dark:bg-gray-900 p-4 pl-12 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand focus:border-brand transition-colors text-gray-900 dark:text-white hover:text-brand dark:hover:text-brand hover:border-brand dark:hover:border-brand placeholder-gray-600 dark:placeholder-gray-400 shadow-soft hover:shadow-glow" 
-              />
-            </div>
-            <div className="relative">
-              <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-brand pointer-events-none" />
-              <input 
-                name="email" 
-                placeholder="Seu email" 
-                type="email" 
-                required 
-                className="w-full border-2 border-gray-400 dark:border-gray-600 bg-white dark:bg-gray-900 p-4 pl-12 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand focus:border-brand transition-colors text-gray-900 dark:text-white hover:text-brand dark:hover:text-brand hover:border-brand dark:hover:border-brand placeholder-gray-600 dark:placeholder-gray-400 shadow-soft hover:shadow-glow" 
-              />
-            </div>
-            <div className="relative">
-              <MessageSquare className="absolute left-4 top-4 w-5 h-5 text-brand pointer-events-none" />
-              <textarea 
-                name="message" 
-                placeholder="Sua mensagem" 
-                required 
-                rows={6}
-                className="w-full border-2 border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 p-4 pl-12 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent transition-all text-gray-900 dark:text-white placeholder-gray-600 dark:placeholder-gray-400 resize-none shadow-soft hover:shadow-glow" 
-              />
-            </div>
-            <Button type="submit" size="lg" className="w-full text-base py-6 rounded-xl">
-              <span className="inline-flex items-center gap-2">
-                <Send className="w-5 h-5" />
-                Enviar Mensagem
-              </span>
-            </Button>
-          </form>
+          <ContactForm />
         </div>
       </section>
     </div>

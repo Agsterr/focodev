@@ -5,6 +5,7 @@ import LogoutButton from './logout-button'
 import AdminLayoutClient from './admin-layout-client'
 import AdminLayoutContent from './admin-layout-content'
 import AdminLogo from './admin-logo'
+import ContactsNotification from '@/components/ContactsNotification'
 
 export const dynamic = 'force-dynamic'
 
@@ -16,6 +17,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
 
   const navItems = [
     { href: '/admin', label: 'Dashboard', icon: '📊' },
+    { href: '/admin/contacts', label: 'Mensagens', icon: '💬' },
     { href: '/admin/services', label: 'Serviços', icon: '⚙️' },
     { href: '/admin/projects', label: 'Projetos', icon: '💼' },
     { href: '/admin/videos', label: 'Vídeos', icon: '🎥' },
@@ -38,6 +40,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
               <span className="font-semibold text-lg">Painel Admin</span>
             </Link>
             <div className="flex items-center gap-4">
+              <ContactsNotification />
               <div className="text-sm text-gray-600 dark:text-gray-400">
                 {userName}
               </div>

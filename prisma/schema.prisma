@@ -46,12 +46,12 @@ model Project {
 }
 
 model Video {
-  id        String   @id @default(cuid())
-  title     String
-  youtubeUrl String
+  id           String   @id @default(cuid())
+  title        String
+  youtubeUrl   String
   thumbnailUrl String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
 }
 
 model Image {
@@ -64,16 +64,16 @@ model Image {
 }
 
 model CompanyInfo {
-  id            String   @id @default(cuid())
-  name          String
-  email         String?
-  phone         String?
-  instagram     String?
-  address       String?
-  whatsappLink  String?
+  id             String   @id @default(cuid())
+  name           String
+  email          String?
+  phone          String?
+  instagram      String?
+  address        String?
+  whatsappLink   String?
   whatsappNumber String?
-  aboutText     String?
-  updatedAt     DateTime @updatedAt
+  aboutText      String?
+  updatedAt      DateTime @updatedAt
 }
 
 model HomeBanner {
@@ -99,4 +99,23 @@ model InstitutionalText {
   key       String   @unique
   content   String
   updatedAt DateTime @updatedAt
+}
+
+model ContactMessage {
+  id        String        @id @default(cuid())
+  name      String
+  email     String
+  phone     String?
+  message   String
+  status    ContactStatus @default(NOVO)
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+
+  @@index([status])
+  @@index([createdAt])
+}
+
+enum ContactStatus {
+  NOVO
+  RESPONDIDO
 }

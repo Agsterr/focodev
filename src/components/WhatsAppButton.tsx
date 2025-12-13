@@ -2,8 +2,11 @@
 import Link from 'next/link'
 
 export default function WhatsAppButton() {
-  const number = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || ''
-  const href = number ? `https://wa.me/${number}` : 'https://wa.me/'
+  const defaultNumber = '16991183292'
+  const rawNumber = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || defaultNumber
+  const number = rawNumber.replace(/\D/g, '')
+  const message = encodeURIComponent('Olá, gostaria de fazer um orçamento')
+  const href = number ? `https://wa.me/${number}?text=${message}` : 'https://wa.me/'
   return (
     <Link
       href={href}
