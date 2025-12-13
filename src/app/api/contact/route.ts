@@ -60,15 +60,24 @@ export async function POST(req: NextRequest) {
     const now = new Date()
 
     // Enviar e-mail (não bloqueia se falhar)
-    const emailResult = await sendEmail(
-      formatContactEmail({
-        name,
-        email,
-        phone,
-        message,
-        date: now,
-      })
-    ).catch((error) => {
+    const formattedEmail = formatContactEmail({
+      name,
+      email,
+      phone,
+      message,
+      date: now,
+    })
+
+    const to =
+      process.env.CONTACT_RECEIVER_EMAIL ||
+      process.env.CONTACT_EMAIL ||
+      'focodevsistemas@gmail.com'
+
+    const emailResult = await sendEmail({
+      to,
+      subject: formattedEmail.subject,
+      html: formattedEmail.html,
+    }).catch((error) => {
       console.error('[Contact API] Erro ao enviar e-mail:', error)
       return { success: false, error: error?.message }
     })

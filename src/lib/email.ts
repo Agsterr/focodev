@@ -19,15 +19,18 @@ export async function sendEmail(data: EmailData): Promise<{ success: boolean; er
     }
 
     // Fallback para SMTP
-    const smtpConfig = {
-      host: process.env.SMTP_HOST,
-      port: Number(process.env.SMTP_PORT || '587'),
-      secure: process.env.SMTP_SECURE === 'true',
-      user: process.env.SMTP_USER,
-      password: process.env.SMTP_PASSWORD,
-    }
+    const smtpHost = process.env.SMTP_HOST
+    const smtpUser = process.env.SMTP_USER
+    const smtpPassword = process.env.SMTP_PASSWORD
 
-    if (smtpConfig.host && smtpConfig.user && smtpConfig.password) {
+    if (smtpHost && smtpUser && smtpPassword) {
+      const smtpConfig = {
+        host: smtpHost,
+        port: Number(process.env.SMTP_PORT || '587'),
+        secure: process.env.SMTP_SECURE === 'true',
+        user: smtpUser,
+        password: smtpPassword,
+      }
       return await sendEmailViaSMTP(data, smtpConfig)
     }
 
@@ -71,7 +74,7 @@ async function sendEmailViaResend(
 }
 
 async function sendEmailViaSMTP(
-  data: EmailData,
+  _data: EmailData,
   config: {
     host: string
     port: number
@@ -82,7 +85,11 @@ async function sendEmailViaSMTP(
 ): Promise<{ success: boolean; error?: string }> {
   // Para SMTP, precisaríamos do nodemailer
   // Por enquanto, vamos apenas logar que seria enviado
-  console.log('[Email] SMTP não implementado ainda. Use Resend ou instale nodemailer')
+  console.log('[Email] SMTP não implementado ainda. Use Resend ou instale nodemailer', {
+    host: config.host,
+    port: config.port,
+    user: config.user,
+  })
   return { success: false, error: 'SMTP não implementado. Use Resend API' }
 }
 
