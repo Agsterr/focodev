@@ -264,3 +264,4 @@ Se tiver problemas, verifique:
 2. Tabela `Logs` no banco de dados
 3. Network tab do navegador (erros de API)
 
+

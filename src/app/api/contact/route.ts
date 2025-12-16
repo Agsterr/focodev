@@ -73,6 +73,13 @@ export async function POST(req: NextRequest) {
       process.env.CONTACT_EMAIL ||
       'focodevsistemas@gmail.com'
 
+    console.log('[Contact API] Configuração de e-mail:', {
+      hasResendKey: !!process.env.RESEND_API_KEY,
+      hasResendFrom: !!process.env.RESEND_FROM_EMAIL,
+      receiverEmail: to,
+      fromEmail: process.env.RESEND_FROM_EMAIL,
+    })
+
     const emailResult = await sendEmail({
       to,
       subject: formattedEmail.subject,

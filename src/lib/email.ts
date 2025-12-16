@@ -15,8 +15,11 @@ export async function sendEmail(data: EmailData): Promise<{ success: boolean; er
     // Verificar se Resend está configurado
     const resendApiKey = process.env.RESEND_API_KEY
     if (resendApiKey) {
+      console.log('[Email] Resend API Key encontrada, usando Resend')
       return await sendEmailViaResend(data, resendApiKey)
     }
+
+    console.warn('[Email] RESEND_API_KEY não encontrada')
 
     // Fallback para SMTP
     const smtpHost = process.env.SMTP_HOST
@@ -24,6 +27,7 @@ export async function sendEmail(data: EmailData): Promise<{ success: boolean; er
     const smtpPassword = process.env.SMTP_PASSWORD
 
     if (smtpHost && smtpUser && smtpPassword) {
+      console.log('[Email] Configuração SMTP encontrada')
       const smtpConfig = {
         host: smtpHost,
         port: Number(process.env.SMTP_PORT || '587'),
@@ -36,7 +40,7 @@ export async function sendEmail(data: EmailData): Promise<{ success: boolean; er
 
     // Se nenhum serviço estiver configurado, apenas logar
     console.warn('[Email] Nenhum serviço de e-mail configurado. Configure RESEND_API_KEY ou SMTP_*')
-    return { success: false, error: 'Serviço de e-mail não configurado' }
+    return { success: false, error: 'Serviço de e-mail não configurado. Configure RESEND_API_KEY no Vercel.' }
   } catch (error: any) {
     console.error('[Email] Erro ao enviar e-mail:', error)
     return { success: false, error: error?.message || 'Erro desconhecido' }
@@ -48,6 +52,19 @@ async function sendEmailViaResend(
   apiKey: string
 ): Promise<{ success: boolean; error?: string }> {
   try {
+    const fromEmail = data.from || process.env.RESEND_FROM_EMAIL
+    
+    if (!fromEmail) {
+      console.error('[Email] RESEND_FROM_EMAIL não configurado')
+      return { success: false, error: 'RESEND_FROM_EMAIL não configurado. Configure no Vercel.' }
+    }
+
+    console.log('[Email] Enviando via Resend:', {
+      from: fromEmail,
+      to: data.to,
+      subject: data.subject,
+    })
+
     const response = await fetch('https://api.resend.com/emails', {
       method: 'POST',
       headers: {
@@ -55,21 +72,29 @@ async function sendEmailViaResend(
         Authorization: `Bearer ${apiKey}`,
       },
       body: JSON.stringify({
-        from: data.from || process.env.RESEND_FROM_EMAIL || 'noreply@focodev.com',
+        from: fromEmail,
         to: data.to,
         subject: data.subject,
         html: data.html,
       }),
     })
 
+    const responseData = await response.json()
+
     if (!response.ok) {
-      const error = await response.text()
-      throw new Error(`Resend API error: ${error}`)
+      console.error('[Email] Erro da API Resend:', {
+        status: response.status,
+        statusText: response.statusText,
+        error: responseData,
+      })
+      throw new Error(`Resend API error (${response.status}): ${JSON.stringify(responseData)}`)
     }
 
+    console.log('[Email] E-mail enviado com sucesso via Resend:', responseData)
     return { success: true }
   } catch (error: any) {
-    return { success: false, error: error?.message }
+    console.error('[Email] Erro ao enviar via Resend:', error)
+    return { success: false, error: error?.message || 'Erro desconhecido ao enviar e-mail' }
   }
 }
 
