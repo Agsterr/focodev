@@ -45,26 +45,28 @@ export default function AdminVideosPage() {
         <Input type="file" onChange={(e) => setFile(e.target.files?.[0] || null)} />
         <Button onClick={create}>Criar</Button>
       </div>
-      <table className="w-full text-sm">
-        <thead>
-          <tr className="text-left">
-            <th>Título</th>
-            <th>URL</th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody>
-          {data?.data?.items?.map((v: any) => (
-            <tr key={v.id} className="border-t dark:border-gray-800">
-              <td className="py-2">{v.title}</td>
-              <td className="py-2">{v.youtubeUrl}</td>
-              <td className="py-2 text-right">
-                <Button variant="outline" size="sm" onClick={() => remove(v.id)}>Excluir</Button>
-              </td>
+      <div className="w-full overflow-x-auto">
+        <table className="w-full min-w-[480px] text-sm">
+          <thead>
+            <tr className="text-left">
+              <th>Título</th>
+              <th>URL</th>
+              <th></th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {data?.data?.items?.map((v: any) => (
+              <tr key={v.id} className="border-t dark:border-gray-800">
+                <td className="py-2">{v.title}</td>
+                <td className="py-2">{v.youtubeUrl}</td>
+                <td className="py-2 text-right">
+                  <Button variant="outline" size="sm" onClick={() => remove(v.id)}>Excluir</Button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   )
 }

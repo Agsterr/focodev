@@ -35,28 +35,30 @@ export default function AdminUsersPage() {
         </select>
         <Button onClick={create}>Criar</Button>
       </div>
-      <table className="w-full text-sm">
-        <thead>
-          <tr className="text-left">
-            <th>Nome</th>
-            <th>Email</th>
-            <th>Role</th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody>
-          {data?.data?.items?.map((u: any) => (
-            <tr key={u.id} className="border-t dark:border-gray-800">
-              <td className="py-2">{u.name}</td>
-              <td className="py-2">{u.email}</td>
-              <td className="py-2">{u.role}</td>
-              <td className="py-2 text-right">
-                <Button variant="outline" size="sm" onClick={() => remove(u.id)}>Excluir</Button>
-              </td>
+      <div className="w-full overflow-x-auto">
+        <table className="w-full min-w-[480px] text-sm">
+          <thead>
+            <tr className="text-left">
+              <th>Nome</th>
+              <th>Email</th>
+              <th>Role</th>
+              <th></th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {data?.data?.items?.map((u: any) => (
+              <tr key={u.id} className="border-t dark:border-gray-800">
+                <td className="py-2">{u.name}</td>
+                <td className="py-2">{u.email}</td>
+                <td className="py-2">{u.role}</td>
+                <td className="py-2 text-right">
+                  <Button variant="outline" size="sm" onClick={() => remove(u.id)}>Excluir</Button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   )
 }

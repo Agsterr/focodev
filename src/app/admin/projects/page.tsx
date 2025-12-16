@@ -31,26 +31,28 @@ export default function AdminProjectsPage() {
         <textarea value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} placeholder="Descrição" className="border p-3 rounded-md dark:border-gray-700" />
         <Button onClick={create}>Criar</Button>
       </div>
-      <table className="w-full text-sm">
-        <thead>
-          <tr className="text-left">
-            <th>Título</th>
-            <th>Slug</th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody>
-          {data?.data?.items?.map((p: any) => (
-            <tr key={p.id} className="border-t dark:border-gray-800">
-              <td className="py-2">{p.title}</td>
-              <td className="py-2">{p.slug}</td>
-              <td className="py-2 text-right">
-                <Button variant="outline" size="sm" onClick={() => remove(p.id)}>Excluir</Button>
-              </td>
+      <div className="w-full overflow-x-auto">
+        <table className="w-full min-w-[480px] text-sm">
+          <thead>
+            <tr className="text-left">
+              <th>Título</th>
+              <th>Slug</th>
+              <th></th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {data?.data?.items?.map((p: any) => (
+              <tr key={p.id} className="border-t dark:border-gray-800">
+                <td className="py-2">{p.title}</td>
+                <td className="py-2">{p.slug}</td>
+                <td className="py-2 text-right">
+                  <Button variant="outline" size="sm" onClick={() => remove(p.id)}>Excluir</Button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   )
 }

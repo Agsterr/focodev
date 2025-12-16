@@ -27,11 +27,10 @@ export default function AdminLayoutContent({
   const newMessagesCount = contactsData?.data?.pagination?.total || 0
 
   return (
-    <div className="container py-8">
-      <div className="flex gap-8">
-        {/* Sidebar */}
-        <aside className="w-64 shrink-0">
-          <nav className="space-y-1 bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-800 p-2 shadow-sm">
+    <div className="container px-4 py-6 sm:py-8">
+      <div className="flex flex-col gap-6 lg:flex-row lg:gap-8">
+        <aside className="w-full lg:w-64 lg:shrink-0">
+          <nav className="space-y-1 bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-800 p-2 shadow-sm max-h-[70vh] overflow-y-auto">
             {navItems.map((item) => {
               const isActive = pathname === item.href || (item.href !== '/admin' && pathname?.startsWith(item.href))
               const isProfile = item.href === '/admin/profile'
@@ -63,9 +62,8 @@ export default function AdminLayoutContent({
           </nav>
         </aside>
 
-        {/* Main Content */}
         <div className="flex-1 min-w-0">
-          <div className="bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-800 shadow-sm p-6">
+          <div className="bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-800 shadow-sm p-4 sm:p-6">
             {children}
           </div>
         </div>
@@ -73,4 +71,3 @@ export default function AdminLayoutContent({
     </div>
   )
 }
-

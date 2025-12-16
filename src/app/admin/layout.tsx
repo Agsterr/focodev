@@ -34,14 +34,14 @@ export default async function AdminLayout({ children }: { children: React.ReactN
       <div className="min-h-screen bg-gray-50 dark:bg-gray-950">
         {/* Header */}
         <header className="sticky top-0 z-50 border-b border-gray-200 dark:border-gray-800 bg-white/95 dark:bg-gray-900/95 backdrop-blur-sm shadow-sm">
-          <div className="container flex h-16 items-center justify-between">
-            <Link href="/admin" className="flex items-center gap-3 group">
+          <div className="container flex h-16 items-center justify-between gap-3 px-4 sm:px-6">
+            <Link href="/admin" className="flex items-center gap-3 group min-w-0">
               <AdminLogo />
-              <span className="font-semibold text-lg">Painel Admin</span>
+              <span className="font-semibold text-lg truncate">Painel Admin</span>
             </Link>
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-2 sm:gap-4 flex-shrink-0">
               <ContactsNotification />
-              <div className="text-sm text-gray-600 dark:text-gray-400">
+              <div className="hidden text-sm text-gray-600 dark:text-gray-400 sm:block max-w-[160px] truncate">
                 {userName}
               </div>
               <LogoutButton />
