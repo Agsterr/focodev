@@ -9,10 +9,28 @@ const fetcher = (url: string) => fetch(url).then((r) => r.json())
 
 export default function AdminContactsPage() {
   const [statusFilter, setStatusFilter] = useState<'NOVO' | 'RESPONDIDO' | null>(null)
+  const [dateFilter, setDateFilter] = useState<'ALL' | 'WEEK' | 'MONTH' | 'YEAR'>('ALL')
   const [selectedMessage, setSelectedMessage] = useState<string | null>(null)
   const [page, setPage] = useState(1)
 
-  const filterUrl = statusFilter ? `/api/contacts?page=${page}&pageSize=20&status=${statusFilter}` : `/api/contacts?page=${page}&pageSize=20`
+  const params = new URLSearchParams({
+    page: String(page),
+    pageSize: '20',
+  })
+
+  if (statusFilter) {
+    params.set('status', statusFilter)
+  }
+
+  if (dateFilter === 'WEEK') {
+    params.set('period', 'week')
+  } else if (dateFilter === 'MONTH') {
+    params.set('period', 'month')
+  } else if (dateFilter === 'YEAR') {
+    params.set('period', 'year')
+  }
+
+  const filterUrl = `/api/contacts?${params.toString()}`
   const { data, mutate } = useSWR(filterUrl, fetcher)
 
   const contacts = data?.data?.contacts || []
@@ -45,35 +63,87 @@ export default function AdminContactsPage() {
         </div>
       </div>
 
-      {/* Filtros */}
-      <div className="mb-6 flex gap-2">
-        <Button
-          variant={statusFilter === null ? 'default' : 'outline'}
-          onClick={() => setStatusFilter(null)}
-          size="sm"
-        >
-          Todas
-        </Button>
-        <Button
-          variant={statusFilter === 'NOVO' ? 'default' : 'outline'}
-          onClick={() => setStatusFilter('NOVO')}
-          size="sm"
-          className="relative"
-        >
-          Novas
-          {data?.data?.pagination?.total > 0 && statusFilter !== 'NOVO' && (
-            <span className="ml-2 px-2 py-0.5 text-xs bg-red-500 text-white rounded-full">
-              {contacts.filter((c: any) => c.status === 'NOVO').length}
-            </span>
-          )}
-        </Button>
-        <Button
-          variant={statusFilter === 'RESPONDIDO' ? 'default' : 'outline'}
-          onClick={() => setStatusFilter('RESPONDIDO')}
-          size="sm"
-        >
-          Respondidas
-        </Button>
+      <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex flex-wrap gap-2">
+          <Button
+            variant={statusFilter === null ? 'default' : 'outline'}
+            onClick={() => {
+              setStatusFilter(null)
+              setPage(1)
+            }}
+            size="sm"
+          >
+            Todas
+          </Button>
+          <Button
+            variant={statusFilter === 'NOVO' ? 'default' : 'outline'}
+            onClick={() => {
+              setStatusFilter('NOVO')
+              setPage(1)
+            }}
+            size="sm"
+            className="relative"
+          >
+            Não respondidas
+            {data?.data?.pagination?.total > 0 && statusFilter !== 'NOVO' && (
+              <span className="ml-2 px-2 py-0.5 text-xs bg-red-500 text-white rounded-full">
+                {contacts.filter((c: any) => c.status === 'NOVO').length}
+              </span>
+            )}
+          </Button>
+          <Button
+            variant={statusFilter === 'RESPONDIDO' ? 'default' : 'outline'}
+            onClick={() => {
+              setStatusFilter('RESPONDIDO')
+              setPage(1)
+            }}
+            size="sm"
+          >
+            Respondidas
+          </Button>
+        </div>
+        <div className="flex flex-wrap gap-2">
+          <Button
+            variant={dateFilter === 'ALL' ? 'default' : 'outline'}
+            size="sm"
+            onClick={() => {
+              setDateFilter('ALL')
+              setPage(1)
+            }}
+          >
+            Todas as datas
+          </Button>
+          <Button
+            variant={dateFilter === 'WEEK' ? 'default' : 'outline'}
+            size="sm"
+            onClick={() => {
+              setDateFilter('WEEK')
+              setPage(1)
+            }}
+          >
+            Semanal
+          </Button>
+          <Button
+            variant={dateFilter === 'MONTH' ? 'default' : 'outline'}
+            size="sm"
+            onClick={() => {
+              setDateFilter('MONTH')
+              setPage(1)
+            }}
+          >
+            Mensal
+          </Button>
+          <Button
+            variant={dateFilter === 'YEAR' ? 'default' : 'outline'}
+            size="sm"
+            onClick={() => {
+              setDateFilter('YEAR')
+              setPage(1)
+            }}
+          >
+            Anual
+          </Button>
+        </div>
       </div>
 
       <div className="grid lg:grid-cols-2 gap-6">

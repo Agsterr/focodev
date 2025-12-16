@@ -22,8 +22,34 @@ export async function GET(req: NextRequest) {
     const { page, pageSize, skip, take } = parsePagination(req)
     const { searchParams } = new URL(req.url)
     const status = searchParams.get('status') as 'NOVO' | 'RESPONDIDO' | null
+    const period = searchParams.get('period')
 
-    const where = status ? { status } : {}
+    const where: any = {}
+
+    if (status) {
+      where.status = status
+    }
+
+    if (period === 'week' || period === 'month' || period === 'year') {
+      const now = new Date()
+
+      if (period === 'week') {
+        const currentDay = now.getDay()
+        const daysSinceMonday = (currentDay + 6) % 7
+        const weekStart = new Date(now)
+        weekStart.setHours(0, 0, 0, 0)
+        weekStart.setDate(weekStart.getDate() - daysSinceMonday)
+        where.createdAt = { gte: weekStart }
+      } else if (period === 'month') {
+        const monthStart = new Date(now.getFullYear(), now.getMonth(), 1)
+        monthStart.setHours(0, 0, 0, 0)
+        where.createdAt = { gte: monthStart }
+      } else if (period === 'year') {
+        const yearStart = new Date(now.getFullYear(), 0, 1)
+        yearStart.setHours(0, 0, 0, 0)
+        where.createdAt = { gte: yearStart }
+      }
+    }
 
     const [contacts, total] = await Promise.all([
       prisma.contactMessage.findMany({
