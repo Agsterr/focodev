@@ -1,58 +1,99 @@
-## Focodev Site
+# Focodev Site
 
-Aplicação Next.js que representa o site institucional da Focodev, com painel admin para gestão de conteúdo e mensagens de contato.
+Site institucional da **FocoDev** com painel administrativo para gestão de conteúdo, portfólio de projetos e mensagens de contato.
 
-### Tecnologias principais
+**Produção:** [focodev.com.br](https://focodev.com.br)
 
-- `Next.js` 14
-- `React` 18
-- `TypeScript`
-- `Prisma` + banco relacional
-- `NextAuth` para autenticação
+---
 
-### Scripts principais
+## O que faz
 
-- `npm run dev` – sobe o servidor de desenvolvimento
-- `npm run build` – roda migrations em produção e gera o build
-- `npm run start` – sobe o servidor do build
-- `npm run lint` – validação de lint com `next lint`
-- `npm run typecheck` – verificação de tipos com `tsc --noEmit`
+- Página pública com serviços, projetos, depoimentos e formulário de contato
+- Painel admin (`/admin`) para editar textos, imagens, vídeos, banner e portfólio
+- Gestão de mensagens de contato com filtros por status e período
+- Notificações por e-mail (Resend) e WhatsApp (opcional)
+- Upload de mídia via Cloudinary
 
-### Variáveis de ambiente
+---
 
-Use um arquivo `.env.local` em desenvolvimento, seguindo como referência o `.env.example` existente no projeto (e o arquivo `CONTATO_SETUP.md` para o módulo de contato).
+## Tecnologias
+
+| Camada | Stack |
+|--------|-------|
+| Framework | Next.js 14, React 18, TypeScript |
+| Estilo | Tailwind CSS |
+| Banco | PostgreSQL (Prisma ORM) |
+| Auth | NextAuth |
+| Mídia | Cloudinary |
+| Infra | Docker, Hetzner, Cloudflare Tunnel |
+| CI/CD | GitHub Actions |
+
+---
+
+## Como rodar localmente
+
+```bash
+git clone https://github.com/Agsterr/focodev.git
+cd focodev
+npm install
+cp .env.example .env.local   # preencha as variáveis
+npm run db:migrate
+npm run db:seed
+npm run dev
+```
+
+Acesse `http://localhost:3000`. O painel admin fica em `/admin/login`.
+
+---
+
+## Scripts principais
+
+| Comando | Descrição |
+|---------|-----------|
+| `npm run dev` | Servidor de desenvolvimento |
+| `npm run build` | Gera Prisma Client e build de produção |
+| `npm run build:deploy` | Migrations + build (usado no deploy) |
+| `npm run start` | Servidor do build |
+| `npm run lint` | Validação ESLint |
+| `npm run typecheck` | Verificação de tipos TypeScript |
+| `npm run db:migrate` | Migrations do Prisma |
+| `npm run db:seed` | Popula dados iniciais |
+
+---
+
+## Variáveis de ambiente
+
+Use `.env.local` em desenvolvimento, seguindo o `.env.example`.
 
 Nunca commite arquivos `.env*` ou segredos no repositório.
 
-### Sistema de contato
+Para o módulo de contato (e-mail e WhatsApp), veja [CONTATO_SETUP.md](CONTATO_SETUP.md).
 
-O fluxo completo de contato está detalhado em `CONTATO_SETUP.md`. De forma resumida:
+---
 
-- Formulário público em `src/components/ContactForm.tsx`
-- API pública de contato em `/api/contact`
-- Persistência das mensagens na tabela `ContactMessage`
-- Envio de e-mail e notificação WhatsApp (opcionais, via configuração)
-- Painel admin para leitura e gestão em `/admin/contacts`
+## Sistema de contato
 
-### Filtros de mensagens no painel admin
+- Formulário público: `src/components/ContactForm.tsx`
+- API: `POST /api/contact`
+- Mensagens salvas na tabela `ContactMessage`
+- Painel admin: `/admin/contacts`
 
-Na página `/admin/contacts` (`src/app/admin/contacts/page.tsx`) existem filtros combináveis:
+Filtros disponíveis no painel (status + período semanal/mensal/anual). Detalhes em [CONTATO_SETUP.md](CONTATO_SETUP.md).
 
-- **Status**
-  - `Todas` – não aplica filtro de status
-  - `Não respondidas` – mensagens com status `NOVO`
-  - `Respondidas` – mensagens com status `RESPONDIDO`
+---
 
-- **Período**
-  - `Todas as datas` – histórico completo
-  - `Semanal` – mensagens criadas na semana atual (a partir de segunda-feira)
-  - `Mensal` – mensagens criadas no mês atual
-  - `Anual` – mensagens criadas no ano atual
+## Deploy em produção
 
-Os filtros são convertidos em parâmetros para a API de admin `/api/contacts` (`src/app/api/contacts/route.ts`):
+| Item | Valor |
+|------|-------|
+| Servidor | Hetzner (`178.105.11.19`) |
+| Path | `/opt/focodev-site` |
+| Domínio | `https://focodev.com.br` |
 
-- `status=NOVO|RESPONDIDO`
-- `period=week|month|year`
+Deploy automático via push na branch `main`. Documentação: [docs/DEPLOY_HETZNER.md](docs/DEPLOY_HETZNER.md) e [docs/CICD.md](docs/CICD.md).
 
-A API aplica esses filtros sobre o campo `createdAt` da tabela `ContactMessage`.
+---
 
+## Autor
+
+**Agster Junior da Costa Santos** — [GitHub](https://github.com/Agsterr)
