@@ -3,6 +3,12 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { prisma } from '@/lib/db'
 import { Button } from '@/components/ui/button'
+import { DEFAULT_PROJECTS } from '@/lib/site-content'
+
+function getProjectFallbackImage(slug: string) {
+  const p = DEFAULT_PROJECTS.find((x) => x.slug === slug)
+  return p?.coverImageUrl || '/portfolio/default.svg'
+}
 
 interface Props { params: { slug: string } }
 
@@ -17,6 +23,9 @@ export async function generateMetadata({ params }: Props) {
 export default async function ProjectDetail({ params }: Props) {
   const project = await prisma.project.findUnique({ where: { slug: params.slug }, include: { images: true } })
   if (!project) return notFound()
+
+  const coverUrl = project.coverImageUrl || (project.images[0]?.url) || getProjectFallbackImage(params.slug)
+  const galleryImages = project.images.length > 0 ? project.images : []
   
   return (
     <div className="container py-12 md:py-20">
@@ -39,10 +48,22 @@ export default async function ProjectDetail({ params }: Props) {
         </p>
       </div>
 
-      {/* Images Gallery */}
-      {project.images.length > 0 && (
+      {/* Cover + Gallery */}
+      <div className="mb-12">
+        <div className="relative aspect-[21/9] max-h-96 rounded-3xl overflow-hidden shadow-2xl ring-1 ring-gray-200 dark:ring-gray-800 mb-8">
+          <Image
+            src={coverUrl}
+            alt={project.title}
+            fill
+            className="object-cover"
+            sizes="100vw"
+            priority
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
+        </div>
+        {galleryImages.length > 0 && (
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {project.images.map((img: typeof project.images[number], index: number) => (
+          {galleryImages.map((img: typeof project.images[number], index: number) => (
             <div 
               key={img.id} 
               className="relative group overflow-hidden rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:scale-[1.02]"
@@ -66,7 +87,8 @@ export default async function ProjectDetail({ params }: Props) {
             </div>
           ))}
         </div>
-      )}
+        )}
+      </div>
 
       {/* Back to Portfolio Button */}
       <div className="mt-12 text-center">

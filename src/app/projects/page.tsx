@@ -1,15 +1,25 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import { prisma } from '@/lib/db'
+import { DEFAULT_PROJECTS } from '@/lib/site-content'
 
 export const metadata = { title: 'Portfólio' }
 export const dynamic = 'force-dynamic'
 
 export default async function ProjectsPage() {
-  const projects = await prisma.project.findMany({ 
+  let projects = await prisma.project.findMany({ 
     orderBy: { createdAt: 'desc' },
     include: { images: true }
-  })
+  }).catch(() => [])
+
+  if (projects.length === 0) {
+    projects = DEFAULT_PROJECTS.map((p) => ({
+      ...p,
+      images: [],
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    }))
+  }
   
   return (
     <div className="container py-12 md:py-20">

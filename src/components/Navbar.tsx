@@ -1,14 +1,13 @@
 "use client"
 import Link from 'next/link'
-import Image from 'next/image'
 import { useEffect, useState } from 'react'
 import { Button } from '@/components/ui/button'
-import { Wrench, Info, Briefcase, MessageSquare } from 'lucide-react'
+import FocoDevLogo from '@/components/FocoDevLogo'
+import { Wrench, Info, Briefcase, MessageSquare, LayoutGrid } from 'lucide-react'
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
-  const logoSrc = process.env.NEXT_PUBLIC_LOGO_URL
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 8)
@@ -21,41 +20,7 @@ export default function Navbar() {
     <header className={`sticky top-0 z-50 border-b border-gray-200 dark:border-gray-800 backdrop-blur-md transition-all duration-300 ${scrolled ? 'bg-white/95 dark:bg-gray-900/95 shadow-lg' : 'bg-white/80 dark:bg-gray-900/80'}`}>
       <div className="container flex h-20 items-center justify-between">
         <Link href="/" className="flex items-center gap-3 group">
-          {logoSrc ? (
-            <Image
-              src={logoSrc}
-              alt="FocoDev Sistemas"
-              width={200}
-              height={60}
-              className="h-12 md:h-14 w-auto transition-transform duration-300 group-hover:scale-105"
-              priority
-            />
-          ) : (
-            <svg viewBox="0 0 240 50" className="h-12 md:h-14 w-auto transition-transform duration-300 group-hover:scale-105" aria-hidden>
-              <defs>
-                <linearGradient id="brandGradient" x1="0" y1="0" x2="1" y2="0">
-                  <stop offset="0%" stopColor="#0EA5E9" />
-                  <stop offset="100%" stopColor="#0284C7" />
-                </linearGradient>
-              </defs>
-              <g>
-                {/* Lupa - círculo externo */}
-                <circle cx="20" cy="20" r="12" fill="none" stroke="url(#brandGradient)" strokeWidth="3" />
-                {/* Círculo interno */}
-                <circle cx="16" cy="16" r="4" fill="url(#brandGradient)" />
-                {/* Cabo da lupa */}
-                <line x1="28" y1="28" x2="35" y2="35" stroke="url(#brandGradient)" strokeWidth="3" strokeLinecap="round" />
-                {/* Texto FocoDev */}
-                <text x="45" y="25" fontSize="22" fontWeight="700" fill="url(#brandGradient)" fontFamily="Arial, sans-serif">
-                  FocoDev
-                </text>
-                {/* Texto SISTEMAS */}
-                <text x="45" y="38" fontSize="12" fontWeight="600" fill="url(#brandGradient)" fontFamily="Arial, sans-serif">
-                  SISTEMAS
-                </text>
-              </g>
-            </svg>
-          )}
+          <FocoDevLogo priority />
           <span className="sr-only">FocoDev Sistemas</span>
         </Link>
 
@@ -76,12 +41,20 @@ export default function Navbar() {
               Sobre
             </span>
           </NavLink>
-          <NavLink href="/projects">
+          <NavLink href="/#portfolio">
             <span className="inline-flex items-center gap-2 font-semibold">
               <span className="h-9 w-9 rounded-md bg-gradient-to-r from-brand/20 to-brand-dark/20 flex items-center justify-center ring-1 ring-brand/30 group-hover:from-brand/30 group-hover:to-brand-dark/30">
                 <Briefcase className="w-6 h-6 text-brand" aria-hidden />
               </span>
               Portfólio
+            </span>
+          </NavLink>
+          <NavLink href="/#sistemas">
+            <span className="inline-flex items-center gap-2 font-semibold">
+              <span className="h-9 w-9 rounded-md bg-gradient-to-r from-brand/20 to-brand-dark/20 flex items-center justify-center ring-1 ring-brand/30 group-hover:from-brand/30 group-hover:to-brand-dark/30">
+                <LayoutGrid className="w-6 h-6 text-brand" aria-hidden />
+              </span>
+              Sistemas
             </span>
           </NavLink>
           <NavLink href="/#contato">
@@ -133,12 +106,20 @@ export default function Navbar() {
                 Sobre
               </span>
             </MobileLink>
-            <MobileLink href="/projects" onClick={() => setMenuOpen(false)}>
+            <MobileLink href="/#portfolio" onClick={() => setMenuOpen(false)}>
               <span className="inline-flex items-center gap-2 text-xl font-semibold">
                 <span className="h-10 w-10 rounded-md bg-gradient-to-r from-brand/20 to-brand-dark/20 flex items-center justify-center ring-1 ring-brand/30 group-hover:from-brand/30 group-hover:to-brand-dark/30">
                   <Briefcase className="w-6 h-6 text-brand" aria-hidden />
                 </span>
                 Portfólio
+              </span>
+            </MobileLink>
+            <MobileLink href="/#sistemas" onClick={() => setMenuOpen(false)}>
+              <span className="inline-flex items-center gap-2 text-xl font-semibold">
+                <span className="h-10 w-10 rounded-md bg-gradient-to-r from-brand/20 to-brand-dark/20 flex items-center justify-center ring-1 ring-brand/30 group-hover:from-brand/30 group-hover:to-brand-dark/30">
+                  <LayoutGrid className="w-6 h-6 text-brand" aria-hidden />
+                </span>
+                Sistemas
               </span>
             </MobileLink>
             <MobileLink href="/#contato" onClick={() => setMenuOpen(false)}>

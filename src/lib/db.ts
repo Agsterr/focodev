@@ -8,20 +8,26 @@ export const prisma = globalForPrisma.prisma || createPrisma()
 
 function createPrisma() {
   const connectionString = process.env.DATABASE_URL
-  if (!connectionString && process.env.NODE_ENV !== 'production') {
-    const handler = {
-      get() {
-        throw new Error('DATABASE_URL não está configurada. Defina em .env.local e reinicie o servidor')
-      },
+  if (!connectionString) {
+    if (process.env.NODE_ENV !== 'production') {
+      const handler = {
+        get() {
+          throw new Error('DATABASE_URL não está configurada. Defina em .env.local e reinicie o servidor')
+        },
+      }
+      return new Proxy({}, handler) as unknown as InstanceType<typeof PrismaClient>
     }
-    return new Proxy({}, handler) as unknown as InstanceType<typeof PrismaClient>
+    return new PrismaClient()
   }
-  const pool = new Pool({ connectionString: connectionString! })
-  const adapter = new PrismaNeon(pool)
-  type OptionsArg = ConstructorParameters<typeof PrismaClient>[0]
-  const options = { adapter } as unknown as OptionsArg
-  const client = new PrismaClient(options)
-  return client
+  const useNeon = connectionString.includes('neon.tech')
+  if (useNeon) {
+    const pool = new Pool({ connectionString })
+    const adapter = new PrismaNeon(pool)
+    type OptionsArg = ConstructorParameters<typeof PrismaClient>[0]
+    const options = { adapter } as unknown as OptionsArg
+    return new PrismaClient(options)
+  }
+  return new PrismaClient()
 }
 
 if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = prisma

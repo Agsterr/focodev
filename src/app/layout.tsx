@@ -13,6 +13,11 @@ export const metadata: Metadata = {
   icons: {
     icon: '/favicon.ico',
   },
+  manifest: '/manifest.webmanifest',
+  appleWebApp: {
+    capable: true,
+    title: 'FocoDev Sistemas',
+  },
 }
 
 export const dynamic = 'force-dynamic'

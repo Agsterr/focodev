@@ -1,0 +1,56 @@
+# Site institucional FocoDev — producao Hetzner (porta 8082).
+# Cloudflare Tunnel: www.focodev.com.br -> localhost:8082 (tunel gerenciamento-estoque).
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: focodev-site-postgres
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-focodev_site}
+      POSTGRES_USER: ${POSTGRES_USER:-focodev}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-changeme}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - app-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-focodev} -d ${POSTGRES_DB:-focodev_site}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        NEXT_PUBLIC_LOGO_URL: ${NEXT_PUBLIC_LOGO_URL:-/logo.png}
+        NEXT_PUBLIC_WHATSAPP_NUMBER: ${NEXT_PUBLIC_WHATSAPP_NUMBER:-}
+        NEXT_PUBLIC_INSTAGRAM_HANDLE: ${NEXT_PUBLIC_INSTAGRAM_HANDLE:-}
+    container_name: focodev-site-app
+    depends_on:
+      postgres:
+        condition: service_healthy
+    env_file:
+      - .env
+    environment:
+      DATABASE_URL: postgresql://${POSTGRES_USER:-focodev}:${POSTGRES_PASSWORD:-changeme}@postgres:5432/${POSTGRES_DB:-focodev_site}?schema=public
+      NODE_ENV: production
+    ports:
+      - "${HTTP_PORT:-8082}:3000"
+    networks:
+      - app-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://127.0.0.1:3000/ >/dev/null 2>&1 || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  postgres_data:

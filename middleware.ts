@@ -13,7 +13,14 @@ function parseAuthRateCookie(value: string | undefined) {
 }
 
 export async function middleware(req: NextRequest) {
+  const host = (req.headers.get('host') || '').split(':')[0]
   const { pathname } = req.nextUrl
+
+  // painel.focodev.com.br → área administrativa
+  if (host === 'painel.focodev.com.br' && pathname === '/') {
+    return NextResponse.redirect(new URL('/admin', req.url))
+  }
+
   if (pathname.startsWith('/api/auth')) {
     if (req.method === 'POST') {
       const cookie = req.cookies.get('rl_auth')?.value
@@ -39,5 +46,5 @@ export async function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/admin/:path*', '/api/auth/:path*'],
+  matcher: ['/', '/admin/:path*', '/api/auth/:path*'],
 }
