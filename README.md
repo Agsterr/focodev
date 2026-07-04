@@ -2,7 +2,8 @@
 
 Site institucional da **FocoDev** com painel administrativo para gestão de conteúdo, portfólio de projetos e mensagens de contato.
 
-**Produção:** [focodev.com.br](https://focodev.com.br)
+**Produção:** [www.focodev.com.br](https://www.focodev.com.br)  
+**Sistema de estoque:** [focodev.com.br](https://focodev.com.br)
 
 ---
 
@@ -88,7 +89,9 @@ Filtros disponíveis no painel (status + período semanal/mensal/anual). Detalhe
 |------|-------|
 | Servidor | Hetzner (`178.105.11.19`) |
 | Path | `/opt/focodev-site` |
-| Domínio | `https://focodev.com.br` |
+| Domínio (site) | `https://www.focodev.com.br` |
+| Painel admin | `https://painel.focodev.com.br` |
+| Sistema de estoque | `https://focodev.com.br` |
 
 Deploy automático via push na branch `main`. Documentação: [docs/DEPLOY_HETZNER.md](docs/DEPLOY_HETZNER.md) e [docs/CICD.md](docs/CICD.md).
 
