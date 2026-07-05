@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { SYSTEM_LINKS } from '@/lib/system-links'
+import { PRODUCTION_SYSTEMS } from '@/lib/system-links'
 
 export default function Footer() {
   const year = new Date().getFullYear()
@@ -30,7 +30,18 @@ export default function Footer() {
               <li><Link className="hover:text-brand transition-colors" href="/projects">Portfólio</Link></li>
               <li><Link className="hover:text-brand transition-colors" href="/#servicos">Serviços</Link></li>
               <li><Link className="hover:text-brand transition-colors" href="/#contato">Contato</Link></li>
-              <li><a className="hover:text-brand transition-colors" href={SYSTEM_LINKS.estoque.href} target="_blank" rel="noopener noreferrer">Gerenciamento de Estoque</a></li>
+              {PRODUCTION_SYSTEMS.map((system) => (
+                <li key={system.href}>
+                  <a
+                    className="hover:text-brand transition-colors"
+                    href={system.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    {system.label}
+                  </a>
+                </li>
+              ))}
               <li><Link className="hover:text-brand transition-colors" href="/#sistemas">App Rotas (mobile)</Link></li>
             </ul>
           </div>

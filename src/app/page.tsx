@@ -5,7 +5,7 @@ import { prisma } from '@/lib/db'
 import { Smartphone, Server, Cog, Palette, Gauge, Globe, MessageSquare, Info, ShieldCheck, Sparkles, Play, Package, MapPin, ExternalLink } from 'lucide-react'
 import ContactForm from '@/components/ContactForm'
 import TestimonialsSection from '@/components/TestimonialsSection'
-import { SHOWCASE_PROJECTS, SYSTEM_LINKS } from '@/lib/system-links'
+import { SHOWCASE_PROJECTS, PRODUCTION_SYSTEMS, PROJECT_EXTERNAL_URLS } from '@/lib/system-links'
 import { DEFAULT_PROJECTS, DEFAULT_SERVICES, HERO_STATS, TECH_STACK } from '@/lib/site-content'
 
 export const dynamic = 'force-dynamic'
@@ -35,11 +35,9 @@ function getYouTubeVideoId(url: string): string | null {
 
 function getProjectFallbackImage(p: { slug?: string; title?: string }) {
   const key = (p.slug || p.title || '').toLowerCase()
-  if (key.includes('fastburger')) return '/portfolio/fastburger.svg'
-  if (key.includes('fintrack')) return '/portfolio/fintrack.svg'
-  if (key.includes('educapro') || key.includes('educa')) return '/portfolio/educapro.svg'
-  if (key.includes('fitlife') || key.includes('fit') || key.includes('treino')) return '/portfolio/fitlife.svg'
-  if (key.includes('focomarket') || key.includes('estoque') || key.includes('vendas')) return '/portfolio/focomarket.svg'
+  if (key.includes('barbearia') || key.includes('barber')) return '/portfolio/fastburger.svg'
+  if (key.includes('mercado') || key.includes('focomarket') || key.includes('estoque') || key.includes('vendas')) return '/portfolio/focomarket.svg'
+  if (key.includes('academia') || key.includes('fitlife') || key.includes('fit') || key.includes('treino')) return '/portfolio/fitlife.svg'
   if (key.includes('rotas') || key.includes('route')) return '/portfolio/app-rotas.svg'
   return '/portfolio/default.svg'
 }
@@ -186,28 +184,31 @@ export default async function HomePage() {
             Plataformas disponíveis e projetos desenvolvidos pela FocoDev
           </p>
         </div>
-        <div className="grid sm:grid-cols-2 gap-8 max-w-5xl mx-auto">
-          <a
-            href={SYSTEM_LINKS.estoque.href}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="card p-8 group ring-1 ring-brand/20 hover:ring-brand/40 hover:border-brand transition-all"
-          >
-            <div className="h-12 w-12 rounded-xl bg-brand/10 text-brand flex items-center justify-center ring-1 ring-brand/20 mb-4">
-              <Package className="w-6 h-6" />
-            </div>
-            <div className="text-xl font-bold mb-2 text-gray-900 dark:text-white group-hover:text-brand transition-colors flex items-center gap-2">
-              {SYSTEM_LINKS.estoque.label}
-              <ExternalLink className="w-4 h-4 opacity-60" />
-            </div>
-            <p className="text-gray-700 dark:text-gray-300 leading-relaxed">{SYSTEM_LINKS.estoque.description}</p>
-            <span className="inline-flex items-center gap-1.5 mt-4 px-3 py-1 rounded-full bg-brand/10 text-brand text-sm font-medium ring-1 ring-brand/20">
-              <Globe className="w-3.5 h-3.5" />
-              Acessar online
-            </span>
-          </a>
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
+          {PRODUCTION_SYSTEMS.map((system) => (
+            <a
+              key={system.href}
+              href={system.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="card p-8 group ring-1 ring-brand/20 hover:ring-brand/40 hover:border-brand transition-all"
+            >
+              <div className="h-12 w-12 rounded-xl bg-brand/10 text-brand flex items-center justify-center ring-1 ring-brand/20 mb-4">
+                <Package className="w-6 h-6" />
+              </div>
+              <div className="text-xl font-bold mb-2 text-gray-900 dark:text-white group-hover:text-brand transition-colors flex items-center gap-2">
+                {system.label}
+                <ExternalLink className="w-4 h-4 opacity-60" />
+              </div>
+              <p className="text-gray-700 dark:text-gray-300 leading-relaxed">{system.description}</p>
+              <span className="inline-flex items-center gap-1.5 mt-4 px-3 py-1 rounded-full bg-brand/10 text-brand text-sm font-medium ring-1 ring-brand/20">
+                <Globe className="w-3.5 h-3.5" />
+                Acessar online
+              </span>
+            </a>
+          ))}
 
-          <div className="card overflow-hidden ring-1 ring-brand/20">
+          <div className="card overflow-hidden ring-1 ring-brand/20 sm:col-span-2 lg:col-span-1">
             <div className="relative h-40 bg-sky-50 dark:bg-slate-900">
               <Image
                 src={SHOWCASE_PROJECTS.rotas.image}
@@ -382,13 +383,9 @@ export default async function HomePage() {
           </Link>
         </div>
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
-          {displayProjects.map((p, index: number) => (
-            <Link
-              key={p.id}
-              href={`/projects/${p.slug}`}
-              className="group block"
-              style={{ animationDelay: `${index * 100}ms` }}
-            >
+          {displayProjects.map((p, index: number) => {
+            const externalUrl = PROJECT_EXTERNAL_URLS[p.slug]
+            const card = (
               <div className="relative rounded-2xl overflow-hidden border border-gray-200/80 dark:border-gray-800 bg-white dark:bg-gray-900 shadow-soft hover:shadow-glow transition-all duration-300 hover:-translate-y-1 hover:border-brand/40">
                 <div className="relative h-48 bg-gradient-to-br from-sky-50 to-cyan-100 dark:from-slate-800 dark:to-slate-900 overflow-hidden">
                   <Image
@@ -406,13 +403,39 @@ export default async function HomePage() {
                   </div>
                   <p className="text-gray-600 dark:text-gray-400 line-clamp-3 leading-relaxed text-sm">{p.description}</p>
                   <div className="mt-4 text-brand text-sm font-semibold flex items-center gap-1 opacity-80 group-hover:opacity-100 transition-opacity">
-                    Ver projeto
+                    {externalUrl ? 'Acessar sistema' : 'Ver projeto'}
                     <ExternalLink className="w-3.5 h-3.5" />
                   </div>
                 </div>
               </div>
-            </Link>
-          ))}
+            )
+
+            if (externalUrl) {
+              return (
+                <a
+                  key={p.id}
+                  href={externalUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="group block"
+                  style={{ animationDelay: `${index * 100}ms` }}
+                >
+                  {card}
+                </a>
+              )
+            }
+
+            return (
+              <Link
+                key={p.id}
+                href={`/projects/${p.slug}`}
+                className="group block"
+                style={{ animationDelay: `${index * 100}ms` }}
+              >
+                {card}
+              </Link>
+            )
+          })}
         </div>
       </section>
 

@@ -2,6 +2,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { prisma } from '@/lib/db'
 import { DEFAULT_PROJECTS } from '@/lib/site-content'
+import { PROJECT_EXTERNAL_URLS } from '@/lib/system-links'
 
 export const metadata = { title: 'Portfólio' }
 export const dynamic = 'force-dynamic'
@@ -40,14 +41,10 @@ export default async function ProjectsPage() {
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
           {projects.map((p: typeof projects[number], index: number) => {
             const coverImageUrl = p.coverImageUrl || (p.images && p.images.length > 0 ? p.images[0].url : null)
-            
-            return (
-              <Link 
-                key={p.id} 
-                href={`/projects/${p.slug}`} 
-                className="card p-0 group block overflow-hidden"
-                style={{ animationDelay: `${index * 100}ms` }}
-              >
+            const externalUrl = PROJECT_EXTERNAL_URLS[p.slug]
+
+            const card = (
+              <>
                 {coverImageUrl && (
                   <div className="relative h-64 overflow-hidden">
                     <Image
@@ -68,12 +65,38 @@ export default async function ProjectsPage() {
                     {p.description}
                   </p>
                   <div className="text-brand text-sm font-medium opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-2">
-                    Ver projeto
+                    {externalUrl ? 'Acessar sistema' : 'Ver projeto'}
                     <svg className="w-4 h-4 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                     </svg>
                   </div>
                 </div>
+              </>
+            )
+
+            if (externalUrl) {
+              return (
+                <a
+                  key={p.id}
+                  href={externalUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="card p-0 group block overflow-hidden"
+                  style={{ animationDelay: `${index * 100}ms` }}
+                >
+                  {card}
+                </a>
+              )
+            }
+
+            return (
+              <Link
+                key={p.id}
+                href={`/projects/${p.slug}`}
+                className="card p-0 group block overflow-hidden"
+                style={{ animationDelay: `${index * 100}ms` }}
+              >
+                {card}
               </Link>
             )
           })}

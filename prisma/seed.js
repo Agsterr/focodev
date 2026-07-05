@@ -38,36 +38,32 @@ const PROJECTS = [
     coverImageUrl: '/portfolio/focomarket.svg',
   },
   {
+    slug: 'mercado-digital',
+    title: 'Mercado Digital',
+    description: 'PWA de mercado com catálogo, promoções, pedidos com entrega e painel do dono — em produção em mercado.focodev.com.br.',
+    coverImageUrl: '/portfolio/focomarket.svg',
+  },
+  {
+    slug: 'barbearia',
+    title: 'Barbearia',
+    description: 'Agendamentos online, fila de atendimento e painel administrativo para barbearias — em produção em barbearia.focodev.com.br.',
+    coverImageUrl: '/portfolio/fastburger.svg',
+  },
+  {
+    slug: 'foco-academia',
+    title: 'Foco Academia',
+    description: 'Treinos, avaliações físicas e acompanhamento para alunos e instrutores — em produção em academia.focodev.com.br.',
+    coverImageUrl: '/portfolio/fitlife.svg',
+  },
+  {
     slug: 'app-rotas',
     title: 'App Rotas',
     description: 'App mobile Flutter para planejamento de rotas de entrega, GPS e uso em campo por equipes operacionais.',
     coverImageUrl: '/portfolio/app-rotas.svg',
   },
-  {
-    slug: 'fintrack',
-    title: 'FinTrack',
-    description: 'Controle financeiro pessoal e empresarial com dashboards, categorias e relatórios visuais intuitivos.',
-    coverImageUrl: '/portfolio/fintrack.svg',
-  },
-  {
-    slug: 'fastburger',
-    title: 'FastBurger',
-    description: 'Sistema de pedidos para restaurantes com cardápio digital, gestão de fila e painel da cozinha.',
-    coverImageUrl: '/portfolio/fastburger.svg',
-  },
-  {
-    slug: 'educapro',
-    title: 'EducaPro',
-    description: 'Plataforma educacional com aulas, progresso do aluno e área do professor em interface moderna.',
-    coverImageUrl: '/portfolio/educapro.svg',
-  },
-  {
-    slug: 'fitlife',
-    title: 'FitLife',
-    description: 'App de treinos e acompanhamento fitness com planos personalizados e métricas de evolução.',
-    coverImageUrl: '/portfolio/fitlife.svg',
-  },
 ]
+
+const REMOVED_PROJECT_SLUGS = ['fintrack', 'fastburger', 'educapro', 'fitlife']
 
 async function main() {
   const adminEmail = 'admin@focodev.com'
@@ -135,6 +131,10 @@ async function main() {
       create: project,
     })
   }
+
+  await prisma.project.deleteMany({
+    where: { slug: { in: REMOVED_PROJECT_SLUGS } },
+  })
 
   console.log('Seed concluído. Admin: admin@focodev.com / admin123')
 }

@@ -40,45 +40,38 @@ export const DEFAULT_PROJECTS = [
     coverImageUrl: '/portfolio/focomarket.svg',
   },
   {
+    id: 'proj-mercado',
+    slug: 'mercado-digital',
+    title: 'Mercado Digital',
+    description: 'PWA de mercado com catálogo, promoções, pedidos com entrega e painel do dono — em produção em mercado.focodev.com.br.',
+    coverImageUrl: '/portfolio/focomarket.svg',
+  },
+  {
+    id: 'proj-barbearia',
+    slug: 'barbearia',
+    title: 'Barbearia',
+    description: 'Agendamentos online, fila de atendimento e painel administrativo para barbearias — em produção em barbearia.focodev.com.br.',
+    coverImageUrl: '/portfolio/fastburger.svg',
+  },
+  {
+    id: 'proj-academia',
+    slug: 'foco-academia',
+    title: 'Foco Academia',
+    description: 'Treinos, avaliações físicas e acompanhamento para alunos e instrutores — em produção em academia.focodev.com.br.',
+    coverImageUrl: '/portfolio/fitlife.svg',
+  },
+  {
     id: 'proj-rotas',
     slug: 'app-rotas',
     title: 'App Rotas',
     description: 'App mobile Flutter para planejamento de rotas de entrega, GPS e uso em campo por equipes operacionais.',
     coverImageUrl: '/portfolio/app-rotas.svg',
   },
-  {
-    id: 'proj-fintrack',
-    slug: 'fintrack',
-    title: 'FinTrack',
-    description: 'Controle financeiro pessoal e empresarial com dashboards, categorias e relatórios visuais intuitivos.',
-    coverImageUrl: '/portfolio/fintrack.svg',
-  },
-  {
-    id: 'proj-fastburger',
-    slug: 'fastburger',
-    title: 'FastBurger',
-    description: 'Sistema de pedidos para restaurantes com cardápio digital, gestão de fila e painel da cozinha.',
-    coverImageUrl: '/portfolio/fastburger.svg',
-  },
-  {
-    id: 'proj-educapro',
-    slug: 'educapro',
-    title: 'EducaPro',
-    description: 'Plataforma educacional com aulas, progresso do aluno e área do professor em interface moderna.',
-    coverImageUrl: '/portfolio/educapro.svg',
-  },
-  {
-    id: 'proj-fitlife',
-    slug: 'fitlife',
-    title: 'FitLife',
-    description: 'App de treinos e acompanhamento fitness com planos personalizados e métricas de evolução.',
-    coverImageUrl: '/portfolio/fitlife.svg',
-  },
 ] as const
 
 export const HERO_STATS = [
   { value: '10+', label: 'Projetos entregues' },
-  { value: '3', label: 'Sistemas em produção' },
+  { value: '5', label: 'Sistemas em produção' },
   { value: '100%', label: 'Foco em resultado' },
 ] as const
 
