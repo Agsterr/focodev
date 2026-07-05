@@ -45,7 +45,7 @@ ssh hetzner "bash /opt/focodev-site/scripts/deploy-hetzner.sh"
 | **Painel admin** | https://painel.focodev.com.br |
 | Estoque | https://focodev.com.br |
 
-Login admin padrão (trocar após 1º acesso): `admin@focodev.com` / `admin123`
+Após o seed (`prisma/seed.js`), faça login no painel com o usuário administrador configurado no seed e **altere a senha no primeiro acesso**.
 
 ## Painel — o que você gerencia
 

@@ -51,7 +51,7 @@ Seed inicial do admin:
 docker compose -f /opt/focodev-site/docker-compose.yml exec app node prisma/seed.js
 ```
 
-Login padrao: `admin@focodev.com` / `admin123` — trocar apos primeiro acesso.
+Após o seed, use o usuário administrador definido em `prisma/seed.js` e **troque a senha no primeiro acesso**.
 
 ## Vercel
 
