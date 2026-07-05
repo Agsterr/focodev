@@ -6,7 +6,7 @@ const prisma = new PrismaClient()
 const SERVICES = [
   {
     title: 'Desenvolvimento Web & Mobile',
-    description: 'Sites, painéis administrativos e apps nativos com React, Next.js e Flutter — rápidos, responsivos e prontos para escalar.',
+    description: 'Sites, painéis administrativos e apps com React, Next.js e Flutter — APIs robustas em Java Spring e Python, com IA quando faz sentido.',
   },
   {
     title: 'Infraestrutura & Deploy',

@@ -2,7 +2,7 @@ export const DEFAULT_SERVICES = [
   {
     id: 'svc-web',
     title: 'Desenvolvimento Web & Mobile',
-    description: 'Sites, painéis administrativos e apps nativos com React, Next.js e Flutter — rápidos, responsivos e prontos para escalar.',
+    description: 'Sites, painéis administrativos e apps com React, Next.js e Flutter — APIs robustas em Java Spring e Python, com IA quando faz sentido.',
   },
   {
     id: 'svc-infra',
@@ -75,7 +75,17 @@ export const HERO_STATS = [
   { value: '100%', label: 'Foco em resultado' },
 ] as const
 
-export const TECH_STACK = ['Next.js', 'React', 'Flutter', 'Docker', 'PostgreSQL', 'Cloudflare'] as const
+export const TECH_STACK = [
+  'Java Spring',
+  'Python',
+  'IA',
+  'Next.js',
+  'React',
+  'Flutter',
+  'Docker',
+  'PostgreSQL',
+  'Cloudflare',
+] as const
 
 /** Depoimentos fictícios — avatares SVG próprios, sem imagens de terceiros. */
 export const TESTIMONIALS = [
