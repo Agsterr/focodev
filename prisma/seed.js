@@ -66,15 +66,18 @@ const PROJECTS = [
 const REMOVED_PROJECT_SLUGS = ['fintrack', 'fastburger', 'educapro', 'fitlife']
 
 async function main() {
-  const adminEmail = 'admin@focodev.com'
-  const adminPassword = 'admin123'
-  const hash = await bcrypt.hash(adminPassword, 10)
-
-  await prisma.user.upsert({
-    where: { email: adminEmail },
-    update: {},
-    create: { name: 'Administrador', email: adminEmail, passwordHash: hash, role: 'ADMIN' },
-  })
+  const adminEmail = process.env.SEED_ADMIN_EMAIL || 'admin@focodev.com'
+  const adminPassword = process.env.SEED_ADMIN_PASSWORD
+  if (!adminPassword) {
+    console.log('SEED_ADMIN_PASSWORD não definida — usuário admin não será criado.')
+  } else {
+    const hash = await bcrypt.hash(adminPassword, 10)
+    await prisma.user.upsert({
+      where: { email: adminEmail },
+      update: {},
+      create: { name: 'Administrador', email: adminEmail, passwordHash: hash, role: 'ADMIN' },
+    })
+  }
 
   await prisma.companyInfo.upsert({
     where: { id: 'company-singleton' },
@@ -136,7 +139,7 @@ async function main() {
     where: { slug: { in: REMOVED_PROJECT_SLUGS } },
   })
 
-  console.log('Seed concluído. Admin: admin@focodev.com / admin123')
+  console.log('Seed concluído.')
 }
 
 main()

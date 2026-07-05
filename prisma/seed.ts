@@ -4,20 +4,23 @@ import bcrypt from 'bcryptjs'
 const prisma = new PrismaClient()
 
 async function main() {
-  const adminEmail = 'admin@focodev.com'
-  const adminPassword = 'admin123'
-  const hash = await bcrypt.hash(adminPassword, 10)
-
-  await prisma.user.upsert({
-    where: { email: adminEmail },
-    update: {},
-    create: {
-      name: 'Administrador',
-      email: adminEmail,
-      passwordHash: hash,
-      role: 'ADMIN',
-    },
-  })
+  const adminEmail = process.env.SEED_ADMIN_EMAIL || 'admin@focodev.com'
+  const adminPassword = process.env.SEED_ADMIN_PASSWORD
+  if (!adminPassword) {
+    console.log('SEED_ADMIN_PASSWORD não definida — usuário admin não será criado.')
+  } else {
+    const hash = await bcrypt.hash(adminPassword, 10)
+    await prisma.user.upsert({
+      where: { email: adminEmail },
+      update: {},
+      create: {
+        name: 'Administrador',
+        email: adminEmail,
+        passwordHash: hash,
+        role: 'ADMIN',
+      },
+    })
+  }
 
   await prisma.companyInfo.upsert({
     where: { id: 'company-singleton' },
@@ -48,7 +51,7 @@ async function main() {
     },
   })
 
-  console.log('Seed concluído. Usuário admin: admin@focodev.com / admin123 (alterar)')
+  console.log('Seed concluído.')
 }
 
 main()
