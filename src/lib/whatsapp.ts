@@ -82,52 +82,13 @@ function formatWhatsAppMessage(data: WhatsAppNotificationData): string {
   return message
 }
 
-/**
- * Função auxiliar para enviar via API de WhatsApp (exemplo com Twilio)
- * Descomente e configure se tiver uma API de WhatsApp
- */
-/*
-async function sendViaWhatsAppAPI(
-  number: string,
-  message: string
-): Promise<{ success: boolean; error?: string }> {
-  try {
-    const accountSid = process.env.TWILIO_ACCOUNT_SID
-    const authToken = process.env.TWILIO_AUTH_TOKEN
-    const fromNumber = process.env.TWILIO_WHATSAPP_FROM
-
-    if (!accountSid || !authToken || !fromNumber) {
-      return { success: false, error: 'Twilio não configurado' }
-    }
-
-    const response = await fetch(
-      `https://api.twilio.com/2010-04-01/Accounts/${accountSid}/Messages.json`,
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded',
-          Authorization: `Basic ${Buffer.from(`${accountSid}:${authToken}`).toString('base64')}`,
-        },
-        body: new URLSearchParams({
-          From: `whatsapp:${fromNumber}`,
-          To: `whatsapp:${number}`,
-          Body: message,
-        }),
-      }
-    )
-
-    if (!response.ok) {
-      const error = await response.text()
-      throw new Error(`Twilio API error: ${error}`)
-    }
-
-    return { success: true }
-  } catch (error: any) {
-    return { success: false, error: error?.message }
-  }
+export function getWhatsAppNumber() {
+  const raw = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || '16991183292'
+  return raw.replace(/\D/g, '')
 }
-*/
 
-
-
-
+export function getWhatsAppHref(message: string) {
+  const number = getWhatsAppNumber()
+  const text = encodeURIComponent(message)
+  return number ? `https://wa.me/${number}?text=${text}` : `https://wa.me/?text=${text}`
+}

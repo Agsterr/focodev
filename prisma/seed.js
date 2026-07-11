@@ -52,14 +52,14 @@ const PROJECTS = [
   {
     slug: 'foco-academia',
     title: 'Foco Academia',
-    description: 'Treinos, avaliações físicas e acompanhamento para alunos e instrutores — em produção em academia.focodev.com.br.',
-    coverImageUrl: '/portfolio/fitlife.svg',
+    description: 'App de academia com musculação, treino outdoor (GPS), evolução de peso, painel do instrutor e portal do aluno.',
+    coverImageUrl: '/portfolio/fitlife/app-menu.png',
   },
   {
     slug: 'app-rotas',
     title: 'App Rotas',
-    description: 'App mobile Flutter para planejamento de rotas de entrega, GPS e uso em campo por equipes operacionais.',
-    coverImageUrl: '/portfolio/app-rotas.svg',
+    description: 'App mobile e painel web para planejamento de rotas de entrega, GPS e operação em campo.',
+    coverImageUrl: '/portfolio/rotas/app-inicio.png',
   },
 ]
 

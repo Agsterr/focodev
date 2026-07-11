@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { PRODUCTION_SYSTEMS } from '@/lib/system-links'
+import { PRODUCTION_SYSTEMS, SHOWCASE_PROJECTS, SYSTEM_LINKS } from '@/lib/system-links'
 
 export default function Footer() {
   const year = new Date().getFullYear()
@@ -42,7 +42,8 @@ export default function Footer() {
                   </a>
                 </li>
               ))}
-              <li><Link className="hover:text-brand transition-colors" href="/#sistemas">App Rotas (mobile)</Link></li>
+              <li><Link className="hover:text-brand transition-colors" href={SYSTEM_LINKS.academia.href}>{SYSTEM_LINKS.academia.label}</Link></li>
+              <li><Link className="hover:text-brand transition-colors" href={SHOWCASE_PROJECTS.rotas.href}>{SHOWCASE_PROJECTS.rotas.label}</Link></li>
             </ul>
           </div>
           <div>

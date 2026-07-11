@@ -1,9 +1,10 @@
-import { notFound } from 'next/navigation'
+import { notFound, redirect } from 'next/navigation'
 import Image from 'next/image'
 import Link from 'next/link'
 import { prisma } from '@/lib/db'
 import { Button } from '@/components/ui/button'
 import { DEFAULT_PROJECTS } from '@/lib/site-content'
+import { PROJECT_LANDING_HREFS } from '@/lib/product-landings'
 
 function getProjectFallbackImage(slug: string) {
   const p = DEFAULT_PROJECTS.find((x) => x.slug === slug)
@@ -15,12 +16,24 @@ interface Props { params: { slug: string } }
 export const dynamic = 'force-dynamic'
 
 export async function generateMetadata({ params }: Props) {
+  const landing = PROJECT_LANDING_HREFS[params.slug]
+  if (landing) {
+    const titles: Record<string, string> = {
+      fitlife: 'Foco Academia',
+      'foco-academia': 'Foco Academia',
+      'app-rotas': 'App Rotas',
+    }
+    return { title: titles[params.slug] || 'Projeto' }
+  }
   const project = await prisma.project.findUnique({ where: { slug: params.slug } })
   if (!project) return { title: 'Projeto' }
   return { title: project.title, description: project.description }
 }
 
 export default async function ProjectDetail({ params }: Props) {
+  const landingHref = PROJECT_LANDING_HREFS[params.slug]
+  if (landingHref) redirect(landingHref)
+
   const project = await prisma.project.findUnique({ where: { slug: params.slug }, include: { images: true } })
   if (!project) return notFound()
 

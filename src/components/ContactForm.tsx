@@ -4,7 +4,11 @@ import { useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { User, Mail, MessageSquare, Send, Phone, Loader2, CheckCircle2, AlertCircle } from 'lucide-react'
 
-export default function ContactForm() {
+type ContactFormProps = {
+  defaultMessage?: string
+}
+
+export default function ContactForm({ defaultMessage = '' }: ContactFormProps) {
   const [loading, setLoading] = useState(false)
   const [success, setSuccess] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -12,7 +16,7 @@ export default function ContactForm() {
     name: '',
     email: '',
     phone: '',
-    message: '',
+    message: defaultMessage,
   })
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
@@ -41,7 +45,7 @@ export default function ContactForm() {
 
       // Sucesso
       setSuccess(true)
-      setFormData({ name: '', email: '', phone: '', message: '' })
+      setFormData({ name: '', email: '', phone: '', message: defaultMessage })
 
       // Limpar mensagem de sucesso após 5 segundos
       setTimeout(() => {

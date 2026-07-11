@@ -7,6 +7,7 @@ import ContactForm from '@/components/ContactForm'
 import TestimonialsSection from '@/components/TestimonialsSection'
 import { SHOWCASE_PROJECTS, PRODUCTION_SYSTEMS, PROJECT_EXTERNAL_URLS } from '@/lib/system-links'
 import { DEFAULT_PROJECTS, DEFAULT_SERVICES, HERO_STATS, TECH_STACK } from '@/lib/site-content'
+import { getProjectHref } from '@/lib/product-landings'
 
 export const dynamic = 'force-dynamic'
 
@@ -37,8 +38,8 @@ function getProjectFallbackImage(p: { slug?: string; title?: string }) {
   const key = (p.slug || p.title || '').toLowerCase()
   if (key.includes('barbearia') || key.includes('barber')) return '/portfolio/fastburger.svg'
   if (key.includes('mercado') || key.includes('focomarket') || key.includes('estoque') || key.includes('vendas')) return '/portfolio/focomarket.svg'
-  if (key.includes('academia') || key.includes('fitlife') || key.includes('fit') || key.includes('treino')) return '/portfolio/fitlife.svg'
-  if (key.includes('rotas') || key.includes('route')) return '/portfolio/app-rotas.svg'
+  if (key.includes('academia') || key.includes('fitlife') || key.includes('fit') || key.includes('treino')) return '/portfolio/fitlife/app-menu.png'
+  if (key.includes('rotas') || key.includes('route')) return '/portfolio/rotas/app-inicio.png'
   return '/portfolio/default.svg'
 }
 export default async function HomePage() {
@@ -124,8 +125,8 @@ export default async function HomePage() {
                       <Smartphone className="w-6 h-6 text-brand" />
                     </div>
                     <div>
-                      <div className="font-semibold text-gray-900 dark:text-white">App Rotas</div>
-                      <div className="text-sm text-gray-600 dark:text-gray-400">Flutter · App mobile em campo</div>
+                      <div className="font-semibold text-gray-900 dark:text-white">Foco Academia & App Rotas</div>
+                      <div className="text-sm text-gray-600 dark:text-gray-400">Landings com orçamento · /fitlife e /rotas</div>
                     </div>
                   </div>
                   <div className="flex items-center gap-4 p-4 rounded-2xl bg-gradient-to-r from-brand/5 to-brand-dark/5 ring-1 ring-brand/15">
@@ -181,7 +182,7 @@ export default async function HomePage() {
         <div className="text-center mb-16">
           <h2 className="section-title">Nossos Sistemas</h2>
           <p className="section-subtitle max-w-2xl mx-auto text-gray-800 dark:text-gray-200 font-semibold">
-            Plataformas disponíveis e projetos desenvolvidos pela FocoDev
+            Conheça os produtos, veja o que fazem e peça um orçamento — o acesso é liberado após contratação
           </p>
         </div>
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
@@ -208,43 +209,53 @@ export default async function HomePage() {
             </a>
           ))}
 
-          <div className="card overflow-hidden ring-1 ring-brand/20 sm:col-span-2 lg:col-span-1">
-            <div className="relative h-40 bg-sky-50 dark:bg-slate-900">
-              <Image
-                src={SHOWCASE_PROJECTS.rotas.image}
-                alt={SHOWCASE_PROJECTS.rotas.label}
-                fill
-                className="object-cover"
-                sizes="(max-width: 768px) 100vw, 50vw"
-              />
-            </div>
-            <div className="p-8">
-              <div className="flex flex-wrap items-center gap-2 mb-3">
-                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-brand/10 text-brand text-sm font-semibold ring-1 ring-brand/20">
-                  <Smartphone className="w-3.5 h-3.5" />
-                  {SHOWCASE_PROJECTS.rotas.badge}
-                </span>
-                <span className="px-3 py-1 rounded-full bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 text-sm font-medium">
-                  {SHOWCASE_PROJECTS.rotas.tech}
+          {([SHOWCASE_PROJECTS.fitlife, SHOWCASE_PROJECTS.rotas] as const).map((product) => (
+            <Link
+              key={product.href}
+              href={product.href}
+              className="card overflow-hidden ring-1 ring-brand/20 hover:ring-brand/40 hover:border-brand transition-all group block"
+            >
+              <div className="relative h-40 bg-sky-50 dark:bg-slate-900">
+                <Image
+                  src={product.image}
+                  alt={product.label}
+                  fill
+                  className="object-cover group-hover:scale-105 transition-transform duration-500"
+                  sizes="(max-width: 768px) 100vw, 33vw"
+                />
+              </div>
+              <div className="p-8">
+                <div className="flex flex-wrap items-center gap-2 mb-3">
+                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-brand/10 text-brand text-sm font-semibold ring-1 ring-brand/20">
+                    <Smartphone className="w-3.5 h-3.5" />
+                    {product.badge}
+                  </span>
+                  <span className="px-3 py-1 rounded-full bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 text-sm font-medium">
+                    {product.tech}
+                  </span>
+                </div>
+                <div className="text-xl font-bold mb-2 text-gray-900 dark:text-white group-hover:text-brand transition-colors flex items-center gap-2">
+                  {product.label === 'App Rotas' ? <MapPin className="w-5 h-5 text-brand" /> : null}
+                  {product.label}
+                </div>
+                <p className="text-gray-700 dark:text-gray-300 leading-relaxed">{product.description}</p>
+                <ul className="mt-4 flex flex-wrap gap-2">
+                  {product.features.map((feature) => (
+                    <li
+                      key={feature}
+                      className="text-xs font-medium px-2.5 py-1 rounded-md bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400"
+                    >
+                      {feature}
+                    </li>
+                  ))}
+                </ul>
+                <span className="inline-flex items-center gap-1.5 mt-5 text-brand text-sm font-semibold">
+                  Conhecer e orçar
+                  <ExternalLink className="w-3.5 h-3.5 opacity-70" />
                 </span>
               </div>
-              <div className="text-xl font-bold mb-2 text-gray-900 dark:text-white flex items-center gap-2">
-                <MapPin className="w-5 h-5 text-brand" />
-                {SHOWCASE_PROJECTS.rotas.label}
-              </div>
-              <p className="text-gray-700 dark:text-gray-300 leading-relaxed">{SHOWCASE_PROJECTS.rotas.description}</p>
-              <ul className="mt-4 flex flex-wrap gap-2">
-                {SHOWCASE_PROJECTS.rotas.features.map((feature) => (
-                  <li
-                    key={feature}
-                    className="text-xs font-medium px-2.5 py-1 rounded-md bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400"
-                  >
-                    {feature}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </div>
+            </Link>
+          ))}
         </div>
       </section>
 
@@ -384,7 +395,12 @@ export default async function HomePage() {
         </div>
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
           {displayProjects.map((p, index: number) => {
-            const externalUrl = PROJECT_EXTERNAL_URLS[p.slug]
+            const landingHref = getProjectHref(p.slug)
+            const hasLanding = landingHref !== `/projects/${p.slug}`
+            const externalUrl = !hasLanding ? PROJECT_EXTERNAL_URLS[p.slug] : undefined
+            const href = hasLanding ? landingHref : (externalUrl || `/projects/${p.slug}`)
+            const isExternal = Boolean(externalUrl)
+
             const card = (
               <div className="relative rounded-2xl overflow-hidden border border-gray-200/80 dark:border-gray-800 bg-white dark:bg-gray-900 shadow-soft hover:shadow-glow transition-all duration-300 hover:-translate-y-1 hover:border-brand/40">
                 <div className="relative h-48 bg-gradient-to-br from-sky-50 to-cyan-100 dark:from-slate-800 dark:to-slate-900 overflow-hidden">
@@ -403,18 +419,18 @@ export default async function HomePage() {
                   </div>
                   <p className="text-gray-600 dark:text-gray-400 line-clamp-3 leading-relaxed text-sm">{p.description}</p>
                   <div className="mt-4 text-brand text-sm font-semibold flex items-center gap-1 opacity-80 group-hover:opacity-100 transition-opacity">
-                    {externalUrl ? 'Acessar sistema' : 'Ver projeto'}
+                    {isExternal ? 'Acessar sistema' : hasLanding ? 'Conhecer e orçar' : 'Ver projeto'}
                     <ExternalLink className="w-3.5 h-3.5" />
                   </div>
                 </div>
               </div>
             )
 
-            if (externalUrl) {
+            if (isExternal) {
               return (
                 <a
                   key={p.id}
-                  href={externalUrl}
+                  href={href}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="group block"
@@ -428,7 +444,7 @@ export default async function HomePage() {
             return (
               <Link
                 key={p.id}
-                href={`/projects/${p.slug}`}
+                href={href}
                 className="group block"
                 style={{ animationDelay: `${index * 100}ms` }}
               >

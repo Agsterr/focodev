@@ -22,8 +22,8 @@ export const SYSTEM_LINKS = {
   },
   academia: {
     label: 'Foco Academia',
-    description: 'Treinos, avaliações e acompanhamento para alunos e instrutores.',
-    href: 'https://academia.focodev.com.br',
+    description: 'App de academia com musculação, outdoor, painel do instrutor e portal do aluno.',
+    href: '/fitlife',
   },
 } as const satisfies Record<string, SystemLink>
 
@@ -32,7 +32,6 @@ export const PRODUCTION_SYSTEMS: SystemLink[] = [
   SYSTEM_LINKS.estoque,
   SYSTEM_LINKS.mercado,
   SYSTEM_LINKS.barbearia,
-  SYSTEM_LINKS.academia,
 ]
 
 /** URL externa por slug do portfólio (quando o projeto está online). */
@@ -40,18 +39,28 @@ export const PROJECT_EXTERNAL_URLS: Record<string, string> = {
   'gerenciamento-estoque': SYSTEM_LINKS.estoque.href,
   'mercado-digital': SYSTEM_LINKS.mercado.href,
   barbearia: SYSTEM_LINKS.barbearia.href,
-  'foco-academia': SYSTEM_LINKS.academia.href,
 }
 
-/** Projetos exibidos como amostra no site — sem link externo (ex.: apps mobile). */
+/** Produtos com landing própria no site (contato primeiro — sem login aberto). */
 export const SHOWCASE_PROJECTS = {
   rotas: {
     label: 'App Rotas',
     description:
-      'App mobile Flutter para planejamento e gestão de rotas de entrega. Otimização de percursos, acompanhamento em tempo real e interface pensada para equipes de campo.',
-    badge: 'App mobile',
+      'App mobile e painel web para planejamento e gestão de rotas de entrega. Otimização de percursos, GPS e operação em campo.',
+    badge: 'App + painel web',
     tech: 'Flutter',
-    image: '/portfolio/app-rotas.svg',
-    features: ['Planejamento de rotas', 'GPS e mapas', 'Uso em campo'],
+    image: '/portfolio/rotas/app-inicio.png',
+    features: ['Planejamento de rotas', 'GPS e mapas', 'Painel para criar rotas'],
+    href: '/rotas',
+  },
+  fitlife: {
+    label: 'Foco Academia',
+    description:
+      'App de academia com musculação, treino outdoor (GPS), evolução de peso, painel do instrutor e portal do aluno.',
+    badge: 'App + painéis web',
+    tech: 'Mobile + Web',
+    image: '/portfolio/fitlife/app-menu.png',
+    features: ['Musculação e séries', 'Outdoor com GPS', 'Painel do instrutor'],
+    href: '/fitlife',
   },
 } as const

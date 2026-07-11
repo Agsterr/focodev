@@ -27,6 +27,9 @@ export async function POST(req: NextRequest) {
     const created = await prisma.image.create({ data: parsed.data })
     await prisma.logs.create({ data: { action: 'create_image', message: created.url, meta: { id: created.id } } })
     revalidatePath('/admin/images')
+    revalidatePath('/fitlife')
+    revalidatePath('/rotas')
+    revalidatePath('/projects')
     return jsonResponse(created, 201)
   } catch (e: any) {
     return errorResponse('Falha ao criar imagem', 500, e?.message)
@@ -43,6 +46,8 @@ export async function DELETE(req: NextRequest) {
     const deleted = await prisma.image.delete({ where: { id } })
     await prisma.logs.create({ data: { action: 'delete_image', message: deleted.url, meta: { id } } })
     revalidatePath('/admin/images')
+    revalidatePath('/fitlife')
+    revalidatePath('/rotas')
     return jsonResponse({ id })
   } catch (e: any) {
     return errorResponse('Falha ao excluir imagem', 500, e?.message)

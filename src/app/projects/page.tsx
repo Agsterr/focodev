@@ -3,6 +3,7 @@ import Image from 'next/image'
 import { prisma } from '@/lib/db'
 import { DEFAULT_PROJECTS } from '@/lib/site-content'
 import { PROJECT_EXTERNAL_URLS } from '@/lib/system-links'
+import { getProjectHref } from '@/lib/product-landings'
 
 export const metadata = { title: 'Portfólio' }
 export const dynamic = 'force-dynamic'
@@ -41,7 +42,11 @@ export default async function ProjectsPage() {
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
           {projects.map((p: typeof projects[number], index: number) => {
             const coverImageUrl = p.coverImageUrl || (p.images && p.images.length > 0 ? p.images[0].url : null)
-            const externalUrl = PROJECT_EXTERNAL_URLS[p.slug]
+            const landingHref = getProjectHref(p.slug)
+            const hasLanding = landingHref !== `/projects/${p.slug}`
+            const externalUrl = !hasLanding ? PROJECT_EXTERNAL_URLS[p.slug] : undefined
+            const href = hasLanding ? landingHref : (externalUrl || `/projects/${p.slug}`)
+            const isExternal = Boolean(externalUrl)
 
             const card = (
               <>
@@ -65,7 +70,7 @@ export default async function ProjectsPage() {
                     {p.description}
                   </p>
                   <div className="text-brand text-sm font-medium opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-2">
-                    {externalUrl ? 'Acessar sistema' : 'Ver projeto'}
+                    {isExternal ? 'Acessar sistema' : hasLanding ? 'Conhecer e orçar' : 'Ver projeto'}
                     <svg className="w-4 h-4 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                     </svg>
@@ -74,11 +79,11 @@ export default async function ProjectsPage() {
               </>
             )
 
-            if (externalUrl) {
+            if (isExternal) {
               return (
                 <a
                   key={p.id}
-                  href={externalUrl}
+                  href={href}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="card p-0 group block overflow-hidden"
@@ -92,7 +97,7 @@ export default async function ProjectsPage() {
             return (
               <Link
                 key={p.id}
-                href={`/projects/${p.slug}`}
+                href={href}
                 className="card p-0 group block overflow-hidden"
                 style={{ animationDelay: `${index * 100}ms` }}
               >
