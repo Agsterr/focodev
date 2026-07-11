@@ -30,10 +30,10 @@ export default function ProductLanding({ content, images }: Props) {
   const waHref = getWhatsAppHref(content.whatsappMessage)
 
   return (
-    <div className="overflow-hidden">
+    <div className="overflow-x-clip">
       {/* Hero */}
       <section className="relative min-h-[88vh] flex items-end md:items-center">
-        <div className="absolute inset-0">
+        <div className="absolute inset-0 pointer-events-none">
           <Image
             src={content.coverImage}
             alt={content.brand}
@@ -102,7 +102,7 @@ export default function ProductLanding({ content, images }: Props) {
           <div className="text-center mb-14 max-w-2xl mx-auto">
             <h2 className="section-title">Para quem é o {content.brand}?</h2>
             <p className="section-subtitle mb-0">
-              Academia, profissional autônomo ou uso pessoal — qualquer um pode contratar.
+              {content.audiencesSubtitle}
             </p>
           </div>
           <div className="grid md:grid-cols-3 gap-8">
@@ -233,7 +233,7 @@ export default function ProductLanding({ content, images }: Props) {
 
       {/* CTA + Contato */}
       <section id="orcamento" className="relative py-20 md:py-24 scroll-mt-24">
-        <div className="absolute inset-0 bg-gradient-to-r from-brand to-brand-dark opacity-95" />
+        <div className="absolute inset-0 bg-gradient-to-r from-brand to-brand-dark opacity-95 pointer-events-none" />
         <div className="container relative z-10">
           <div className="grid lg:grid-cols-2 gap-12 items-start">
             <div className="text-white">

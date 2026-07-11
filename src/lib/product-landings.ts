@@ -33,6 +33,7 @@ export type ProductLandingContent = {
   problemText: string
   solutionTitle: string
   solutionText: string
+  audiencesSubtitle: string
   audiences: AudienceBlock[]
   features: FeatureBlock[]
   benefits: string[]
@@ -61,6 +62,8 @@ export const PRODUCT_LANDINGS: Record<'fitlife' | 'rotas', ProductLandingContent
     solutionTitle: 'Uma plataforma completa para quem treina e quem ensina',
     solutionText:
       'No app o aluno marca séries, acompanha progresso, faz treino outdoor com GPS e sincroniza dados offline. No painel, o instrutor monta a ficha. No portal web, o aluno consulta quando quiser. Menos atrito. Mais evolução.',
+    audiencesSubtitle:
+      'Academia, profissional autônomo ou uso pessoal — qualquer um pode contratar.',
     audiences: [
       {
         title: 'Academias',
@@ -225,6 +228,8 @@ export const PRODUCT_LANDINGS: Record<'fitlife' | 'rotas', ProductLandingContent
     solutionTitle: 'Do cadastro do cliente à rota no celular',
     solutionText:
       'No App Rotas você gerencia clientes, cria e simula rotas, envia localização ao servidor, faz backup no aparelho e repassa tudo para outro motorista. No painel web, quem organiza a operação monta o fluxo antes de sair para a rua.',
+    audiencesSubtitle:
+      'Empresa de entrega, comércio com frota própria ou equipe de motoristas — qualquer operação pode contratar.',
     audiences: [
       {
         title: 'Empresas de entrega e logística',

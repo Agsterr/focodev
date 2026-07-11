@@ -1,5 +1,4 @@
 "use client"
-import Link from 'next/link'
 
 export default function WhatsAppButton() {
   const defaultNumber = '16991183292'
@@ -8,11 +7,12 @@ export default function WhatsAppButton() {
   const message = encodeURIComponent('Olá, gostaria de fazer um orçamento')
   const href = number ? `https://wa.me/${number}?text=${message}` : 'https://wa.me/'
   return (
-    <Link
+    <a
       href={href}
       target="_blank"
+      rel="noopener noreferrer"
       aria-label="WhatsApp"
-      className="fixed bottom-6 right-6 rounded-full bg-gradient-to-r from-green-500 to-green-600 text-white px-5 py-4 shadow-glow hover:from-green-600 hover:to-green-700 ring-2 ring-white/50 animate-pulse"
+      className="fixed bottom-6 right-6 z-[100] rounded-full bg-gradient-to-r from-green-500 to-green-600 text-white px-5 py-4 shadow-glow hover:from-green-600 hover:to-green-700 ring-2 ring-white/50 animate-pulse pointer-events-auto"
     >
       <span className="inline-flex items-center gap-2 font-semibold">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
@@ -20,6 +20,6 @@ export default function WhatsAppButton() {
         </svg>
         WhatsApp
       </span>
-    </Link>
+    </a>
   )
 }
