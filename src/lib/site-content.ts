@@ -150,3 +150,37 @@ export const TESTIMONIALS = [
     rating: 5,
   },
 ] as const
+
+export const ABOUT_PARAGRAPHS = [
+  'A FocoDev Sistemas é uma software house do interior de São Paulo especializada em desenvolvimento de software sob medida: sites, sistemas web, aplicativos mobile, PWAs e automações que entram em produção de verdade.',
+  'Trabalhamos com Next.js, React, Flutter, Java Spring, Python e infraestrutura com Docker e Cloudflare. Do diagnóstico ao deploy, entregamos soluções rápidas, seguras e alinhadas ao processo do cliente — estoque, academia, rotas, mercado, barbearia e projetos sob demanda.',
+  'Se você precisa de um sistema sob medida, um app para o time de campo ou um site que gera orçamentos, fale conosco. Orçamento sem compromisso e foco em resultado.',
+] as const
+
+export const FAQ_ITEMS = [
+  {
+    question: 'Quanto custa desenvolver um sistema ou app sob medida?',
+    answer:
+      'O valor depende do escopo, integrações e prazo. Na FocoDev, o orçamento é sob medida: após entender sua operação, enviamos uma proposta clara com etapas e entregáveis. Entre em contato pelo formulário ou WhatsApp para começar.',
+  },
+  {
+    question: 'Vocês desenvolvem sites, sistemas web e aplicativos mobile?',
+    answer:
+      'Sim. Criamos sites institucionais, painéis administrativos, PWAs instaláveis e apps mobile (Flutter), além de APIs em Java Spring e Python. Também cuidamos de infraestrutura, deploy e manutenção.',
+  },
+  {
+    question: 'A FocoDev atende empresas fora da região?',
+    answer:
+      'Sim. Atendemos o interior de São Paulo e clientes em todo o Brasil de forma remota, com reuniões online, acompanhamento por WhatsApp e entregas contínuas.',
+  },
+  {
+    question: 'Como funciona o processo de orçamento e contratação?',
+    answer:
+      'Você descreve a necessidade no formulário ou no WhatsApp. Alinhamos escopo, prazo e investimento. Após a contratação, configuramos o ambiente, desenvolvemos por etapas e liberamos o acesso à medida que o produto fica pronto.',
+  },
+  {
+    question: 'Quais produtos a FocoDev já tem em produção?',
+    answer:
+      'Temos sistemas em produção como gerenciamento de estoque, Mercado Digital e Barbearia, além das landings de Foco Academia e App Rotas para orçamento. Confira o portfólio e as páginas /fitlife e /rotas.',
+  },
+] as const

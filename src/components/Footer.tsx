@@ -21,7 +21,9 @@ export default function Footer() {
         <div className="grid gap-8 md:grid-cols-3">
           <div>
             <div className="text-lg font-semibold mb-2">FocoDev Sistemas</div>
-            <p className="text-sm text-gray-600 dark:text-gray-400">Soluções digitais modernas e seguras.</p>
+            <p className="text-sm text-gray-600 dark:text-gray-400">
+              Software house no interior de São Paulo: sites, sistemas web, apps mobile e automações sob medida.
+            </p>
           </div>
           <div>
             <div className="text-lg font-semibold mb-2">Links</div>
@@ -29,7 +31,7 @@ export default function Footer() {
               <li><Link className="hover:text-brand transition-colors" href="/">Home</Link></li>
               <li><Link className="hover:text-brand transition-colors" href="/projects">Portfólio</Link></li>
               <li><Link className="hover:text-brand transition-colors" href="/#servicos">Serviços</Link></li>
-              <li><Link className="hover:text-brand transition-colors" href="/#contato">Contato</Link></li>
+              <li><Link className="hover:text-brand transition-colors" href="/#faq">FAQ</Link></li>
               {PRODUCTION_SYSTEMS.map((system) => (
                 <li key={system.href}>
                   <a

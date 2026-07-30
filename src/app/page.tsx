@@ -6,10 +6,12 @@ import { prisma } from '@/lib/db'
 import { Smartphone, Server, Cog, Palette, Gauge, Globe, MessageSquare, Info, ShieldCheck, Sparkles, Play, Package, MapPin, ExternalLink } from 'lucide-react'
 import ContactForm from '@/components/ContactForm'
 import TestimonialsSection from '@/components/TestimonialsSection'
+import FaqSection from '@/components/FaqSection'
+import JsonLd from '@/components/JsonLd'
 import { SHOWCASE_PROJECTS, PRODUCTION_SYSTEMS, PROJECT_EXTERNAL_URLS } from '@/lib/system-links'
-import { DEFAULT_PROJECTS, DEFAULT_SERVICES, HERO_STATS, TECH_STACK } from '@/lib/site-content'
+import { ABOUT_PARAGRAPHS, DEFAULT_PROJECTS, DEFAULT_SERVICES, HERO_STATS, TECH_STACK } from '@/lib/site-content'
 import { getProjectHref } from '@/lib/product-landings'
-import { buildMetadata, SITE_DESCRIPTION, SITE_NAME, SITE_TAGLINE } from '@/lib/seo'
+import { buildMetadata, serviceListJsonLd, SITE_DESCRIPTION, SITE_NAME, SITE_TAGLINE } from '@/lib/seo'
 
 export const metadata: Metadata = buildMetadata({
   title: `${SITE_NAME} — ${SITE_TAGLINE}`,
@@ -66,6 +68,15 @@ export default async function HomePage() {
   const displayProjects = projects.length > 0 ? projects : DEFAULT_PROJECTS
 
   return (
+    <>
+      <JsonLd
+        data={serviceListJsonLd(
+          displayServices.map((s: { title: string; description: string }) => ({
+            name: s.title,
+            description: s.description,
+          }))
+        )}
+      />
     <div className="overflow-hidden">
       {/* Hero Section */}
       <section className="relative py-20 md:py-28 overflow-hidden">
@@ -357,10 +368,12 @@ export default async function HomePage() {
               Sobre Nós
             </span>
           </h2>
-          <div className="card p-6 md:p-8 ring-1 ring-brand/20 bg-white/90 dark:bg-gray-900/90">
-            <p className="text-lg md:text-xl text-gray-700 dark:text-gray-300 leading-relaxed">
-              Somos especialistas em criar soluções digitais sob medida, focadas em performance, segurança e experiência do usuário. Nossos projetos incluem funcionalidades como ConstroiSites, CorrigiBug e BlendingPages, oferecendo ferramentas eficientes para construir sites, corrigir problemas rapidamente e integrar conteúdos de forma inteligente. Cada solução é pensada para atender às necessidades específicas de cada cliente, garantindo resultados consistentes e de alta qualidade.
-            </p>
+          <div className="card p-6 md:p-8 ring-1 ring-brand/20 bg-white/90 dark:bg-gray-900/90 space-y-4 text-left">
+            {ABOUT_PARAGRAPHS.map((paragraph) => (
+              <p key={paragraph.slice(0, 32)} className="text-lg md:text-xl text-gray-700 dark:text-gray-300 leading-relaxed">
+                {paragraph}
+              </p>
+            ))}
           </div>
           <div className="mt-8 flex flex-wrap justify-center gap-4">
             <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-brand/15 text-brand-dark dark:text-brand text-base md:text-lg font-semibold ring-1 ring-brand/30">
@@ -380,6 +393,8 @@ export default async function HomePage() {
       </section>
 
       <TestimonialsSection />
+
+      <FaqSection />
 
       {/* Portfolio Section */}
       <section id="portfolio" className="container py-20 relative scroll-mt-24">
@@ -481,5 +496,6 @@ export default async function HomePage() {
         </div>
       </section>
     </div>
+    </>
   )
 }

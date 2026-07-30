@@ -5,34 +5,37 @@ export const SITE_URL =
   (process.env.NEXT_PUBLIC_SITE_URL || 'https://www.focodev.com.br').replace(/\/$/, '')
 
 export const SITE_NAME = 'FocoDev Sistemas'
-export const SITE_TAGLINE = 'Soluções digitais modernas e seguras para o seu negócio'
+export const SITE_TAGLINE = 'Desenvolvimento de software, sites e apps sob medida'
 
 export const SITE_DESCRIPTION =
-  'Desenvolvimento de sites, apps mobile, sistemas web e automações sob medida. Software rápido, seguro e pronto para produção — FocoDev Sistemas.'
+  'Software house no interior de São Paulo: desenvolvimento de sistemas web, apps mobile, sites, PWAs e automações sob medida. Next.js, Flutter, Java Spring e Python — do projeto à produção.'
 
 export const SITE_KEYWORDS = [
-  'desenvolvimento de software',
-  'criação de sites',
-  'aplicativos mobile',
-  'sistemas web',
-  'Next.js',
-  'Flutter',
   'FocoDev',
   'FocoDev Sistemas',
-  'desenvolvimento sob medida',
+  'desenvolvimento de software sob medida',
+  'software house',
+  'criação de sites profissionais',
+  'desenvolvimento de sistemas web',
+  'aplicativos mobile Flutter',
   'PWA',
   'automação de processos',
   'app de academia',
-  'app de rotas',
-  'Brasil',
+  'app de rotas de entrega',
+  'sistema de estoque',
+  'desenvolvimento Next.js',
+  'empresa de software interior de São Paulo',
+  'orçamento de sistema sob medida',
 ]
 
 export const SITE_EMAIL = 'focodevsistemas@gmail.com'
+export const SITE_PHONE = '+5516991183292'
 export const SITE_INSTAGRAM = 'https://www.instagram.com/focodevsistemas/'
 export const SITE_LOCALE = 'pt_BR'
+export const SITE_AREA = 'Interior de São Paulo, Brasil'
 
-/** Imagem padrão para Open Graph / Twitter (absolute). */
-export const DEFAULT_OG_IMAGE = `${SITE_URL}/logo.svg`
+/** Imagem padrão OG/Twitter em PNG (SVG rende mal em redes sociais). */
+export const DEFAULT_OG_IMAGE = `${SITE_URL}/portfolio/fitlife/app-menu.png`
 
 export function absoluteUrl(path = '/') {
   if (!path || path === '/') return SITE_URL
@@ -107,23 +110,42 @@ export function buildMetadata({
 export function organizationJsonLd() {
   return {
     '@context': 'https://schema.org',
-    '@type': 'Organization',
+    '@type': ['Organization', 'ProfessionalService'],
     name: SITE_NAME,
     url: SITE_URL,
     logo: absoluteUrl('/logo.svg'),
+    image: DEFAULT_OG_IMAGE,
     email: SITE_EMAIL,
+    telephone: SITE_PHONE,
     sameAs: [SITE_INSTAGRAM],
     description: SITE_DESCRIPTION,
-    areaServed: {
-      '@type': 'Country',
-      name: 'Brasil',
+    slogan: SITE_TAGLINE,
+    areaServed: [
+      { '@type': 'AdministrativeArea', name: 'São Paulo' },
+      { '@type': 'Country', name: 'Brasil' },
+    ],
+    address: {
+      '@type': 'PostalAddress',
+      addressRegion: 'SP',
+      addressCountry: 'BR',
     },
     contactPoint: {
       '@type': 'ContactPoint',
       contactType: 'sales',
       email: SITE_EMAIL,
+      telephone: SITE_PHONE,
       availableLanguage: ['Portuguese'],
+      areaServed: 'BR',
     },
+    knowsAbout: [
+      'Desenvolvimento de software',
+      'Aplicativos mobile',
+      'Sistemas web',
+      'PWA',
+      'Automação de processos',
+      'Next.js',
+      'Flutter',
+    ],
   }
 }
 
@@ -132,6 +154,7 @@ export function websiteJsonLd() {
     '@context': 'https://schema.org',
     '@type': 'WebSite',
     name: SITE_NAME,
+    alternateName: 'FocoDev',
     url: SITE_URL,
     description: SITE_DESCRIPTION,
     inLanguage: 'pt-BR',
@@ -140,6 +163,46 @@ export function websiteJsonLd() {
       name: SITE_NAME,
       url: SITE_URL,
     },
+  }
+}
+
+export function faqPageJsonLd(items: { question: string; answer: string }[]) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: items.map((item) => ({
+      '@type': 'Question',
+      name: item.question,
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: item.answer,
+      },
+    })),
+  }
+}
+
+export function serviceListJsonLd(
+  services: { name: string; description: string }[]
+) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'ItemList',
+    name: `Serviços — ${SITE_NAME}`,
+    itemListElement: services.map((service, index) => ({
+      '@type': 'ListItem',
+      position: index + 1,
+      item: {
+        '@type': 'Service',
+        name: service.name,
+        description: service.description,
+        provider: {
+          '@type': 'Organization',
+          name: SITE_NAME,
+          url: SITE_URL,
+        },
+        areaServed: SITE_AREA,
+      },
+    })),
   }
 }
 

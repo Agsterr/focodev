@@ -2,39 +2,49 @@
 
 O site usa a API de Metadata do Next.js com URL canônica, Open Graph, Twitter Cards, `sitemap.xml`, `robots.txt` e JSON-LD (Schema.org).
 
-## Variável de ambiente
+## Variáveis de ambiente
 
 ```env
 NEXT_PUBLIC_SITE_URL=https://www.focodev.com.br
+NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION=
 ```
 
-Usada em canonical, sitemap, Open Graph e dados estruturados. Padrão: `https://www.focodev.com.br`.
+## Diagnóstico de posicionamento (jul/2026)
+
+| Consulta | Situação |
+|----------|----------|
+| `FocoDev Sistemas` / `focodev.com.br` | Site aparece — marca está indexada |
+| `desenvolvimento de software sob medida` (genérico) | Concorrentes maiores dominam; site ainda pouco competitivo |
+| `software Ribeirão Preto` / local | Concorrentes locais com páginas longas e FAQ; FocoDev ainda sem relevância local forte |
+
+**Produção atual (antes deste deploy):** `/sitemap.xml` e `/robots.txt` do Next ainda não existiam (404). O Cloudflare serve um `robots.txt` gerenciado. Após o merge/deploy deste PR, o sitemap próprio passa a existir.
 
 ## O que está implementado
 
 | Recurso | Onde |
 |---------|------|
 | Metadata base + `metadataBase` | `src/app/layout.tsx` |
-| Open Graph / Twitter | Todas as páginas públicas via `buildMetadata` |
+| Open Graph / Twitter (PNG) | Páginas públicas via `buildMetadata` |
 | Canonical URLs | Por página |
-| `sitemap.xml` | `src/app/sitemap.ts` (home, portfólio, landings, projetos) |
+| `sitemap.xml` | `src/app/sitemap.ts` |
 | `robots.txt` | `src/app/robots.ts` (bloqueia `/admin` e `/api`) |
-| JSON-LD Organization + WebSite | Layout raiz |
+| JSON-LD Organization / ProfessionalService + WebSite | Layout |
+| JSON-LD Service (ItemList) + FAQPage | Home |
 | JSON-LD SoftwareApplication | `/fitlife`, `/rotas` |
-| JSON-LD CreativeWork + Breadcrumb | Projetos e landings |
+| Copy “Sobre” + FAQ on-page | Home |
 | `noindex` no admin | `src/app/admin/layout.tsx` |
-| Helpers centralizados | `src/lib/seo.ts` |
+| Helpers | `src/lib/seo.ts` |
 
-## Páginas cobertas
+## Próximos passos (fora do código)
 
-- `/` — home
-- `/projects` — portfólio
-- `/projects/[slug]` — detalhe do projeto
-- `/fitlife` — Foco Academia
-- `/rotas` — App Rotas
+1. Fazer deploy e confirmar `https://www.focodev.com.br/sitemap.xml`
+2. Cadastrar a propriedade no [Google Search Console](https://search.google.com/search-console) e enviar o sitemap
+3. Colar o código de verificação em `NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION`
+4. Criar backlinks (Instagram bio, Google Business Profile, parceiros)
+5. Trocar depoimentos ilustrativos por cases reais quando possível (sem Review schema falso)
+6. Conteúdo contínuo (blog/cases) para palavras-chave de cauda longa
 
-## Depois do deploy
+## Validação
 
-1. Confirme `https://www.focodev.com.br/robots.txt` e `/sitemap.xml`
-2. No [Google Search Console](https://search.google.com/search-console), adicione a propriedade e envie o sitemap
-3. Use a [Ferramenta de Teste de Resultados Rich](https://search.google.com/test/rich-results) para validar o JSON-LD
+- [Rich Results Test](https://search.google.com/test/rich-results)
+- [PageSpeed Insights](https://pagespeed.web.dev/)
