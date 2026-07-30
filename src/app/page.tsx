@@ -97,7 +97,7 @@ export default async function HomePage() {
                 </span>
               </h1>
               <p className="text-lg md:text-xl text-gray-600 dark:text-gray-400 leading-relaxed max-w-xl">
-                {banner?.subtitle || 'Software sob medida, veloz e seguro — do site institucional ao app mobile em produção.'}
+                {banner?.subtitle || 'Empresa de sistemas em Franca/SP, com atendimento em todo o Brasil — software sob medida, do site ao app mobile em produção.'}
               </p>
               <div className="flex flex-wrap gap-2">
                 {TECH_STACK.map((tech) => (

@@ -32,7 +32,10 @@ export default function Footer() {
           <div>
             <div className="text-lg font-semibold mb-2">FocoDev Sistemas</div>
             <p className="text-sm text-gray-600 dark:text-gray-400">
-              Software house no interior de São Paulo: sites, sistemas web, apps mobile e automações sob medida.
+              Empresa de sistemas em Franca/SP, com atendimento em todo o Brasil: sites, sistemas web, apps mobile e automações sob medida.
+            </p>
+            <p className="text-sm text-gray-500 dark:text-gray-500 mt-2">
+              Franca, SP · Brasil
             </p>
           </div>
           <div>

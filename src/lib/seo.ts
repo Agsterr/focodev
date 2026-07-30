@@ -8,7 +8,7 @@ export const SITE_NAME = 'FocoDev Sistemas'
 export const SITE_TAGLINE = 'Desenvolvimento de software, sites e apps sob medida'
 
 export const SITE_DESCRIPTION =
-  'Software house no interior de São Paulo: desenvolvimento de sistemas web, apps mobile, sites, PWAs e automações sob medida. Next.js, Flutter, Java Spring e Python — do projeto à produção.'
+  'Empresa de sistemas em Franca/SP com atendimento em todo o Brasil: desenvolvimento de software sob medida, sites, apps mobile, PWAs e automações. Next.js, Flutter, Java Spring e Python — do projeto à produção.'
 
 export const SITE_KEYWORDS = [
   'FocoDev',
@@ -24,6 +24,10 @@ export const SITE_KEYWORDS = [
   'app de rotas de entrega',
   'sistema de estoque',
   'desenvolvimento Next.js',
+  'empresa de sistemas em Franca SP',
+  'empresa de software Franca SP',
+  'desenvolvimento de sistemas Franca',
+  'software house Franca São Paulo',
   'empresa de software interior de São Paulo',
   'orçamento de sistema sob medida',
 ]
@@ -32,7 +36,9 @@ export const SITE_EMAIL = 'focodevsistemas@gmail.com'
 export const SITE_PHONE = '+5516991183292'
 export const SITE_INSTAGRAM = 'https://www.instagram.com/focodevsistemas/'
 export const SITE_LOCALE = 'pt_BR'
-export const SITE_AREA = 'Interior de São Paulo, Brasil'
+export const SITE_CITY = 'Franca'
+export const SITE_REGION = 'SP'
+export const SITE_AREA = 'Franca, SP e todo o Brasil'
 
 /** Imagem padrão OG/Twitter em PNG (SVG rende mal em redes sociais). */
 export const DEFAULT_OG_IMAGE = `${SITE_URL}/portfolio/fitlife/app-menu.png`
@@ -121,12 +127,21 @@ export function organizationJsonLd() {
     description: SITE_DESCRIPTION,
     slogan: SITE_TAGLINE,
     areaServed: [
+      {
+        '@type': 'City',
+        name: SITE_CITY,
+        containedInPlace: {
+          '@type': 'State',
+          name: 'São Paulo',
+        },
+      },
       { '@type': 'AdministrativeArea', name: 'São Paulo' },
       { '@type': 'Country', name: 'Brasil' },
     ],
     address: {
       '@type': 'PostalAddress',
-      addressRegion: 'SP',
+      addressLocality: SITE_CITY,
+      addressRegion: SITE_REGION,
       addressCountry: 'BR',
     },
     contactPoint: {
@@ -135,7 +150,7 @@ export function organizationJsonLd() {
       email: SITE_EMAIL,
       telephone: SITE_PHONE,
       availableLanguage: ['Portuguese'],
-      areaServed: 'BR',
+      areaServed: ['Franca', 'SP', 'BR'],
     },
     knowsAbout: [
       'Desenvolvimento de software',
