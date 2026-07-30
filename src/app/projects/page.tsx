@@ -1,11 +1,27 @@
+import type { Metadata } from 'next'
 import Link from 'next/link'
 import Image from 'next/image'
 import { prisma } from '@/lib/db'
+import JsonLd from '@/components/JsonLd'
 import { DEFAULT_PROJECTS } from '@/lib/site-content'
 import { PROJECT_EXTERNAL_URLS } from '@/lib/system-links'
 import { getProjectHref } from '@/lib/product-landings'
+import { breadcrumbJsonLd, buildMetadata } from '@/lib/seo'
 
-export const metadata = { title: 'Portfólio' }
+export const metadata: Metadata = buildMetadata({
+  title: 'Portfólio',
+  description:
+    'Conheça projetos da FocoDev: sistemas web, apps mobile, estoque, mercado, barbearia, academia e rotas — cases reais em produção.',
+  path: '/projects',
+  keywords: [
+    'portfólio',
+    'cases',
+    'projetos FocoDev',
+    'desenvolvimento de sistemas',
+    'apps em produção',
+  ],
+})
+
 export const dynamic = 'force-dynamic'
 
 export default async function ProjectsPage() {
@@ -24,6 +40,13 @@ export default async function ProjectsPage() {
   }
   
   return (
+    <>
+      <JsonLd
+        data={breadcrumbJsonLd([
+          { name: 'Home', path: '/' },
+          { name: 'Portfólio', path: '/projects' },
+        ])}
+      />
     <div className="container py-12 md:py-20">
       <div className="mb-16 text-center">
         <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 text-gray-900 dark:text-white">
@@ -108,5 +131,6 @@ export default async function ProjectsPage() {
         </div>
       )}
     </div>
+    </>
   )
 }

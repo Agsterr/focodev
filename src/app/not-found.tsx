@@ -1,5 +1,14 @@
+import type { Metadata } from 'next'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
+import { buildMetadata } from '@/lib/seo'
+
+export const metadata: Metadata = buildMetadata({
+  title: 'Página não encontrada',
+  description: 'A página que você procura não existe ou foi movida.',
+  path: '/404',
+  noIndex: true,
+})
 
 export default function NotFound() {
   return (

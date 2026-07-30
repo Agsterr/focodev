@@ -1,3 +1,4 @@
+import type { Metadata } from 'next'
 import Image from 'next/image'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
@@ -8,6 +9,13 @@ import TestimonialsSection from '@/components/TestimonialsSection'
 import { SHOWCASE_PROJECTS, PRODUCTION_SYSTEMS, PROJECT_EXTERNAL_URLS } from '@/lib/system-links'
 import { DEFAULT_PROJECTS, DEFAULT_SERVICES, HERO_STATS, TECH_STACK } from '@/lib/site-content'
 import { getProjectHref } from '@/lib/product-landings'
+import { buildMetadata, SITE_DESCRIPTION, SITE_NAME, SITE_TAGLINE } from '@/lib/seo'
+
+export const metadata: Metadata = buildMetadata({
+  title: `${SITE_NAME} — ${SITE_TAGLINE}`,
+  description: SITE_DESCRIPTION,
+  path: '/',
+})
 
 export const dynamic = 'force-dynamic'
 
