@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button'
 import { prisma } from '@/lib/db'
 import { Smartphone, Server, Cog, Palette, Gauge, Globe, MessageSquare, Info, ShieldCheck, Sparkles, Play, Package, MapPin, ExternalLink } from 'lucide-react'
 import ContactForm from '@/components/ContactForm'
+import TrackedAnchor from '@/components/TrackedAnchor'
 import TestimonialsSection from '@/components/TestimonialsSection'
 import { SHOWCASE_PROJECTS, PRODUCTION_SYSTEMS, PROJECT_EXTERNAL_URLS } from '@/lib/system-links'
 import { DEFAULT_PROJECTS, DEFAULT_SERVICES, HERO_STATS, TECH_STACK } from '@/lib/site-content'
@@ -91,7 +92,13 @@ export default async function HomePage() {
               </div>
               <div className="flex flex-wrap gap-4 pt-2">
                 <Button asChild size="lg" variant="gradient" className="text-base px-8 py-6 rounded-xl shadow-glow">
-                  <Link href={banner?.ctaLink || '/#contato'}>{banner?.ctaText || 'Solicitar orçamento'}</Link>
+                  <TrackedAnchor
+                    kind="cta"
+                    source="home_hero_orcamento"
+                    href={banner?.ctaLink || '/#contato'}
+                  >
+                    {banner?.ctaText || 'Solicitar orçamento'}
+                  </TrackedAnchor>
                 </Button>
                 <Button asChild size="lg" variant="outline" className="text-base px-8 py-6 rounded-xl bg-white/80 dark:bg-gray-900/80">
                   <Link href="/#portfolio">Ver Portfólio</Link>
@@ -469,7 +476,7 @@ export default async function HomePage() {
             </h2>
             <p className="text-xl md:text-2xl text-gray-800 dark:text-gray-200 font-semibold">Fale com nossa equipe</p>
           </div>
-          <ContactForm />
+          <ContactForm trackingSource="home" />
         </div>
       </section>
     </div>

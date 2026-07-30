@@ -1,14 +1,20 @@
-"use client"
+'use client'
 
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { User, Mail, MessageSquare, Send, Phone, Loader2, CheckCircle2, AlertCircle } from 'lucide-react'
+import { trackFormStart, trackLeadSubmit } from '@/lib/analytics'
 
 type ContactFormProps = {
   defaultMessage?: string
+  /** Origem do formulário para o Google Ads (ex: home, fitlife, rotas) */
+  trackingSource?: string
 }
 
-export default function ContactForm({ defaultMessage = '' }: ContactFormProps) {
+export default function ContactForm({
+  defaultMessage = '',
+  trackingSource = 'contact_form',
+}: ContactFormProps) {
   const [loading, setLoading] = useState(false)
   const [success, setSuccess] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -18,6 +24,13 @@ export default function ContactForm({ defaultMessage = '' }: ContactFormProps) {
     phone: '',
     message: defaultMessage,
   })
+  const formStartedRef = useRef(false)
+
+  function handleFormInteraction() {
+    if (formStartedRef.current) return
+    formStartedRef.current = true
+    trackFormStart(trackingSource)
+  }
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
@@ -43,11 +56,12 @@ export default function ContactForm({ defaultMessage = '' }: ContactFormProps) {
         throw new Error(data.error?.message || 'Erro ao enviar mensagem. Tente novamente.')
       }
 
-      // Sucesso
+      trackLeadSubmit(trackingSource)
+
       setSuccess(true)
       setFormData({ name: '', email: '', phone: '', message: defaultMessage })
+      formStartedRef.current = false
 
-      // Limpar mensagem de sucesso após 5 segundos
       setTimeout(() => {
         setSuccess(false)
       }, 5000)
@@ -60,7 +74,6 @@ export default function ContactForm({ defaultMessage = '' }: ContactFormProps) {
 
   return (
     <form onSubmit={handleSubmit} className="card p-8 md:p-10 space-y-6 ring-1 ring-brand/20 hover:ring-brand/40">
-      {/* Mensagem de sucesso */}
       {success && (
         <div className="p-4 rounded-xl bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 flex items-center gap-3">
           <CheckCircle2 className="w-5 h-5 text-green-600 dark:text-green-400 flex-shrink-0" />
@@ -70,7 +83,6 @@ export default function ContactForm({ defaultMessage = '' }: ContactFormProps) {
         </div>
       )}
 
-      {/* Mensagem de erro */}
       {error && (
         <div className="p-4 rounded-xl bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 flex items-center gap-3">
           <AlertCircle className="w-5 h-5 text-red-600 dark:text-red-400 flex-shrink-0" />
@@ -78,12 +90,12 @@ export default function ContactForm({ defaultMessage = '' }: ContactFormProps) {
         </div>
       )}
 
-      {/* Campo Nome */}
       <div className="relative">
         <User className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-brand pointer-events-none" />
         <input
           name="name"
           value={formData.name}
+          onFocus={handleFormInteraction}
           onChange={(e) => setFormData({ ...formData, name: e.target.value })}
           placeholder="Seu nome"
           required
@@ -92,13 +104,13 @@ export default function ContactForm({ defaultMessage = '' }: ContactFormProps) {
         />
       </div>
 
-      {/* Campo Email */}
       <div className="relative">
         <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-brand pointer-events-none" />
         <input
           name="email"
           type="email"
           value={formData.email}
+          onFocus={handleFormInteraction}
           onChange={(e) => setFormData({ ...formData, email: e.target.value })}
           placeholder="Seu email"
           required
@@ -107,13 +119,13 @@ export default function ContactForm({ defaultMessage = '' }: ContactFormProps) {
         />
       </div>
 
-      {/* Campo Telefone */}
       <div className="relative">
         <Phone className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-brand pointer-events-none" />
         <input
           name="phone"
           type="tel"
           value={formData.phone}
+          onFocus={handleFormInteraction}
           onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
           placeholder="Seu telefone (opcional)"
           disabled={loading}
@@ -121,12 +133,12 @@ export default function ContactForm({ defaultMessage = '' }: ContactFormProps) {
         />
       </div>
 
-      {/* Campo Mensagem */}
       <div className="relative">
         <MessageSquare className="absolute left-4 top-4 w-5 h-5 text-brand pointer-events-none" />
         <textarea
           name="message"
           value={formData.message}
+          onFocus={handleFormInteraction}
           onChange={(e) => setFormData({ ...formData, message: e.target.value })}
           placeholder="Sua mensagem"
           required
@@ -136,7 +148,6 @@ export default function ContactForm({ defaultMessage = '' }: ContactFormProps) {
         />
       </div>
 
-      {/* Botão de envio */}
       <Button
         type="submit"
         size="lg"
@@ -160,7 +171,3 @@ export default function ContactForm({ defaultMessage = '' }: ContactFormProps) {
     </form>
   )
 }
-
-
-
-

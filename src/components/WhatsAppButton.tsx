@@ -1,4 +1,6 @@
-"use client"
+'use client'
+
+import TrackedAnchor from '@/components/TrackedAnchor'
 
 export default function WhatsAppButton() {
   const defaultNumber = '16991183292'
@@ -6,8 +8,11 @@ export default function WhatsAppButton() {
   const number = rawNumber.replace(/\D/g, '')
   const message = encodeURIComponent('Olá, gostaria de fazer um orçamento')
   const href = number ? `https://wa.me/${number}?text=${message}` : 'https://wa.me/'
+
   return (
-    <a
+    <TrackedAnchor
+      kind="whatsapp"
+      source="floating_button"
       href={href}
       target="_blank"
       rel="noopener noreferrer"
@@ -20,6 +25,6 @@ export default function WhatsAppButton() {
         </svg>
         WhatsApp
       </span>
-    </a>
+    </TrackedAnchor>
   )
 }

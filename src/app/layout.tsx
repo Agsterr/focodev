@@ -3,6 +3,7 @@ import type { Metadata } from 'next'
 import { ThemeProvider } from '@/components/theme-provider'
 import SessionProviderWrapper from '@/components/session-provider-wrapper'
 import ConditionalLayout from '@/components/conditional-layout'
+import GoogleAdsTag from '@/components/GoogleAdsTag'
 
 export const metadata: Metadata = {
   title: {
@@ -26,6 +27,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="pt-BR" suppressHydrationWarning>
       <body>
+        <GoogleAdsTag />
         <SessionProviderWrapper>
           <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
             <ConditionalLayout>
