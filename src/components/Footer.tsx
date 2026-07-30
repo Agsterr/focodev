@@ -1,8 +1,11 @@
 import Link from 'next/link'
 import { PRODUCTION_SYSTEMS, SHOWCASE_PROJECTS, SYSTEM_LINKS } from '@/lib/system-links'
+import TrackedAnchor from '@/components/TrackedAnchor'
+import { getWhatsAppHref } from '@/lib/whatsapp'
 
 export default function Footer() {
   const year = new Date().getFullYear()
+  const whatsappHref = getWhatsAppHref('Olá, gostaria de fazer um orçamento')
 
   return (
     <footer className="border-t border-gray-200 dark:border-gray-800 bg-muted-light dark:bg-muted-dark">
@@ -10,9 +13,16 @@ export default function Footer() {
         <div className="rounded-2xl p-8 md:p-10 mb-10 bg-gradient-to-r from-brand to-brand-dark text-white flex flex-col md:flex-row items-center justify-between gap-6 shadow-glow">
           <div className="text-2xl md:text-3xl font-bold">Pronto para acelerar seu projeto?</div>
           <div className="flex gap-4">
-            <a href="https://wa.me/16991183292?text=Ol%C3%A1,%20gostaria%20de%20fazer%20um%20or%C3%A7amento" target="_blank" rel="noreferrer" className="inline-flex items-center justify-center rounded-xl bg-white text-brand font-semibold px-6 py-3 hover:bg-white/90 transition">
+            <TrackedAnchor
+              kind="whatsapp"
+              source="footer_cta"
+              href={whatsappHref}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center justify-center rounded-xl bg-white text-brand font-semibold px-6 py-3 hover:bg-white/90 transition"
+            >
               Solicitar orçamento
-            </a>
+            </TrackedAnchor>
             <a href="/projects" className="inline-flex items-center justify-center rounded-xl border border-white/60 text-white font-semibold px-6 py-3 hover:bg-white/10 transition">
               Ver portfólio
             </a>
@@ -53,9 +63,14 @@ export default function Footer() {
             <ul className="space-y-2 text-sm">
               <li>
                 Email:{' '}
-                <a href="mailto:focodevsistemas@gmail.com" className="hover:text-brand transition-colors">
+                <TrackedAnchor
+                  kind="mailto"
+                  source="footer"
+                  href="mailto:focodevsistemas@gmail.com"
+                  className="hover:text-brand transition-colors"
+                >
                   focodevsistemas@gmail.com
-                </a>
+                </TrackedAnchor>
               </li>
               <li>
                 Instagram:{' '}

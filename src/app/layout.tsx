@@ -4,6 +4,7 @@ import { ThemeProvider } from '@/components/theme-provider'
 import SessionProviderWrapper from '@/components/session-provider-wrapper'
 import ConditionalLayout from '@/components/conditional-layout'
 import JsonLd from '@/components/JsonLd'
+import GoogleAdsTag from '@/components/GoogleAdsTag'
 import {
   SITE_DESCRIPTION,
   SITE_KEYWORDS,
@@ -104,6 +105,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="pt-BR" suppressHydrationWarning>
       <body>
         <JsonLd data={[organizationJsonLd(), websiteJsonLd()]} />
+        <GoogleAdsTag />
         <SessionProviderWrapper>
           <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
             <ConditionalLayout>

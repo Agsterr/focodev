@@ -11,6 +11,7 @@ import {
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import ContactForm from '@/components/ContactForm'
+import TrackedAnchor from '@/components/TrackedAnchor'
 import { getWhatsAppHref } from '@/lib/whatsapp'
 import {
   type ProductLandingContent,
@@ -62,10 +63,15 @@ export default function ProductLanding({ content, images }: Props) {
             </p>
             <div className="flex flex-wrap gap-4">
               <Button asChild size="lg" variant="gradient" className="text-base px-8 py-6 rounded-xl">
-                <a href="#orcamento" className="inline-flex items-center gap-1">
+                <TrackedAnchor
+                  kind="cta"
+                  source={`${content.slug}_hero_orcamento`}
+                  href="#orcamento"
+                  className="inline-flex items-center gap-1"
+                >
                   Faça seu orçamento
                   <ArrowRight className="w-5 h-5" />
-                </a>
+                </TrackedAnchor>
               </Button>
               <Button
                 asChild
@@ -73,9 +79,15 @@ export default function ProductLanding({ content, images }: Props) {
                 variant="outline"
                 className="text-base px-8 py-6 rounded-xl border-white/40 text-white hover:bg-white/10 hover:text-white"
               >
-                <a href={waHref} target="_blank" rel="noopener noreferrer">
+                <TrackedAnchor
+                  kind="whatsapp"
+                  source={`${content.slug}_hero_whatsapp`}
+                  href={waHref}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
                   Falar no WhatsApp
-                </a>
+                </TrackedAnchor>
               </Button>
             </div>
           </div>
@@ -245,9 +257,15 @@ export default function ProductLanding({ content, images }: Props) {
                   size="lg"
                   className="rounded-xl bg-white text-brand hover:bg-white/90 font-semibold px-8 py-6"
                 >
-                  <a href={waHref} target="_blank" rel="noopener noreferrer">
+                  <TrackedAnchor
+                    kind="whatsapp"
+                    source={`${content.slug}_cta_whatsapp`}
+                    href={waHref}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
                     Entre em contato para contratar
-                  </a>
+                  </TrackedAnchor>
                 </Button>
                 <Button
                   asChild
@@ -266,7 +284,10 @@ export default function ProductLanding({ content, images }: Props) {
               </p>
             </div>
             <div>
-              <ContactForm defaultMessage={content.contactDefaultMessage} />
+              <ContactForm
+                defaultMessage={content.contactDefaultMessage}
+                trackingSource={content.slug}
+              />
             </div>
           </div>
         </div>

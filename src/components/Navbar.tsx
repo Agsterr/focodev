@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import { Button } from '@/components/ui/button'
 import FocoDevLogo from '@/components/FocoDevLogo'
 import { Wrench, Info, Briefcase, MessageSquare, LayoutGrid } from 'lucide-react'
+import { trackCtaClick } from '@/lib/analytics'
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false)
@@ -70,7 +71,9 @@ export default function Navbar() {
         <div className="flex items-center gap-3">
           <div className="hidden md:block">
             <Button asChild variant="gradient" size="sm">
-              <Link href="/#contato">Orçar Projeto</Link>
+              <Link href="/#contato" onClick={() => trackCtaClick('navbar_orcar', '/#contato')}>
+                Orçar Projeto
+              </Link>
             </Button>
           </div>
           <button
