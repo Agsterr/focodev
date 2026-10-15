@@ -1,3 +1,5 @@
+import '@fontsource-variable/inter'
+import '@fontsource-variable/space-grotesk'
 import '../styles/globals.css'
 import type { Metadata, Viewport } from 'next'
 import { ThemeProvider } from '@/components/theme-provider'
@@ -91,8 +93,8 @@ export const metadata: Metadata = {
 
 export const viewport: Viewport = {
   themeColor: [
-    { media: '(prefers-color-scheme: light)', color: '#0ea5e9' },
-    { media: '(prefers-color-scheme: dark)', color: '#0c4a6e' },
+    { media: '(prefers-color-scheme: light)', color: '#05060f' },
+    { media: '(prefers-color-scheme: dark)', color: '#05060f' },
   ],
   width: 'device-width',
   initialScale: 1,
@@ -102,12 +104,12 @@ export const dynamic = 'force-dynamic'
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="pt-BR" suppressHydrationWarning>
+    <html lang="pt-BR" className="dark" style={{ colorScheme: 'dark' }} suppressHydrationWarning>
       <body>
         <JsonLd data={[organizationJsonLd(), websiteJsonLd()]} />
         <GoogleAdsTag />
         <SessionProviderWrapper>
-          <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+          <ThemeProvider attribute="class" defaultTheme="dark" forcedTheme="dark" enableSystem={false}>
             <ConditionalLayout>
               {children}
             </ConditionalLayout>
