@@ -188,8 +188,8 @@ export default async function HomePage() {
                     className="lg:rotate-[1.5deg]"
                   />
                   <PhoneFrame
-                    src="/portfolio/mercado/loja-celular.webp"
-                    alt="App de mercado da FocoDev aberto no celular"
+                    src="/portfolio/barbearia/app-horarios.webp"
+                    alt="App de agendamento da barbearia aberto no celular"
                     priority
                     className="absolute bottom-0 left-0 w-[34%] sm:w-[30%] -rotate-6 animate-float"
                   />
