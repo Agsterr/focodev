@@ -122,3 +122,23 @@ html {
 ::-webkit-scrollbar-thumb:hover {
   @apply bg-brand;
 }
+
+/* Animação de entrada ao rolar (ver ScrollReveal.tsx) */
+.reveal-ready [data-reveal]:not(.is-visible) {
+  opacity: 0;
+  transform: translateY(24px);
+}
+.reveal-ready [data-reveal] {
+  transition: opacity 0.7s ease-out, transform 0.7s ease-out;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

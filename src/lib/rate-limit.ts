@@ -1,18 +1,33 @@
-import { NextRequest, NextResponse } from 'next/server'
+import type { NextRequest } from 'next/server'
 
-function parse(value: string | undefined) {
-  if (!value) return { count: 0, ts: 0 }
-  const [count, ts] = value.split(':').map((v) => Number(v))
-  return { count: count || 0, ts: ts || 0 }
+// Limitador em memória por IP. O site roda em um único container (Hetzner),
+// então o estado local do processo é suficiente — e, ao contrário de um cookie,
+// não pode ser burlado pelo cliente.
+const buckets = new Map<string, { count: number; resetAt: number }>()
+
+export function getClientIp(req: NextRequest) {
+  return (
+    req.headers.get('cf-connecting-ip') ||
+    req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ||
+    req.headers.get('x-real-ip') ||
+    'unknown'
+  )
 }
 
 export function rateLimit(req: NextRequest, key: string, limit = 30, windowMs = 60_000) {
-  const cookie = req.cookies.get(`rl_${key}`)?.value
-  const { count, ts } = parse(cookie)
   const now = Date.now()
-  const newCount = now - ts > windowMs ? 1 : count + 1
-  if (newCount > limit) return { limited: true }
-  const res = NextResponse.next()
-  res.cookies.set(`rl_${key}`, `${newCount}:${now}`, { httpOnly: true, sameSite: 'lax', path: '/', secure: true })
-  return { limited: false, response: res }
+  if (buckets.size > 10_000) {
+    buckets.forEach((b, k) => {
+      if (b.resetAt <= now) buckets.delete(k)
+    })
+  }
+
+  const id = `${key}:${getClientIp(req)}`
+  const bucket = buckets.get(id)
+  if (!bucket || bucket.resetAt <= now) {
+    buckets.set(id, { count: 1, resetAt: now + windowMs })
+    return { limited: false }
+  }
+  bucket.count += 1
+  return { limited: bucket.count > limit }
 }

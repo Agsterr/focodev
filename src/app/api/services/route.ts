@@ -3,6 +3,14 @@ import { prisma } from '@/lib/db'
 import { jsonResponse, errorResponse, parsePagination, requireAuth } from '@/lib/api'
 import { serviceSchema } from '@/types/schemas'
 import { sanitize } from '@/lib/sanitize'
+import { revalidatePath, revalidateTag } from 'next/cache'
+import { SITE_CONTENT_TAG } from '@/lib/public-data'
+
+function revalidateServices() {
+  revalidateTag(SITE_CONTENT_TAG)
+  revalidatePath('/')
+  revalidatePath('/admin/services')
+}
 
 export async function GET(req: NextRequest) {
   try {
@@ -26,6 +34,7 @@ export async function POST(req: NextRequest) {
     if (!parsed.success) return errorResponse('Dados inválidos', 400, parsed.error.format())
     const created = await prisma.service.create({ data: { ...parsed.data, title: sanitize(parsed.data.title), description: sanitize(parsed.data.description || '') } })
     await prisma.logs.create({ data: { action: 'create_service', message: created.title, meta: { id: created.id } } })
+    revalidateServices()
     return jsonResponse(created, 201)
   } catch (e: any) {
     return errorResponse('Falha ao criar serviço', 500, e?.message)
@@ -43,6 +52,7 @@ export async function PUT(req: NextRequest) {
     if (!parsed.success) return errorResponse('Dados inválidos', 400, parsed.error.format())
     const updated = await prisma.service.update({ where: { id }, data: { ...parsed.data, title: parsed.data.title ? sanitize(parsed.data.title) : undefined, description: parsed.data.description ? sanitize(parsed.data.description) : undefined } })
     await prisma.logs.create({ data: { action: 'update_service', message: updated.title, meta: { id } } })
+    revalidateServices()
     return jsonResponse(updated)
   } catch (e: any) {
     return errorResponse('Falha ao atualizar serviço', 500, e?.message)
@@ -58,6 +68,7 @@ export async function DELETE(req: NextRequest) {
     if (!id) return errorResponse('ID obrigatório', 400)
     const deleted = await prisma.service.delete({ where: { id } })
     await prisma.logs.create({ data: { action: 'delete_service', message: deleted.title, meta: { id } } })
+    revalidateServices()
     return jsonResponse({ id })
   } catch (e: any) {
     return errorResponse('Falha ao excluir serviço', 500, e?.message)

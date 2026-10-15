@@ -3,7 +3,8 @@ import { prisma } from '@/lib/db'
 import { jsonResponse, errorResponse, requireAuth } from '@/lib/api'
 import { homeBannerSchema } from '@/types/schemas'
 import { sanitize } from '@/lib/sanitize'
-import { revalidatePath } from 'next/cache'
+import { revalidatePath, revalidateTag } from 'next/cache'
+import { SITE_CONTENT_TAG } from '@/lib/public-data'
 
 export async function GET() {
   try {
@@ -34,6 +35,7 @@ export async function PUT(req: NextRequest) {
       create: { id: 'home-banner', ...data },
     })
     await prisma.logs.create({ data: { action: 'update_banner', message: updated.title } })
+    revalidateTag(SITE_CONTENT_TAG)
     revalidatePath('/')
     revalidatePath('/admin/banner')
     return jsonResponse(updated)

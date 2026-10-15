@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import { notFound, redirect } from 'next/navigation'
 import Image from 'next/image'
 import Link from 'next/link'
-import { prisma } from '@/lib/db'
+import { getProjectBySlug } from '@/lib/public-data'
 import { Button } from '@/components/ui/button'
 import JsonLd from '@/components/JsonLd'
 import { DEFAULT_PROJECTS } from '@/lib/site-content'
@@ -39,7 +39,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     })
   }
 
-  const project = await prisma.project.findUnique({ where: { slug: params.slug } })
+  const project = await getProjectBySlug(params.slug).catch(() => null)
   if (!project) {
     return buildMetadata({
       title: 'Projeto não encontrado',
@@ -64,7 +64,7 @@ export default async function ProjectDetail({ params }: Props) {
   const landingHref = PROJECT_LANDING_HREFS[params.slug]
   if (landingHref) redirect(landingHref)
 
-  const project = await prisma.project.findUnique({ where: { slug: params.slug }, include: { images: true } })
+  const project = await getProjectBySlug(params.slug)
   if (!project) return notFound()
 
   const coverUrl = project.coverImageUrl || (project.images[0]?.url) || getProjectFallbackImage(params.slug)
@@ -111,6 +111,7 @@ export default async function ProjectDetail({ params }: Props) {
           <div className="relative aspect-[21/9] max-h-96 rounded-3xl overflow-hidden shadow-2xl ring-1 ring-gray-200 dark:ring-gray-800 mb-8">
             <Image
               src={coverUrl}
+              unoptimized={String(coverUrl).endsWith('.svg')}
               alt={project.title}
               fill
               className="object-cover"
@@ -130,6 +131,7 @@ export default async function ProjectDetail({ params }: Props) {
                   <div className="aspect-[4/3] relative">
                     <Image
                       src={img.url}
+                      unoptimized={String(img.url).endsWith('.svg')}
                       alt={img.alt || project.title}
                       fill
                       className="object-cover group-hover:scale-110 transition-transform duration-700"

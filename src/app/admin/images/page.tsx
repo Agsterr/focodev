@@ -2,6 +2,7 @@
 import useSWR from 'swr'
 import { useState } from 'react'
 import { Button } from '@/components/ui/button'
+import { useToast } from '@/components/admin/toast'
 
 const fetcher = (url: string) => fetch(url).then((r) => r.json())
 
@@ -21,6 +22,7 @@ export default function AdminImagesPage() {
   const [projectId, setProjectId] = useState('')
   const [category, setCategory] = useState('')
   const [uploading, setUploading] = useState(false)
+  const toast = useToast()
 
   const projects = projectsData?.data?.items || []
 
@@ -33,7 +35,8 @@ export default function AdminImagesPage() {
       fd.append('folder', 'gallery')
       const up = await fetch('/api/upload', { method: 'POST', body: fd })
       if (!up.ok) {
-        alert('Falha no upload')
+        const err = await up.json().catch(() => null)
+        toast.error(err?.error?.message || 'Falha no upload')
         return
       }
       const json = await up.json()
@@ -51,13 +54,13 @@ export default function AdminImagesPage() {
         }),
       })
       if (!res.ok) {
-        alert('Falha ao salvar imagem')
+        toast.error('Falha ao salvar imagem')
         return
       }
       setFile(null)
       setAlt('')
       mutate()
-      alert('Imagem enviada! Ela aparece na landing do projeto vinculado.')
+      toast.success('Imagem enviada! Ela aparece na landing do projeto vinculado.')
     } finally {
       setUploading(false)
     }
@@ -65,7 +68,9 @@ export default function AdminImagesPage() {
 
   async function remove(id: string) {
     if (!confirm('Excluir esta imagem?')) return
-    await fetch(`/api/images?id=${id}`, { method: 'DELETE' })
+    const res = await fetch(`/api/images?id=${id}`, { method: 'DELETE' })
+    if (res.ok) toast.success('Imagem excluída')
+    else toast.error('Falha ao excluir imagem')
     mutate()
   }
 

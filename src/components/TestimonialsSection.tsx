@@ -45,6 +45,7 @@ export default function TestimonialsSection() {
                 <div className="relative h-14 w-14 rounded-full overflow-hidden ring-2 ring-brand/20 shrink-0 bg-sky-50">
                   <Image
                     src={item.avatar}
+                    unoptimized={String(item.avatar).endsWith('.svg')}
                     alt={`Avatar ilustrado de ${item.name}`}
                     fill
                     className="object-cover"
