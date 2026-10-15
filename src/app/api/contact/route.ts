@@ -4,6 +4,7 @@ import { prisma } from '@/lib/db'
 import { sendEmail, formatContactEmail } from '@/lib/email'
 import { sendWhatsAppNotification } from '@/lib/whatsapp'
 import { sanitize } from '@/lib/sanitize'
+import { rateLimit } from '@/lib/rate-limit'
 
 /**
  * API de contato - Processa formulário de contato do site
@@ -20,8 +21,20 @@ import { sanitize } from '@/lib/sanitize'
  * - Logs de erros para debug
  */
 export async function POST(req: NextRequest) {
+  // Até 5 mensagens a cada 10 minutos por IP (anti-spam)
+  if (rateLimit(req, 'contact', 5, 10 * 60_000).limited) {
+    return errorResponse('Muitas mensagens enviadas. Tente novamente em alguns minutos.', 429)
+  }
+
   try {
     const form = await req.formData()
+
+    // Honeypot: campo invisível para pessoas; se vier preenchido, é bot.
+    // Responde como sucesso para não dar pistas ao robô.
+    if (String(form.get('website') || '').trim()) {
+      return jsonResponse({ ok: true, message: 'Mensagem enviada com sucesso!' })
+    }
+
     const name = sanitize(String(form.get('name') || ''))
     const email = String(form.get('email') || '').trim().toLowerCase()
     const phone = sanitize(String(form.get('phone') || '')) || undefined
@@ -30,6 +43,10 @@ export async function POST(req: NextRequest) {
     // Validação básica
     if (!name || !email || !message) {
       return errorResponse('Campos obrigatórios: nome, e-mail e mensagem', 400)
+    }
+
+    if (name.length > 120 || email.length > 254 || (phone && phone.length > 40)) {
+      return errorResponse('Dados inválidos', 400)
     }
 
     // Validação de e-mail
@@ -72,13 +89,6 @@ export async function POST(req: NextRequest) {
       process.env.CONTACT_RECEIVER_EMAIL ||
       process.env.CONTACT_EMAIL ||
       'focodevsistemas@gmail.com'
-
-    console.log('[Contact API] Configuração de e-mail:', {
-      hasResendKey: !!process.env.RESEND_API_KEY,
-      hasResendFrom: !!process.env.RESEND_FROM_EMAIL,
-      receiverEmail: to,
-      fromEmail: process.env.RESEND_FROM_EMAIL,
-    })
 
     const emailResult = await sendEmail({
       to,

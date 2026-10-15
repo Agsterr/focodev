@@ -17,7 +17,7 @@ export async function GET() {
 
 export async function POST(req: NextRequest) {
   const auth = await requireAuth(req)
-  if (!auth.authorized) return errorResponse('Não autorizado', 401)
+  if (!auth.authorized || !auth.admin) return errorResponse('Não autorizado', 401)
   try {
     const body = await req.json()
     const parsed = textSchema.safeParse(body)
@@ -31,7 +31,7 @@ export async function POST(req: NextRequest) {
 
 export async function PUT(req: NextRequest) {
   const auth = await requireAuth(req)
-  if (!auth.authorized) return errorResponse('Não autorizado', 401)
+  if (!auth.authorized || !auth.admin) return errorResponse('Não autorizado', 401)
   try {
     const body = await req.json()
     const { id, ...rest } = body
@@ -47,7 +47,7 @@ export async function PUT(req: NextRequest) {
 
 export async function DELETE(req: NextRequest) {
   const auth = await requireAuth(req)
-  if (!auth.authorized) return errorResponse('Não autorizado', 401)
+  if (!auth.authorized || !auth.admin) return errorResponse('Não autorizado', 401)
   try {
     const { searchParams } = new URL(req.url)
     const id = searchParams.get('id')

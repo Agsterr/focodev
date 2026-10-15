@@ -18,8 +18,8 @@ export default function AdminProfilePage() {
     setSuccess(null)
 
     // Validações
-    if (newPassword.length < 6) {
-      setError('A nova senha deve ter no mínimo 6 caracteres')
+    if (newPassword.length < 8) {
+      setError('A nova senha deve ter no mínimo 8 caracteres')
       return
     }
 
@@ -153,9 +153,9 @@ export default function AdminProfilePage() {
                 value={newPassword}
                 onChange={(e) => setNewPassword(e.target.value)}
                 required
-                minLength={6}
+                minLength={8}
                 className="w-full px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent transition"
-                placeholder="Mínimo 6 caracteres"
+                placeholder="Mínimo 8 caracteres"
               />
             </div>
 
@@ -172,7 +172,7 @@ export default function AdminProfilePage() {
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 required
-                minLength={6}
+                minLength={8}
                 className="w-full px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent transition"
                 placeholder="Digite a nova senha novamente"
               />

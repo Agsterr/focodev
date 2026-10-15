@@ -4,7 +4,7 @@ import { prisma } from '@/lib/db'
 import bcrypt from 'bcryptjs'
 
 export const authOptions: NextAuthOptions = {
-  secret: process.env.NEXTAUTH_SECRET || 'focodev-secret-key-change-in-production',
+  secret: process.env.NEXTAUTH_SECRET,
   session: { strategy: 'jwt', maxAge: 60 * 60 * 24 }, // 24 horas
   pages: {
     signIn: '/admin/login',
@@ -24,11 +24,12 @@ export const authOptions: NextAuthOptions = {
             console.error('Database not configured')
             return null
           }
-          const user = await prisma.user.findUnique({ where: { email: credentials.email } })
+          const user = await prisma.user.findFirst({
+            where: { email: { equals: credentials.email.trim(), mode: 'insensitive' } },
+          })
           if (!user) return null
           const ok = await bcrypt.compare(credentials.password, user.passwordHash)
           if (!ok) return null
-          console.log('[Auth] Authorize success:', user.email, user.role)
           return { 
             id: user.id, 
             name: user.name, 
@@ -45,7 +46,6 @@ export const authOptions: NextAuthOptions = {
   callbacks: {
     async jwt({ token, user }) {
       if (user) {
-        console.log('[Auth] JWT Callback - User login:', user.email, user.role)
         token.role = user.role
         token.id = user.id
       }
@@ -53,7 +53,6 @@ export const authOptions: NextAuthOptions = {
     },
     async session({ session, token }) {
       if (session.user && token) {
-        // console.log('[Auth] Session Callback - Token role:', token.role)
         session.user.role = token.role
         session.user.id = token.id
       }

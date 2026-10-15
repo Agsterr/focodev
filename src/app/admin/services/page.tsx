@@ -31,7 +31,12 @@ export default function AdminServicesPage() {
   }
 
   async function remove(id: string) {
-    await fetch(`/api/services?id=${id}`, { method: 'DELETE' })
+    if (!confirm('Tem certeza que deseja excluir este serviço?')) return
+    const res = await fetch(`/api/services?id=${id}`, { method: 'DELETE' })
+    if (!res.ok) {
+      const body = await res.json().catch(() => null)
+      alert(body?.error?.message || 'Falha ao excluir')
+    }
     mutate()
   }
 

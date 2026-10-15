@@ -14,11 +14,19 @@ export default function AdminTextsPage() {
     if (res.ok) {
       setForm({ key: '', content: '' })
       mutate()
+    } else {
+      const body = await res.json().catch(() => null)
+      alert(body?.error?.message || 'Falha ao salvar. Verifique os campos.')
     }
   }
 
   async function remove(id: string) {
-    await fetch(`/api/texts?id=${id}`, { method: 'DELETE' })
+    if (!confirm('Tem certeza que deseja excluir este texto?')) return
+    const res = await fetch(`/api/texts?id=${id}`, { method: 'DELETE' })
+    if (!res.ok) {
+      const body = await res.json().catch(() => null)
+      alert(body?.error?.message || 'Falha ao excluir')
+    }
     mutate()
   }
 
