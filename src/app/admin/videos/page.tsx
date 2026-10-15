@@ -4,6 +4,7 @@ import { useState } from 'react'
 import Image from 'next/image'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
+import { useToast } from '@/components/admin/toast'
 
 const fetcher = (url: string) => fetch(url).then((r) => r.json())
 
@@ -24,10 +25,11 @@ export default function AdminVideosPage() {
   const [form, setForm] = useState({ title: '', youtubeUrl: '', thumbnailUrl: '' })
   const [file, setFile] = useState<File | null>(null)
   const [isCreating, setIsCreating] = useState(false)
+  const toast = useToast()
 
   async function create() {
     if (!form.title || !form.youtubeUrl) {
-      alert('Preencha o título e a URL do YouTube')
+      toast.error('Preencha o título e a URL do YouTube')
       return
     }
     setIsCreating(true)
@@ -41,6 +43,8 @@ export default function AdminVideosPage() {
         if (up.ok) {
           const json = await up.json()
           thumbnailUrl = json.data.url
+        } else {
+          toast.error('Falha ao enviar a miniatura; o vídeo será salvo sem ela')
         }
       }
       const res = await fetch('/api/videos', { 
@@ -52,13 +56,13 @@ export default function AdminVideosPage() {
         setForm({ title: '', youtubeUrl: '', thumbnailUrl: '' })
         setFile(null)
         mutate()
-        alert('Vídeo criado com sucesso!')
+        toast.success('Vídeo criado com sucesso!')
       } else {
-        const error = await res.json()
-        alert(`Erro ao criar vídeo: ${error.message || 'Erro desconhecido'}`)
+        const error = await res.json().catch(() => null)
+        toast.error(`Erro ao criar vídeo: ${error?.error?.message || 'Erro desconhecido'}`)
       }
     } catch (error) {
-      alert('Erro ao criar vídeo')
+      toast.error('Erro de conexão ao criar vídeo')
     } finally {
       setIsCreating(false)
     }
@@ -69,9 +73,9 @@ export default function AdminVideosPage() {
     const res = await fetch(`/api/videos?id=${id}`, { method: 'DELETE' })
     if (res.ok) {
       mutate()
-      alert('Vídeo excluído com sucesso!')
+      toast.success('Vídeo excluído com sucesso!')
     } else {
-      alert('Erro ao excluir vídeo')
+      toast.error('Erro ao excluir vídeo')
     }
   }
 

@@ -3,7 +3,8 @@ import { prisma } from '@/lib/db'
 import { jsonResponse, errorResponse, parsePagination, requireAuth } from '@/lib/api'
 import { videoSchema } from '@/types/schemas'
 import { sanitize } from '@/lib/sanitize'
-import { revalidatePath } from 'next/cache'
+import { revalidatePath, revalidateTag } from 'next/cache'
+import { SITE_CONTENT_TAG } from '@/lib/public-data'
 
 export async function GET(req: NextRequest) {
   try {
@@ -27,6 +28,7 @@ export async function POST(req: NextRequest) {
     if (!parsed.success) return errorResponse('Dados inválidos', 400, parsed.error.format())
     const created = await prisma.video.create({ data: { ...parsed.data, title: sanitize(parsed.data.title), youtubeUrl: sanitize(parsed.data.youtubeUrl), thumbnailUrl: parsed.data.thumbnailUrl ? sanitize(parsed.data.thumbnailUrl) : undefined } })
     await prisma.logs.create({ data: { action: 'create_video', message: created.title, meta: { id: created.id } } })
+    revalidateTag(SITE_CONTENT_TAG)
     revalidatePath('/')
     revalidatePath('/admin/videos')
     return jsonResponse(created, 201)
@@ -46,6 +48,7 @@ export async function PUT(req: NextRequest) {
     if (!parsed.success) return errorResponse('Dados inválidos', 400, parsed.error.format())
     const updated = await prisma.video.update({ where: { id }, data: { ...parsed.data, title: parsed.data.title ? sanitize(parsed.data.title) : undefined, youtubeUrl: parsed.data.youtubeUrl ? sanitize(parsed.data.youtubeUrl) : undefined, thumbnailUrl: parsed.data.thumbnailUrl ? sanitize(parsed.data.thumbnailUrl) : undefined } })
     await prisma.logs.create({ data: { action: 'update_video', message: updated.title, meta: { id } } })
+    revalidateTag(SITE_CONTENT_TAG)
     revalidatePath('/')
     revalidatePath('/admin/videos')
     return jsonResponse(updated)
@@ -63,6 +66,7 @@ export async function DELETE(req: NextRequest) {
     if (!id) return errorResponse('ID obrigatório', 400)
     const deleted = await prisma.video.delete({ where: { id } })
     await prisma.logs.create({ data: { action: 'delete_video', message: deleted.title, meta: { id } } })
+    revalidateTag(SITE_CONTENT_TAG)
     revalidatePath('/')
     revalidatePath('/admin/videos')
     return jsonResponse({ id })

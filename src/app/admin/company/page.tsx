@@ -2,12 +2,16 @@
 import useSWR from 'swr'
 import { useState, useEffect } from 'react'
 import { Button } from '@/components/ui/button'
+import { useToast } from '@/components/admin/toast'
+import { sendJson } from '@/components/admin/form'
 
 const fetcher = (url: string) => fetch(url).then((r) => r.json())
 
 export default function AdminCompanyPage() {
   const { data, mutate } = useSWR('/api/company', fetcher)
   const [form, setForm] = useState({ name: '', email: '', phone: '', instagram: '', address: '', whatsappLink: '', whatsappNumber: '' })
+  const toast = useToast()
+  const [saving, setSaving] = useState(false)
   useEffect(() => {
     if (data?.data) setForm({
       name: data.data.name || '',
@@ -21,7 +25,11 @@ export default function AdminCompanyPage() {
   }, [data])
 
   async function save() {
-    await fetch('/api/company', { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(form) })
+    setSaving(true)
+    const error = await sendJson('/api/company', 'PUT', form)
+    setSaving(false)
+    if (error) return toast.error(error)
+    toast.success('Dados da empresa salvos')
     mutate()
   }
 
@@ -36,7 +44,7 @@ export default function AdminCompanyPage() {
         <input value={form.address} onChange={(e) => setForm({ ...form, address: e.target.value })} placeholder="Endereço" className="border p-3 rounded-md dark:border-gray-700" />
         <input value={form.whatsappNumber} onChange={(e) => setForm({ ...form, whatsappNumber: e.target.value })} placeholder="WhatsApp número (somente dígitos)" className="border p-3 rounded-md dark:border-gray-700" />
         <input value={form.whatsappLink} onChange={(e) => setForm({ ...form, whatsappLink: e.target.value })} placeholder="Link WhatsApp (opcional)" className="border p-3 rounded-md dark:border-gray-700" />
-        <Button onClick={save}>Salvar</Button>
+        <Button onClick={save} disabled={saving}>{saving ? 'Salvando...' : 'Salvar'}</Button>
       </div>
     </div>
   )

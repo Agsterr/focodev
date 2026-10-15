@@ -6,6 +6,7 @@ import AdminLayoutClient from './admin-layout-client'
 import AdminLayoutContent from './admin-layout-content'
 import AdminLogo from './admin-logo'
 import ContactsNotification from '@/components/ContactsNotification'
+import { ToastProvider } from '@/components/admin/toast'
 import type { Metadata } from 'next'
 
 export const dynamic = 'force-dynamic'
@@ -41,6 +42,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
 
   return (
     <AdminLayoutClient>
+      <ToastProvider>
       <div className="min-h-screen bg-gray-50 dark:bg-gray-950">
         {/* Header */}
         <header className="sticky top-0 z-50 border-b border-gray-200 dark:border-gray-800 bg-white/95 dark:bg-gray-900/95 backdrop-blur-sm shadow-sm">
@@ -63,6 +65,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
           {children}
         </AdminLayoutContent>
       </div>
+      </ToastProvider>
     </AdminLayoutClient>
   )
 }

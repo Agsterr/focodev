@@ -3,7 +3,8 @@ import { prisma } from '@/lib/db'
 import { jsonResponse, errorResponse, parsePagination, requireAuth } from '@/lib/api'
 import { projectSchema } from '@/types/schemas'
 import { sanitize } from '@/lib/sanitize'
-import { revalidatePath } from 'next/cache'
+import { revalidatePath, revalidateTag } from 'next/cache'
+import { SITE_CONTENT_TAG } from '@/lib/public-data'
 
 export async function GET(req: NextRequest) {
   try {
@@ -27,6 +28,7 @@ export async function POST(req: NextRequest) {
     if (!parsed.success) return errorResponse('Dados inválidos', 400, parsed.error.format())
     const created = await prisma.project.create({ data: { ...parsed.data, title: sanitize(parsed.data.title), slug: sanitize(parsed.data.slug), description: sanitize(parsed.data.description) } })
     await prisma.logs.create({ data: { action: 'create_project', message: created.title, meta: { id: created.id } } })
+    revalidateTag(SITE_CONTENT_TAG)
     revalidatePath('/')
     revalidatePath('/projects')
     revalidatePath('/admin/projects')
@@ -47,6 +49,7 @@ export async function PUT(req: NextRequest) {
     if (!parsed.success) return errorResponse('Dados inválidos', 400, parsed.error.format())
     const updated = await prisma.project.update({ where: { id }, data: { ...parsed.data, title: parsed.data.title ? sanitize(parsed.data.title) : undefined, slug: parsed.data.slug ? sanitize(parsed.data.slug) : undefined, description: parsed.data.description ? sanitize(parsed.data.description) : undefined } })
     await prisma.logs.create({ data: { action: 'update_project', message: updated.title, meta: { id } } })
+    revalidateTag(SITE_CONTENT_TAG)
     revalidatePath('/')
     revalidatePath('/projects')
     revalidatePath('/admin/projects')
@@ -65,6 +68,7 @@ export async function DELETE(req: NextRequest) {
     if (!id) return errorResponse('ID obrigatório', 400)
     const project = await prisma.project.delete({ where: { id } })
     await prisma.logs.create({ data: { action: 'delete_project', message: project.title, meta: { id } } })
+    revalidateTag(SITE_CONTENT_TAG)
     revalidatePath('/')
     revalidatePath('/projects')
     revalidatePath(`/projects/${project.slug}`)

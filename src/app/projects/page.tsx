@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import Image from 'next/image'
-import { prisma } from '@/lib/db'
+import { getProjectsWithImages } from '@/lib/public-data'
 import JsonLd from '@/components/JsonLd'
 import { DEFAULT_PROJECTS } from '@/lib/site-content'
 import { PROJECT_EXTERNAL_URLS } from '@/lib/system-links'
@@ -25,10 +25,7 @@ export const metadata: Metadata = buildMetadata({
 export const dynamic = 'force-dynamic'
 
 export default async function ProjectsPage() {
-  let projects = await prisma.project.findMany({ 
-    orderBy: { createdAt: 'desc' },
-    include: { images: true }
-  }).catch(() => [])
+  let projects = await getProjectsWithImages().catch(() => [])
 
   if (projects.length === 0) {
     projects = DEFAULT_PROJECTS.map((p) => ({

@@ -48,7 +48,7 @@ export default function AdminProfilePage() {
       const data = await res.json()
 
       if (!res.ok) {
-        setError(data.message || 'Erro ao alterar senha')
+        setError(data?.error?.message || 'Erro ao alterar senha')
         setLoading(false)
         return
       }

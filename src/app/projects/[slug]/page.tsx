@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import { notFound, redirect } from 'next/navigation'
 import Image from 'next/image'
 import Link from 'next/link'
-import { prisma } from '@/lib/db'
+import { getProjectBySlug } from '@/lib/public-data'
 import { Button } from '@/components/ui/button'
 import JsonLd from '@/components/JsonLd'
 import { DEFAULT_PROJECTS } from '@/lib/site-content'
@@ -39,7 +39,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     })
   }
 
-  const project = await prisma.project.findUnique({ where: { slug: params.slug } })
+  const project = await getProjectBySlug(params.slug).catch(() => null)
   if (!project) {
     return buildMetadata({
       title: 'Projeto não encontrado',
@@ -64,7 +64,7 @@ export default async function ProjectDetail({ params }: Props) {
   const landingHref = PROJECT_LANDING_HREFS[params.slug]
   if (landingHref) redirect(landingHref)
 
-  const project = await prisma.project.findUnique({ where: { slug: params.slug }, include: { images: true } })
+  const project = await getProjectBySlug(params.slug)
   if (!project) return notFound()
 
   const coverUrl = project.coverImageUrl || (project.images[0]?.url) || getProjectFallbackImage(params.slug)

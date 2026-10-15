@@ -2,12 +2,16 @@
 import useSWR from 'swr'
 import { useState, useEffect } from 'react'
 import { Button } from '@/components/ui/button'
+import { useToast } from '@/components/admin/toast'
+import { sendJson } from '@/components/admin/form'
 
 const fetcher = (url: string) => fetch(url).then((r) => r.json())
 
 export default function AdminBannerPage() {
   const { data, mutate } = useSWR('/api/banner', fetcher)
   const [form, setForm] = useState({ title: '', subtitle: '', backgroundImageUrl: '', ctaText: '', ctaLink: '' })
+  const toast = useToast()
+  const [saving, setSaving] = useState(false)
   useEffect(() => {
     if (data?.data) setForm({
       title: data.data.title || '',
@@ -19,7 +23,11 @@ export default function AdminBannerPage() {
   }, [data])
 
   async function save() {
-    await fetch('/api/banner', { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(form) })
+    setSaving(true)
+    const error = await sendJson('/api/banner', 'PUT', form)
+    setSaving(false)
+    if (error) return toast.error(error)
+    toast.success('Banner atualizado')
     mutate()
   }
 
@@ -32,7 +40,7 @@ export default function AdminBannerPage() {
         <input value={form.backgroundImageUrl} onChange={(e) => setForm({ ...form, backgroundImageUrl: e.target.value })} placeholder="Imagem de fundo (URL)" className="border p-3 rounded-md dark:border-gray-700" />
         <input value={form.ctaText} onChange={(e) => setForm({ ...form, ctaText: e.target.value })} placeholder="CTA" className="border p-3 rounded-md dark:border-gray-700" />
         <input value={form.ctaLink} onChange={(e) => setForm({ ...form, ctaLink: e.target.value })} placeholder="Link CTA" className="border p-3 rounded-md dark:border-gray-700" />
-        <Button onClick={save}>Salvar</Button>
+        <Button onClick={save} disabled={saving}>{saving ? 'Salvando...' : 'Salvar'}</Button>
       </div>
     </div>
   )

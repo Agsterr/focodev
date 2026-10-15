@@ -3,7 +3,8 @@ import { prisma } from '@/lib/db'
 import { jsonResponse, errorResponse, requireAuth } from '@/lib/api'
 import { companyInfoSchema } from '@/types/schemas'
 import { sanitize } from '@/lib/sanitize'
-import { revalidatePath } from 'next/cache'
+import { revalidatePath, revalidateTag } from 'next/cache'
+import { SITE_CONTENT_TAG } from '@/lib/public-data'
 
 export async function GET() {
   try {
@@ -37,6 +38,7 @@ export async function PUT(req: NextRequest) {
       create: { id: 'company-singleton', ...data },
     })
     await prisma.logs.create({ data: { action: 'update_company', message: updated.name } })
+    revalidateTag(SITE_CONTENT_TAG)
     revalidatePath('/')
     revalidatePath('/admin/company')
     return jsonResponse(updated)

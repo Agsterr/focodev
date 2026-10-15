@@ -2,6 +2,7 @@
 import useSWR from 'swr'
 import { useState } from 'react'
 import { Button } from '@/components/ui/button'
+import { useToast } from '@/components/admin/toast'
 
 const fetcher = (url: string) => fetch(url).then((r) => r.json())
 
@@ -12,6 +13,7 @@ export default function AdminUsersPage() {
   const [form, setForm] = useState(emptyForm)
   const [error, setError] = useState<string | null>(null)
   const [saving, setSaving] = useState(false)
+  const toast = useToast()
   const currentUserId: string | null = data?.data?.currentUserId ?? null
 
   async function create(e: React.FormEvent) {
@@ -26,6 +28,7 @@ export default function AdminUsersPage() {
         return
       }
       setForm(emptyForm)
+      toast.success('Usuário criado')
       mutate()
     } finally {
       setSaving(false)
@@ -37,7 +40,9 @@ export default function AdminUsersPage() {
     const res = await fetch(`/api/users?id=${id}`, { method: 'DELETE' })
     if (!res.ok) {
       const body = await res.json().catch(() => null)
-      alert(body?.error?.message || 'Falha ao excluir usuário')
+      toast.error(body?.error?.message || 'Falha ao excluir usuário')
+    } else {
+      toast.success('Usuário excluído')
     }
     mutate()
   }

@@ -2,7 +2,8 @@ import { NextRequest } from 'next/server'
 import { prisma } from '@/lib/db'
 import { jsonResponse, errorResponse, parsePagination, requireAuth } from '@/lib/api'
 import { imageSchema } from '@/types/schemas'
-import { revalidatePath } from 'next/cache'
+import { revalidatePath, revalidateTag } from 'next/cache'
+import { SITE_CONTENT_TAG } from '@/lib/public-data'
 
 export async function GET(req: NextRequest) {
   try {
@@ -26,6 +27,7 @@ export async function POST(req: NextRequest) {
     if (!parsed.success) return errorResponse('Dados inválidos', 400, parsed.error.format())
     const created = await prisma.image.create({ data: parsed.data })
     await prisma.logs.create({ data: { action: 'create_image', message: created.url, meta: { id: created.id } } })
+    revalidateTag(SITE_CONTENT_TAG)
     revalidatePath('/admin/images')
     revalidatePath('/fitlife')
     revalidatePath('/rotas')
@@ -45,6 +47,7 @@ export async function DELETE(req: NextRequest) {
     if (!id) return errorResponse('ID obrigatório', 400)
     const deleted = await prisma.image.delete({ where: { id } })
     await prisma.logs.create({ data: { action: 'delete_image', message: deleted.url, meta: { id } } })
+    revalidateTag(SITE_CONTENT_TAG)
     revalidatePath('/admin/images')
     revalidatePath('/fitlife')
     revalidatePath('/rotas')

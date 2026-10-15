@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import Image from 'next/image'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
-import { prisma } from '@/lib/db'
+import { getHomeData } from '@/lib/public-data'
 import { Smartphone, Server, Cog, Palette, Gauge, Globe, MessageSquare, Info, ShieldCheck, Sparkles, Play, Package, MapPin, ExternalLink } from 'lucide-react'
 import ContactForm from '@/components/ContactForm'
 import TrackedAnchor from '@/components/TrackedAnchor'
@@ -59,10 +59,7 @@ export default async function HomePage() {
   let projects: any[] = []
   let videos: any[] = []
   try {
-    banner = await prisma.homeBanner.findUnique({ where: { id: 'home-banner' } })
-    services = await prisma.service.findMany({ take: 6, orderBy: { createdAt: 'desc' } })
-    projects = await prisma.project.findMany({ take: 6, orderBy: { createdAt: 'desc' } })
-    videos = await prisma.video.findMany({ take: 6, orderBy: { createdAt: 'desc' } })
+    ;({ banner, services, projects, videos } = await getHomeData())
   } catch {}
 
   const displayServices = services.length > 0 ? services : DEFAULT_SERVICES

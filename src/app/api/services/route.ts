@@ -3,9 +3,11 @@ import { prisma } from '@/lib/db'
 import { jsonResponse, errorResponse, parsePagination, requireAuth } from '@/lib/api'
 import { serviceSchema } from '@/types/schemas'
 import { sanitize } from '@/lib/sanitize'
-import { revalidatePath } from 'next/cache'
+import { revalidatePath, revalidateTag } from 'next/cache'
+import { SITE_CONTENT_TAG } from '@/lib/public-data'
 
 function revalidateServices() {
+  revalidateTag(SITE_CONTENT_TAG)
   revalidatePath('/')
   revalidatePath('/admin/services')
 }
