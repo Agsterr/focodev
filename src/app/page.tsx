@@ -9,6 +9,7 @@ import TrackedAnchor from '@/components/TrackedAnchor'
 import TestimonialsSection from '@/components/TestimonialsSection'
 import FaqSection from '@/components/FaqSection'
 import JsonLd from '@/components/JsonLd'
+import ScrollReveal from '@/components/ScrollReveal'
 import { SHOWCASE_PROJECTS, PRODUCTION_SYSTEMS, PROJECT_EXTERNAL_URLS } from '@/lib/system-links'
 import { ABOUT_PARAGRAPHS, DEFAULT_PROJECTS, DEFAULT_SERVICES, HERO_STATS, TECH_STACK } from '@/lib/site-content'
 import { getProjectHref } from '@/lib/product-landings'
@@ -75,6 +76,7 @@ export default async function HomePage() {
           }))
         )}
       />
+      <ScrollReveal />
     <div className="overflow-hidden">
       {/* Hero Section */}
       <section className="relative py-20 md:py-28 overflow-hidden">
@@ -106,7 +108,7 @@ export default async function HomePage() {
                   </span>
                 ))}
               </div>
-              <div className="flex flex-wrap gap-4 pt-2">
+              <div className="flex flex-col sm:flex-row sm:flex-wrap gap-4 pt-2">
                 <Button asChild size="lg" variant="gradient" className="text-base px-8 py-6 rounded-xl shadow-glow">
                   <TrackedAnchor
                     kind="cta"
@@ -169,7 +171,7 @@ export default async function HomePage() {
       </section>
 
       {/* Services Section */}
-      <section id="servicos" className="container py-20 relative scroll-mt-24">
+      <section id="servicos" data-reveal className="container py-20 relative scroll-mt-24">
         <div className="absolute -top-10 left-0 w-64 h-64 bg-brand/10 blur-3xl rounded-full" />
         <div className="absolute -bottom-10 right-0 w-64 h-64 bg-brand-dark/10 blur-3xl rounded-full" />
         <div className="text-center mb-16">
@@ -201,21 +203,21 @@ export default async function HomePage() {
       </section>
 
       {/* Sistemas e projetos */}
-      <section id="sistemas" className="container py-20 relative scroll-mt-24">
+      <section id="sistemas" data-reveal className="container py-20 relative scroll-mt-24">
         <div className="text-center mb-16">
           <h2 className="section-title">Nossos Sistemas</h2>
           <p className="section-subtitle max-w-2xl mx-auto text-gray-800 dark:text-gray-200 font-semibold">
             Conheça os produtos, veja o que fazem e peça um orçamento — o acesso é liberado após contratação
           </p>
         </div>
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
+        <div className="flex flex-wrap justify-center gap-8 max-w-6xl mx-auto">
           {PRODUCTION_SYSTEMS.map((system) => (
             <a
               key={system.href}
               href={system.href}
               target="_blank"
               rel="noopener noreferrer"
-              className="card p-8 group ring-1 ring-brand/20 hover:ring-brand/40 hover:border-brand transition-all"
+              className="w-full sm:w-[calc(50%-1rem)] lg:w-[calc(33.333%-1.334rem)] card p-8 group ring-1 ring-brand/20 hover:ring-brand/40 hover:border-brand transition-all"
             >
               <div className="h-12 w-12 rounded-xl bg-brand/10 text-brand flex items-center justify-center ring-1 ring-brand/20 mb-4">
                 <Package className="w-6 h-6" />
@@ -241,6 +243,7 @@ export default async function HomePage() {
               <div className="relative h-40 bg-sky-50 dark:bg-slate-900">
                 <Image
                   src={product.image}
+                  unoptimized={String(product.image).endsWith('.svg')}
                   alt={product.label}
                   fill
                   className="object-cover group-hover:scale-105 transition-transform duration-500"
@@ -284,7 +287,7 @@ export default async function HomePage() {
 
       {/* Videos Section */}
       {videos.length > 0 && (
-        <section className="container py-20 relative">
+        <section data-reveal className="container py-20 relative">
           <div className="absolute -top-10 left-0 w-64 h-64 bg-brand/10 blur-3xl rounded-full" />
           <div className="absolute -bottom-10 right-0 w-64 h-64 bg-brand-dark/10 blur-3xl rounded-full" />
           <div className="text-center mb-16">
@@ -325,6 +328,7 @@ export default async function HomePage() {
                       <>
                         <Image
                           src={thumbnailUrl}
+                          unoptimized={String(thumbnailUrl).endsWith('.svg')}
                           alt={video.title}
                           fill
                           className="object-cover"
@@ -360,7 +364,7 @@ export default async function HomePage() {
       )}
 
       {/* About Section */}
-      <section id="sobre" className="container py-20 relative scroll-mt-24">
+      <section id="sobre" data-reveal className="container py-20 relative scroll-mt-24">
         <div className="absolute -top-10 left-0 w-64 h-64 bg-brand/10 blur-3xl rounded-full" />
         <div className="absolute -bottom-10 right-0 w-64 h-64 bg-brand-dark/10 blur-3xl rounded-full" />
         <div className="max-w-4xl mx-auto text-center">
@@ -401,7 +405,7 @@ export default async function HomePage() {
       <FaqSection />
 
       {/* Portfolio Section */}
-      <section id="portfolio" className="container py-20 relative scroll-mt-24">
+      <section id="portfolio" data-reveal className="container py-20 relative scroll-mt-24">
         <div className="absolute -top-10 right-0 w-64 h-64 bg-brand/10 blur-3xl rounded-full" />
         <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-12">
           <div>
@@ -433,6 +437,7 @@ export default async function HomePage() {
                 <div className="relative h-48 bg-gradient-to-br from-sky-50 to-cyan-100 dark:from-slate-800 dark:to-slate-900 overflow-hidden">
                   <Image
                     src={p.coverImageUrl || getProjectFallbackImage(p)}
+                    unoptimized={String(p.coverImageUrl || getProjectFallbackImage(p)).endsWith('.svg')}
                     alt={p.title}
                     fill
                     className="object-cover group-hover:scale-105 transition-transform duration-500"
@@ -483,7 +488,7 @@ export default async function HomePage() {
       </section>
 
       {/* Contact Section */}
-      <section id="contato" className="container py-20 scroll-mt-24">
+      <section id="contato" data-reveal className="container py-20 scroll-mt-24">
         <div className="max-w-2xl mx-auto">
           <div className="text-center mb-12">
             <h2 className="section-title">

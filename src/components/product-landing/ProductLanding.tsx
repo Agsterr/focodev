@@ -37,6 +37,7 @@ export default function ProductLanding({ content, images }: Props) {
         <div className="absolute inset-0 pointer-events-none">
           <Image
             src={content.coverImage}
+            unoptimized={String(content.coverImage).endsWith('.svg')}
             alt={content.brand}
             fill
             priority
@@ -209,6 +210,7 @@ export default function ProductLanding({ content, images }: Props) {
                     <div className="aspect-[4/3] relative bg-slate-100 dark:bg-slate-900">
                       <Image
                         src={img.url}
+                        unoptimized={String(img.url).endsWith('.svg')}
                         alt={cleanAlt(img.alt) || gallery.title}
                         fill
                         className="object-cover group-hover:scale-105 transition-transform duration-700"

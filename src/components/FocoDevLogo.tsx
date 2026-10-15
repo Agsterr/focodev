@@ -12,6 +12,7 @@ export default function FocoDevLogo({ className = 'h-12 md:h-14 w-auto', priorit
   return (
     <Image
       src={src}
+      unoptimized={String(src).endsWith('.svg')}
       alt="FocoDev Sistemas"
       width={240}
       height={56}

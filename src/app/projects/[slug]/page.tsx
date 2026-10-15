@@ -111,6 +111,7 @@ export default async function ProjectDetail({ params }: Props) {
           <div className="relative aspect-[21/9] max-h-96 rounded-3xl overflow-hidden shadow-2xl ring-1 ring-gray-200 dark:ring-gray-800 mb-8">
             <Image
               src={coverUrl}
+              unoptimized={String(coverUrl).endsWith('.svg')}
               alt={project.title}
               fill
               className="object-cover"
@@ -130,6 +131,7 @@ export default async function ProjectDetail({ params }: Props) {
                   <div className="aspect-[4/3] relative">
                     <Image
                       src={img.url}
+                      unoptimized={String(img.url).endsWith('.svg')}
                       alt={img.alt || project.title}
                       fill
                       className="object-cover group-hover:scale-110 transition-transform duration-700"

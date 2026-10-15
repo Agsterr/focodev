@@ -74,6 +74,7 @@ export default async function ProjectsPage() {
                   <div className="relative h-64 overflow-hidden">
                     <Image
                       src={coverImageUrl}
+                      unoptimized={String(coverImageUrl).endsWith('.svg')}
                       alt={p.title}
                       fill
                       className="object-cover group-hover:scale-110 transition-transform duration-700"
