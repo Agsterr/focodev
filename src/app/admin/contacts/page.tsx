@@ -3,6 +3,7 @@
 import useSWR from 'swr'
 import { useState } from 'react'
 import { Button } from '@/components/ui/button'
+import NotificationStatus from '@/components/admin/notification-status'
 import { Mail, Phone, MessageSquare, User, Calendar, CheckCircle2, Circle, Eye, EyeOff } from 'lucide-react'
 
 const fetcher = (url: string) => fetch(url).then((r) => r.json())
@@ -62,6 +63,8 @@ export default function AdminContactsPage() {
           </p>
         </div>
       </div>
+
+      <NotificationStatus />
 
       <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex flex-wrap gap-2">
