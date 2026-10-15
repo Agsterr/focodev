@@ -1,18 +1,38 @@
 import type { Metadata } from 'next'
 import Image from 'next/image'
 import Link from 'next/link'
-import { Button } from '@/components/ui/button'
+import {
+  Smartphone,
+  Server,
+  Cog,
+  Palette,
+  Gauge,
+  Globe,
+  Play,
+  ArrowRight,
+  ArrowUpRight,
+  Check,
+  ShoppingCart,
+  CalendarCheck,
+  PackageOpen,
+  MapPin,
+  Sparkles,
+  ShieldCheck,
+  Zap,
+  MessageCircle,
+} from 'lucide-react'
 import { getHomeData } from '@/lib/public-data'
-import { Smartphone, Server, Cog, Palette, Gauge, Globe, MessageSquare, Info, ShieldCheck, Sparkles, Play, Package, MapPin, ExternalLink } from 'lucide-react'
 import ContactForm from '@/components/ContactForm'
 import TrackedAnchor from '@/components/TrackedAnchor'
-import TestimonialsSection from '@/components/TestimonialsSection'
 import FaqSection from '@/components/FaqSection'
 import JsonLd from '@/components/JsonLd'
 import ScrollReveal from '@/components/ScrollReveal'
-import { SHOWCASE_PROJECTS, PRODUCTION_SYSTEMS, PROJECT_EXTERNAL_URLS } from '@/lib/system-links'
-import { ABOUT_PARAGRAPHS, DEFAULT_PROJECTS, DEFAULT_SERVICES, HERO_STATS, TECH_STACK } from '@/lib/site-content'
+import { BrowserFrame, PhoneFrame } from '@/components/home/DeviceFrames'
+import { ABOUT_PARAGRAPHS, DEFAULT_SERVICES, HERO_STATS, PROCESS_STEPS, TECH_STACK } from '@/lib/site-content'
+import { SHOWCASE } from '@/lib/showcase'
+import { PROJECT_EXTERNAL_URLS } from '@/lib/system-links'
 import { getProjectHref } from '@/lib/product-landings'
+import { getWhatsAppHref } from '@/lib/whatsapp'
 import { buildMetadata, serviceListJsonLd, SITE_DESCRIPTION, SITE_NAME, SITE_TAGLINE } from '@/lib/seo'
 
 export const metadata: Metadata = buildMetadata({
@@ -23,16 +43,28 @@ export const metadata: Metadata = buildMetadata({
 
 export const dynamic = 'force-dynamic'
 
+const SERVICE_ICONS = [
+  { match: ['mobile', 'app'], icon: Smartphone },
+  { match: ['infra', 'deploy', 'hosped'], icon: Server },
+  { match: ['auto', 'process'], icon: Cog },
+  { match: ['design', 'ui'], icon: Palette },
+  { match: ['otimiz', 'consult'], icon: Gauge },
+  { match: ['pwa', 'navegador', 'web'], icon: Globe },
+]
+
 function getServiceIcon(name: string) {
   const t = name.toLowerCase()
-  if (t.includes('mobile') || t.includes('app')) return Smartphone
-  if (t.includes('infra') || t.includes('deploy') || t.includes('hosped')) return Server
-  if (t.includes('auto') || t.includes('process')) return Cog
-  if (t.includes('design') || t.includes('ui')) return Palette
-  if (t.includes('otimiz') || t.includes('consult')) return Gauge
-  if (t.includes('pwa') || t.includes('navegador') || t.includes('web')) return Globe
-  return Cog
+  return SERVICE_ICONS.find((s) => s.match.some((m) => t.includes(m)))?.icon || Cog
 }
+
+const ICON_GRADIENTS = [
+  'from-neon-cyan to-sky-500',
+  'from-neon-violet to-indigo-500',
+  'from-neon-pink to-rose-500',
+  'from-emerald-400 to-teal-500',
+  'from-amber-400 to-orange-500',
+  'from-sky-400 to-neon-violet',
+]
 
 function getYouTubeVideoId(url: string): string | null {
   const patterns = [
@@ -46,14 +78,16 @@ function getYouTubeVideoId(url: string): string | null {
   return null
 }
 
-function getProjectFallbackImage(p: { slug?: string; title?: string }) {
-  const key = (p.slug || p.title || '').toLowerCase()
-  if (key.includes('barbearia') || key.includes('barber')) return '/portfolio/fastburger.svg'
-  if (key.includes('mercado') || key.includes('focomarket') || key.includes('estoque') || key.includes('vendas')) return '/portfolio/focomarket.svg'
-  if (key.includes('academia') || key.includes('fitlife') || key.includes('fit') || key.includes('treino')) return '/portfolio/fitlife/app-menu.png'
-  if (key.includes('rotas') || key.includes('route')) return '/portfolio/rotas/app-inicio.png'
-  return '/portfolio/default.svg'
+function SectionHeading({ eyebrow, title, subtitle, align = 'center' }: { eyebrow: string; title: React.ReactNode; subtitle?: string; align?: 'center' | 'left' }) {
+  return (
+    <div className={`mb-12 md:mb-14 ${align === 'center' ? 'text-center mx-auto' : ''} max-w-4xl`}>
+      <span className="eyebrow">{eyebrow}</span>
+      <h2 className="section-title mt-5">{title}</h2>
+      {subtitle && <p className="section-subtitle mb-0">{subtitle}</p>}
+    </div>
+  )
 }
+
 export default async function HomePage() {
   let banner: any = null
   let services: any[] = []
@@ -64,7 +98,9 @@ export default async function HomePage() {
   } catch {}
 
   const displayServices = services.length > 0 ? services : DEFAULT_SERVICES
-  const displayProjects = projects.length > 0 ? projects : DEFAULT_PROJECTS
+  const showcaseSlugs = new Set(SHOWCASE.map((s) => s.slug))
+  const extraProjects = projects.filter((p: any) => !showcaseSlugs.has(p.slug))
+  const whatsappHref = getWhatsAppHref('Olá! Vi o site da FocoDev e quero tirar meu projeto do papel.')
 
   return (
     <>
@@ -77,434 +113,418 @@ export default async function HomePage() {
         )}
       />
       <ScrollReveal />
-    <div className="overflow-hidden">
-      {/* Hero Section */}
-      <section className="relative py-20 md:py-28 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-sky-50 via-white to-cyan-50 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950" />
-        <div className="absolute -top-32 -left-32 w-96 h-96 bg-brand/25 blur-3xl rounded-full" />
-        <div className="absolute top-10 right-0 w-80 h-80 bg-brand-dark/20 blur-3xl rounded-full" />
-        <div className="container relative">
-          <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
-            <div className="space-y-8 animate-fade-in">
-              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-brand/10 text-brand text-sm md:text-base font-semibold ring-1 ring-brand/20">
-                <Sparkles className="w-4 h-4" />
-                Soluções que geram resultado
-              </div>
-              <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight leading-[1.1]">
-                <span className="bg-gradient-to-r from-gray-900 via-gray-800 to-brand-dark dark:from-white dark:via-gray-100 dark:to-brand bg-clip-text text-transparent">
-                  {banner?.title || 'Soluções digitais para impulsionar seu negócio'}
-                </span>
-              </h1>
-              <p className="text-lg md:text-xl text-gray-600 dark:text-gray-400 leading-relaxed max-w-xl">
-                {banner?.subtitle || 'Empresa de sistemas em Franca/SP, com atendimento em todo o Brasil — software sob medida, do site ao app mobile em produção.'}
-              </p>
-              <div className="flex flex-wrap gap-2">
-                {TECH_STACK.map((tech) => (
-                  <span
-                    key={tech}
-                    className="px-3 py-1.5 rounded-lg bg-white/80 dark:bg-gray-900/80 text-sm font-medium text-gray-700 dark:text-gray-300 ring-1 ring-gray-200 dark:ring-gray-700 shadow-sm"
-                  >
-                    {tech}
+      <div className="overflow-hidden">
+        {/* ================= HERO ================= */}
+        <section className="relative -mt-16 md:-mt-20 pt-28 md:pt-36 pb-20 md:pb-28">
+          <div className="pointer-events-none absolute inset-0 bg-grid opacity-60" />
+          <div className="pointer-events-none absolute -top-40 -left-40 h-[36rem] w-[36rem] rounded-full bg-neon-cyan/25 blur-[120px] animate-aurora" />
+          <div className="pointer-events-none absolute top-10 -right-40 h-[32rem] w-[32rem] rounded-full bg-neon-violet/30 blur-[120px] animate-aurora-slow" />
+          <div className="pointer-events-none absolute bottom-0 left-1/3 h-[24rem] w-[24rem] rounded-full bg-neon-pink/20 blur-[120px] animate-aurora" />
+
+          <div className="container relative">
+            <div className="grid items-center gap-16 lg:grid-cols-[1.05fr_1fr]">
+              <div className="animate-fade-in">
+                <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-1.5 text-sm text-slate-300 backdrop-blur">
+                  <span className="relative flex h-2.5 w-2.5">
+                    <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
+                    <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-emerald-400" />
                   </span>
-                ))}
-              </div>
-              <div className="flex flex-col sm:flex-row sm:flex-wrap gap-4 pt-2">
-                <Button asChild size="lg" variant="gradient" className="text-base px-8 py-6 rounded-xl shadow-glow">
+                  Agenda aberta para novos projetos
+                </div>
+
+                <h1 className="mt-7 text-[2.6rem] leading-[1.05] sm:text-6xl lg:text-7xl font-bold text-white">
+                  {banner?.title ? (
+                    banner.title
+                  ) : (
+                    <>
+                      Software que faz seu negócio <span className="text-gradient animate-gradient-x">vender mais</span>.
+                    </>
+                  )}
+                </h1>
+
+                <p className="mt-6 max-w-xl text-lg md:text-xl leading-relaxed text-slate-400">
+                  {banner?.subtitle ||
+                    'Sistemas web, apps e automações sob medida — do primeiro rascunho ao sistema rodando em produção. Empresa de Franca/SP, atendendo todo o Brasil.'}
+                </p>
+
+                <div className="mt-9 flex flex-col gap-3 sm:flex-row">
                   <TrackedAnchor
                     kind="cta"
                     source="home_hero_orcamento"
                     href={banner?.ctaLink || '/#contato'}
+                    className="group inline-flex items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-neon-cyan via-neon-violet to-neon-pink bg-[length:200%_auto] bg-left px-7 py-4 text-base font-semibold text-white shadow-neon transition-[background-position,transform] duration-500 hover:bg-right hover:-translate-y-0.5"
                   >
-                    {banner?.ctaText || 'Solicitar orçamento'}
+                    {banner?.ctaText || 'Quero um orçamento'}
+                    <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" />
                   </TrackedAnchor>
-                </Button>
-                <Button asChild size="lg" variant="outline" className="text-base px-8 py-6 rounded-xl bg-white/80 dark:bg-gray-900/80">
-                  <Link href="/#portfolio">Ver Portfólio</Link>
-                </Button>
-              </div>
-            </div>
+                  <Link
+                    href="/#produtos"
+                    className="inline-flex items-center justify-center gap-2 rounded-2xl border border-white/15 bg-white/5 px-7 py-4 text-base font-semibold text-white backdrop-blur transition hover:bg-white/10"
+                  >
+                    Ver sistemas no ar
+                  </Link>
+                </div>
 
-            <div className="relative animate-fade-in-delay">
-              <div className="absolute inset-0 bg-gradient-to-tr from-brand/20 to-brand-dark/10 rounded-3xl blur-2xl scale-95" />
-              <div className="relative rounded-3xl border border-white/60 dark:border-gray-700/60 bg-white/90 dark:bg-gray-900/90 backdrop-blur-xl shadow-2xl p-8 md:p-10 ring-1 ring-brand/10">
-                <div className="grid grid-cols-3 gap-4 mb-8">
+                <dl className="mt-12 grid max-w-lg grid-cols-3 gap-6 border-t border-white/10 pt-8">
                   {HERO_STATS.map((stat) => (
-                    <div key={stat.label} className="text-center p-4 rounded-2xl bg-sky-50 dark:bg-slate-800/80 ring-1 ring-brand/10">
-                      <div className="text-2xl md:text-3xl font-bold text-brand">{stat.value}</div>
-                      <div className="text-xs md:text-sm text-gray-600 dark:text-gray-400 mt-1 leading-tight">{stat.label}</div>
+                    <div key={stat.label}>
+                      <dt className="sr-only">{stat.label}</dt>
+                      <dd className="font-display whitespace-nowrap text-xl sm:text-2xl md:text-3xl font-bold text-white">{stat.value}</dd>
+                      <dd className="mt-1 text-xs md:text-sm text-slate-500">{stat.label}</dd>
                     </div>
                   ))}
-                </div>
-                <div className="space-y-4">
-                  <div className="flex items-center gap-4 p-4 rounded-2xl bg-gradient-to-r from-brand/5 to-brand-dark/5 ring-1 ring-brand/15">
-                    <div className="h-12 w-12 rounded-xl bg-brand/15 flex items-center justify-center shrink-0">
-                      <Package className="w-6 h-6 text-brand" />
-                    </div>
-                    <div>
-                      <div className="font-semibold text-gray-900 dark:text-white">Gerenciamento de Estoque</div>
-                      <div className="text-sm text-gray-600 dark:text-gray-400">Em produção · focodev.com.br</div>
+                </dl>
+              </div>
+
+              {/* Composição com prints reais */}
+              <div className="relative mx-auto w-full max-w-xl lg:max-w-none animate-fade-in-delay">
+                <div className="absolute -inset-6 rounded-[2.5rem] bg-gradient-to-tr from-neon-cyan/20 via-neon-violet/20 to-neon-pink/20 blur-2xl" />
+                <div className="relative pl-6 pb-14 sm:pl-16 sm:pb-16">
+                  <BrowserFrame
+                    src="/portfolio/barbearia/painel-admin.webp"
+                    alt="Painel administrativo do sistema de barbearia desenvolvido pela FocoDev"
+                    url="admin.barbearia.focodev.com.br"
+                    priority
+                    className="lg:rotate-[1.5deg]"
+                  />
+                  <PhoneFrame
+                    src="/portfolio/mercado/loja-celular.webp"
+                    alt="App de mercado da FocoDev aberto no celular"
+                    priority
+                    className="absolute bottom-0 left-0 w-[34%] sm:w-[30%] -rotate-6 animate-float"
+                  />
+                  <div className="absolute -top-5 right-2 sm:-right-4 hidden sm:block glass rounded-2xl px-4 py-3 shadow-xl animate-float-delay">
+                    <div className="flex items-center gap-3">
+                      <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-emerald-500/20 text-emerald-300">
+                        <ShoppingCart className="h-4 w-4" />
+                      </span>
+                      <div className="text-left">
+                        <div className="text-xs text-slate-400">Novo pedido #1284</div>
+                        <div className="text-sm font-semibold text-white">R$ 68,40 · Preparando</div>
+                      </div>
                     </div>
                   </div>
-                  <div className="flex items-center gap-4 p-4 rounded-2xl bg-gradient-to-r from-brand/5 to-brand-dark/5 ring-1 ring-brand/15">
-                    <div className="h-12 w-12 rounded-xl bg-brand/15 flex items-center justify-center shrink-0">
-                      <Smartphone className="w-6 h-6 text-brand" />
-                    </div>
-                    <div>
-                      <div className="font-semibold text-gray-900 dark:text-white">Foco Academia & App Rotas</div>
-                      <div className="text-sm text-gray-600 dark:text-gray-400">Landings com orçamento · /fitlife e /rotas</div>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-4 p-4 rounded-2xl bg-gradient-to-r from-brand/5 to-brand-dark/5 ring-1 ring-brand/15">
-                    <div className="h-12 w-12 rounded-xl bg-brand/15 flex items-center justify-center shrink-0">
-                      <Globe className="w-6 h-6 text-brand" />
-                    </div>
-                    <div>
-                      <div className="font-semibold text-gray-900 dark:text-white">Sites & PWAs</div>
-                      <div className="text-sm text-gray-600 dark:text-gray-400">Instaláveis no celular</div>
+                  <div className="absolute bottom-3 right-0 sm:right-6 hidden sm:block glass rounded-2xl px-4 py-3 shadow-xl animate-float">
+                    <div className="flex items-center gap-3">
+                      <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-neon-violet/25 text-violet-200">
+                        <CalendarCheck className="h-4 w-4" />
+                      </span>
+                      <div className="text-left">
+                        <div className="text-xs text-slate-400">Horário confirmado</div>
+                        <div className="text-sm font-semibold text-white">Hoje, 14:10 · Rafael</div>
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* Services Section */}
-      <section id="servicos" data-reveal className="container py-20 relative scroll-mt-24">
-        <div className="absolute -top-10 left-0 w-64 h-64 bg-brand/10 blur-3xl rounded-full" />
-        <div className="absolute -bottom-10 right-0 w-64 h-64 bg-brand-dark/10 blur-3xl rounded-full" />
-        <div className="text-center mb-16">
-          <h2 className="section-title">Serviços</h2>
-          <p className="section-subtitle max-w-2xl mx-auto text-gray-800 dark:text-gray-200 font-semibold">
-            O que fazemos para impulsionar seu negócio
-          </p>
-        </div>
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
-          {displayServices.map((s, index: number) => (
-            <div 
-              key={s.id} 
-              className="card p-8 group cursor-pointer ring-1 ring-brand/20 hover:ring-brand/40 hover:border-brand"
-              style={{ animationDelay: `${index * 100}ms` }}
-            >
-              <div className="h-12 w-12 rounded-xl bg-brand/10 text-brand flex items-center justify-center ring-1 ring-brand/20 mb-4 group-hover:bg-brand/15 group-hover:ring-brand/40">
-                {(() => {
-                  const Icon = getServiceIcon(s.title)
-                  return <Icon className="w-6 h-6" />
-                })()}
-              </div>
-              <div className="text-2xl font-bold mb-3 text-gray-900 dark:text-white group-hover:text-brand transition-colors">
-                {s.title}
-              </div>
-              <p className="text-gray-700 dark:text-gray-300 leading-relaxed">{s.description}</p>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* Sistemas e projetos */}
-      <section id="sistemas" data-reveal className="container py-20 relative scroll-mt-24">
-        <div className="text-center mb-16">
-          <h2 className="section-title">Nossos Sistemas</h2>
-          <p className="section-subtitle max-w-2xl mx-auto text-gray-800 dark:text-gray-200 font-semibold">
-            Conheça os produtos, veja o que fazem e peça um orçamento — o acesso é liberado após contratação
-          </p>
-        </div>
-        <div className="flex flex-wrap justify-center gap-8 max-w-6xl mx-auto">
-          {PRODUCTION_SYSTEMS.map((system) => (
-            <a
-              key={system.href}
-              href={system.href}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="w-full sm:w-[calc(50%-1rem)] lg:w-[calc(33.333%-1.334rem)] card p-8 group ring-1 ring-brand/20 hover:ring-brand/40 hover:border-brand transition-all"
-            >
-              <div className="h-12 w-12 rounded-xl bg-brand/10 text-brand flex items-center justify-center ring-1 ring-brand/20 mb-4">
-                <Package className="w-6 h-6" />
-              </div>
-              <div className="text-xl font-bold mb-2 text-gray-900 dark:text-white group-hover:text-brand transition-colors flex items-center gap-2">
-                {system.label}
-                <ExternalLink className="w-4 h-4 opacity-60" />
-              </div>
-              <p className="text-gray-700 dark:text-gray-300 leading-relaxed">{system.description}</p>
-              <span className="inline-flex items-center gap-1.5 mt-4 px-3 py-1 rounded-full bg-brand/10 text-brand text-sm font-medium ring-1 ring-brand/20">
-                <Globe className="w-3.5 h-3.5" />
-                Acessar online
-              </span>
-            </a>
-          ))}
-
-          {([SHOWCASE_PROJECTS.fitlife, SHOWCASE_PROJECTS.rotas] as const).map((product) => (
-            <Link
-              key={product.href}
-              href={product.href}
-              className="card overflow-hidden ring-1 ring-brand/20 hover:ring-brand/40 hover:border-brand transition-all group block"
-            >
-              <div className="relative h-40 bg-sky-50 dark:bg-slate-900">
-                <Image
-                  src={product.image}
-                  unoptimized={String(product.image).endsWith('.svg')}
-                  alt={product.label}
-                  fill
-                  className="object-cover group-hover:scale-105 transition-transform duration-500"
-                  sizes="(max-width: 768px) 100vw, 33vw"
-                />
-              </div>
-              <div className="p-8">
-                <div className="flex flex-wrap items-center gap-2 mb-3">
-                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-brand/10 text-brand text-sm font-semibold ring-1 ring-brand/20">
-                    <Smartphone className="w-3.5 h-3.5" />
-                    {product.badge}
-                  </span>
-                  <span className="px-3 py-1 rounded-full bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 text-sm font-medium">
-                    {product.tech}
-                  </span>
-                </div>
-                <div className="text-xl font-bold mb-2 text-gray-900 dark:text-white group-hover:text-brand transition-colors flex items-center gap-2">
-                  {product.label === 'App Rotas' ? <MapPin className="w-5 h-5 text-brand" /> : null}
-                  {product.label}
-                </div>
-                <p className="text-gray-700 dark:text-gray-300 leading-relaxed">{product.description}</p>
-                <ul className="mt-4 flex flex-wrap gap-2">
-                  {product.features.map((feature) => (
-                    <li
-                      key={feature}
-                      className="text-xs font-medium px-2.5 py-1 rounded-md bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400"
-                    >
-                      {feature}
-                    </li>
-                  ))}
-                </ul>
-                <span className="inline-flex items-center gap-1.5 mt-5 text-brand text-sm font-semibold">
-                  Conhecer e orçar
-                  <ExternalLink className="w-3.5 h-3.5 opacity-70" />
+        {/* ================= TECNOLOGIAS (marquee) ================= */}
+        <section aria-label="Tecnologias" className="relative border-y border-white/10 bg-white/[0.02] py-6">
+          <div className="flex overflow-hidden [mask-image:linear-gradient(90deg,transparent,#000_10%,#000_90%,transparent)]">
+            <div className="flex shrink-0 animate-marquee gap-12 pr-12">
+              {[...TECH_STACK, 'TypeScript', 'n8n', 'Angular', 'GitHub Actions', ...TECH_STACK, 'TypeScript', 'n8n', 'Angular', 'GitHub Actions'].map((tech, i) => (
+                <span key={`${tech}-${i}`} className="flex items-center gap-3 whitespace-nowrap font-display text-lg font-semibold text-slate-500">
+                  <Sparkles className="h-4 w-4 text-neon-violet/70" />
+                  {tech}
                 </span>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* ================= PRODUTOS ================= */}
+        <section id="produtos" className="container relative py-16 md:py-24 scroll-mt-20">
+          <span id="sistemas" className="absolute -top-20" aria-hidden />
+          <span id="portfolio" className="absolute -top-20" aria-hidden />
+          <SectionHeading
+            eyebrow="Sistemas em produção"
+            title={
+              <>
+                Não é mockup. <span className="text-gradient">É sistema rodando.</span>
+              </>
+            }
+            subtitle="Produtos que desenvolvemos e mantemos no ar — e que podem ser adaptados para o seu negócio."
+          />
+
+          <div className="space-y-8 md:space-y-10">
+            {SHOWCASE.map((item, index) => {
+              const reverse = index % 2 === 1
+              const linkProps = item.external
+                ? { href: item.href, target: '_blank', rel: 'noopener noreferrer' }
+                : { href: item.href }
+              return (
+                <article
+                  key={item.slug}
+                  data-reveal
+                  className="group relative overflow-hidden rounded-[2rem] border border-white/10 bg-ink-900/60 p-6 sm:p-10 lg:p-12"
+                >
+                  <div className={`pointer-events-none absolute inset-0 bg-gradient-to-br ${item.accent}`} />
+                  <div className={`pointer-events-none absolute -bottom-24 ${reverse ? '-left-24' : '-right-24'} h-72 w-72 rounded-full ${item.glow} blur-[100px] opacity-60 transition-opacity duration-500 group-hover:opacity-100`} />
+                  <div className={`relative grid items-center gap-10 lg:grid-cols-2 ${reverse ? 'lg:[&>*:first-child]:order-2' : ''}`}>
+                    <div>
+                      <div className="text-sm font-semibold uppercase tracking-[0.18em] text-slate-400">{item.tagline}</div>
+                      <h3 className="mt-3 text-3xl md:text-4xl font-bold text-white">{item.title}</h3>
+                      <p className="mt-4 text-base md:text-lg leading-relaxed text-slate-400">{item.description}</p>
+                      <ul className="mt-6 space-y-2.5">
+                        {item.features.map((f) => (
+                          <li key={f} className="flex items-center gap-3 text-slate-200">
+                            <span className="flex h-6 w-6 items-center justify-center rounded-full bg-white/10">
+                              <Check className="h-3.5 w-3.5 text-neon-cyan" />
+                            </span>
+                            {f}
+                          </li>
+                        ))}
+                      </ul>
+                      <div className="mt-6 flex flex-wrap gap-2">
+                        {item.tech.map((t) => (
+                          <span key={t} className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs font-medium text-slate-300">
+                            {t}
+                          </span>
+                        ))}
+                      </div>
+                      <a
+                        {...linkProps}
+                        className="mt-8 inline-flex items-center gap-2 rounded-xl bg-white px-5 py-3 text-sm font-semibold text-ink-950 transition hover:bg-slate-200"
+                      >
+                        {item.cta}
+                        <ArrowUpRight className="h-4 w-4" />
+                      </a>
+                    </div>
+
+                    <div className="relative">
+                      {item.desktop ? (
+                        <div className={`relative ${item.mobile ? 'pb-10 sm:pb-12 ' + (reverse ? 'pl-10 sm:pl-14' : 'pr-10 sm:pr-14') : ''}`}>
+                          <BrowserFrame
+                            src={item.desktop}
+                            alt={`Tela do sistema ${item.title}`}
+                            url={item.external ? item.href.replace('https://', '') : `focodev.com.br${item.href}`}
+                            className="transition-transform duration-700 group-hover:-translate-y-1"
+                          />
+                          {item.mobile && (
+                            <PhoneFrame
+                              src={item.mobile}
+                              alt={`${item.title} no celular`}
+                              className={`absolute bottom-0 w-[28%] ${reverse ? 'left-0 -rotate-3' : 'right-0 rotate-3'} transition-transform duration-700 group-hover:-translate-y-2`}
+                            />
+                          )}
+                        </div>
+                      ) : (
+                        <div className="flex justify-center gap-5 sm:gap-8">
+                          {[item.mobile, item.mobile2].filter(Boolean).map((src, i) => (
+                            <PhoneFrame
+                              key={src}
+                              src={src as string}
+                              alt={`${item.title} — tela ${i + 1}`}
+                              className={`w-[42%] max-w-[230px] ${i === 0 ? '-rotate-3' : 'rotate-3 translate-y-8'} transition-transform duration-700 group-hover:-translate-y-2`}
+                            />
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </article>
+              )
+            })}
+          </div>
+
+          {extraProjects.length > 0 && (
+            <div className="mt-16" data-reveal>
+              <h3 className="mb-6 text-xl font-semibold text-white">Mais projetos</h3>
+              <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                {extraProjects.map((p: any) => {
+                  const landing = getProjectHref(p.slug)
+                  const external = PROJECT_EXTERNAL_URLS[p.slug]
+                  return (
+                    <Link key={p.id} href={external || landing} className="card group block overflow-hidden">
+                      {p.coverImageUrl && (
+                        <div className="relative aspect-[16/9] bg-ink-800">
+                          <Image
+                            src={p.coverImageUrl}
+                            unoptimized={String(p.coverImageUrl).endsWith('.svg')}
+                            alt={p.title}
+                            fill
+                            sizes="(max-width: 768px) 100vw, 33vw"
+                            className="object-cover transition-transform duration-500 group-hover:scale-105"
+                          />
+                        </div>
+                      )}
+                      <div className="p-6">
+                        <div className="text-lg font-semibold text-white">{p.title}</div>
+                        <p className="mt-2 line-clamp-3 text-sm text-slate-400">{p.description}</p>
+                      </div>
+                    </Link>
+                  )
+                })}
               </div>
+            </div>
+          )}
+
+          <div className="mt-12 text-center">
+            <Link href="/projects" className="inline-flex items-center gap-2 font-semibold text-neon-cyan hover:text-white transition-colors">
+              Ver portfólio completo <ArrowRight className="h-4 w-4" />
             </Link>
-          ))}
-        </div>
-      </section>
-
-      {/* Videos Section */}
-      {videos.length > 0 && (
-        <section data-reveal className="container py-20 relative">
-          <div className="absolute -top-10 left-0 w-64 h-64 bg-brand/10 blur-3xl rounded-full" />
-          <div className="absolute -bottom-10 right-0 w-64 h-64 bg-brand-dark/10 blur-3xl rounded-full" />
-          <div className="text-center mb-16">
-            <h2 className="section-title">
-              <span className="inline-flex items-center gap-3">
-                <span className="h-10 w-10 rounded-xl bg-gradient-to-r from-brand/20 to-brand-dark/20 flex items-center justify-center ring-1 ring-brand/30">
-                  <Play className="w-6 h-6 text-brand" />
-                </span>
-                Trabalhos em Vídeo
-              </span>
-            </h2>
-            <p className="section-subtitle max-w-2xl mx-auto text-gray-800 dark:text-gray-200 font-semibold">
-              Confira alguns dos nossos projetos em ação
-            </p>
           </div>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
-            {videos.map((video: typeof videos[number], index: number) => {
-              const videoId = getYouTubeVideoId(video.youtubeUrl)
-              const embedUrl = videoId ? `https://www.youtube.com/embed/${videoId}` : null
-              const thumbnailUrl = video.thumbnailUrl || (videoId ? `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg` : null)
-              
+        </section>
+
+        {/* ================= SERVIÇOS ================= */}
+        <section id="servicos" data-reveal className="container relative py-16 md:py-24 scroll-mt-20">
+          <SectionHeading
+            eyebrow="Serviços"
+            title={
+              <>
+                Tudo o que seu projeto precisa, <span className="text-gradient">num lugar só</span>
+              </>
+            }
+            subtitle="Do design ao servidor: você fala com quem constrói, sem intermediários."
+          />
+          <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+            {displayServices.map((s: { id: string; title: string; description: string }, index: number) => {
+              const Icon = getServiceIcon(s.title)
               return (
                 <div
-                  key={video.id}
-                  className="group relative overflow-hidden rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:scale-[1.02]"
-                  style={{ animationDelay: `${index * 100}ms` }}
+                  key={s.id}
+                  className="group relative overflow-hidden rounded-3xl border border-white/10 bg-ink-900/60 p-7 transition-all duration-300 hover:-translate-y-1 hover:border-white/20"
                 >
-                  <div className="aspect-video relative bg-gray-900">
-                    {embedUrl ? (
-                      <iframe
-                        src={embedUrl}
-                        title={video.title}
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                        allowFullScreen
-                        className="w-full h-full"
-                      />
-                    ) : thumbnailUrl ? (
-                      <>
-                        <Image
-                          src={thumbnailUrl}
-                          unoptimized={String(thumbnailUrl).endsWith('.svg')}
-                          alt={video.title}
-                          fill
-                          className="object-cover"
-                          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                        />
-                        <a
-                          href={video.youtubeUrl}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="absolute inset-0 flex items-center justify-center bg-black/40 hover:bg-black/50 transition-colors"
-                        >
-                          <div className="w-16 h-16 rounded-full bg-red-600 flex items-center justify-center group-hover:scale-110 transition-transform">
-                            <Play className="w-8 h-8 text-white ml-1" />
-                          </div>
-                        </a>
-                      </>
-                    ) : (
-                      <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-brand/20 to-brand-dark/20">
-                        <Play className="w-16 h-16 text-white/50" />
-                      </div>
-                    )}
+                  <div className="pointer-events-none absolute -right-16 -top-16 h-40 w-40 rounded-full bg-neon-violet/0 blur-3xl transition-all duration-500 group-hover:bg-neon-violet/25" />
+                  <div className={`flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br ${ICON_GRADIENTS[index % ICON_GRADIENTS.length]} shadow-lg`}>
+                    <Icon className="h-6 w-6 text-white" />
                   </div>
-                  <div className="p-6 bg-white dark:bg-gray-900">
-                    <h3 className="text-xl font-bold mb-2 text-gray-900 dark:text-white group-hover:text-brand transition-colors">
-                      {video.title}
-                    </h3>
-                  </div>
+                  <h3 className="mt-6 text-xl font-bold text-white">{s.title}</h3>
+                  <p className="mt-3 leading-relaxed text-slate-400">{s.description}</p>
                 </div>
               )
             })}
           </div>
         </section>
-      )}
 
-      {/* About Section */}
-      <section id="sobre" data-reveal className="container py-20 relative scroll-mt-24">
-        <div className="absolute -top-10 left-0 w-64 h-64 bg-brand/10 blur-3xl rounded-full" />
-        <div className="absolute -bottom-10 right-0 w-64 h-64 bg-brand-dark/10 blur-3xl rounded-full" />
-        <div className="max-w-4xl mx-auto text-center">
-          <h2 className="section-title">
-            <span className="inline-flex items-center gap-3">
-              <span className="h-10 w-10 rounded-xl bg-gradient-to-r from-brand/20 to-brand-dark/20 flex items-center justify-center ring-1 ring-brand/30">
-                <Info className="w-6 h-6 text-brand" />
-              </span>
-              Sobre Nós
-            </span>
-          </h2>
-          <div className="card p-6 md:p-8 ring-1 ring-brand/20 bg-white/90 dark:bg-gray-900/90 space-y-4 text-left">
-            {ABOUT_PARAGRAPHS.map((paragraph) => (
-              <p key={paragraph.slice(0, 32)} className="text-lg md:text-xl text-gray-700 dark:text-gray-300 leading-relaxed">
-                {paragraph}
-              </p>
-            ))}
-          </div>
-          <div className="mt-8 flex flex-wrap justify-center gap-4">
-            <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-brand/15 text-brand-dark dark:text-brand text-base md:text-lg font-semibold ring-1 ring-brand/30">
-              <Gauge className="w-4 h-4" />
-              Performance
-            </span>
-            <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-brand/15 text-brand-dark dark:text-brand text-base md:text-lg font-semibold ring-1 ring-brand/30">
-              <ShieldCheck className="w-4 h-4" />
-              Segurança
-            </span>
-            <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-brand/15 text-brand-dark dark:text-brand text-base md:text-lg font-semibold ring-1 ring-brand/30">
-              <Sparkles className="w-4 h-4" />
-              UX de Alto Nível
-            </span>
-          </div>
-        </div>
-      </section>
-
-      <TestimonialsSection />
-
-      <FaqSection />
-
-      {/* Portfolio Section */}
-      <section id="portfolio" data-reveal className="container py-20 relative scroll-mt-24">
-        <div className="absolute -top-10 right-0 w-64 h-64 bg-brand/10 blur-3xl rounded-full" />
-        <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-12">
-          <div>
-            <h2 className="section-title mb-2">Portfólio</h2>
-            <p className="text-gray-600 dark:text-gray-400 max-w-xl">
-              Projetos reais e demonstrações que mostram nossa capacidade técnica
-            </p>
-          </div>
-          <Link
-            href="/projects"
-            className="text-brand hover:text-brand-dark font-semibold flex items-center gap-2 group transition-colors shrink-0"
-          >
-            Ver tudo
-            <svg className="w-5 h-5 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-            </svg>
-          </Link>
-        </div>
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
-          {displayProjects.map((p, index: number) => {
-            const landingHref = getProjectHref(p.slug)
-            const hasLanding = landingHref !== `/projects/${p.slug}`
-            const externalUrl = !hasLanding ? PROJECT_EXTERNAL_URLS[p.slug] : undefined
-            const href = hasLanding ? landingHref : (externalUrl || `/projects/${p.slug}`)
-            const isExternal = Boolean(externalUrl)
-
-            const card = (
-              <div className="relative rounded-2xl overflow-hidden border border-gray-200/80 dark:border-gray-800 bg-white dark:bg-gray-900 shadow-soft hover:shadow-glow transition-all duration-300 hover:-translate-y-1 hover:border-brand/40">
-                <div className="relative h-48 bg-gradient-to-br from-sky-50 to-cyan-100 dark:from-slate-800 dark:to-slate-900 overflow-hidden">
-                  <Image
-                    src={p.coverImageUrl || getProjectFallbackImage(p)}
-                    unoptimized={String(p.coverImageUrl || getProjectFallbackImage(p)).endsWith('.svg')}
-                    alt={p.title}
-                    fill
-                    className="object-cover group-hover:scale-105 transition-transform duration-500"
-                    sizes="(max-width: 768px) 100vw, 33vw"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-60" />
+        {/* ================= PROCESSO ================= */}
+        <section id="processo" data-reveal className="container relative py-16 md:py-24 scroll-mt-20">
+          <SectionHeading
+            eyebrow="Como trabalhamos"
+            title={
+              <>
+                Da ideia ao sistema no ar em <span className="text-gradient">4 passos</span>
+              </>
+            }
+          />
+          <ol className="relative grid gap-5 md:grid-cols-2 lg:grid-cols-4">
+            {PROCESS_STEPS.map((step, i) => (
+              <li key={step.title} className="relative rounded-3xl border border-white/10 bg-ink-900/60 p-7">
+                <div className="relative flex h-12 w-12 items-center justify-center rounded-full border border-white/15 bg-ink-950 font-display text-lg font-bold">
+                  <span className="text-gradient">0{i + 1}</span>
                 </div>
-                <div className="p-6">
-                  <div className="text-xl font-bold mb-2 text-gray-900 dark:text-white group-hover:text-brand transition-colors">
-                    {p.title}
+                <h3 className="mt-6 text-xl font-bold text-white">{step.title}</h3>
+                <p className="mt-3 leading-relaxed text-slate-400">{step.description}</p>
+              </li>
+            ))}
+          </ol>
+        </section>
+
+        {/* ================= VÍDEOS ================= */}
+        {videos.length > 0 && (
+          <section data-reveal className="container relative py-16 md:py-24">
+            <SectionHeading eyebrow="Em ação" title="Trabalhos em vídeo" />
+            <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+              {videos.map((video: any) => {
+                const videoId = getYouTubeVideoId(video.youtubeUrl)
+                const embedUrl = videoId ? `https://www.youtube.com/embed/${videoId}` : null
+                return (
+                  <div key={video.id} className="card overflow-hidden">
+                    <div className="relative aspect-video bg-black">
+                      {embedUrl ? (
+                        <iframe
+                          src={embedUrl}
+                          title={video.title}
+                          loading="lazy"
+                          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                          allowFullScreen
+                          className="h-full w-full"
+                        />
+                      ) : (
+                        <a href={video.youtubeUrl} target="_blank" rel="noopener noreferrer" className="flex h-full items-center justify-center">
+                          <Play className="h-14 w-14 text-white/60" />
+                        </a>
+                      )}
+                    </div>
+                    <div className="p-5 font-semibold text-white">{video.title}</div>
                   </div>
-                  <p className="text-gray-600 dark:text-gray-400 line-clamp-3 leading-relaxed text-sm">{p.description}</p>
-                  <div className="mt-4 text-brand text-sm font-semibold flex items-center gap-1 opacity-80 group-hover:opacity-100 transition-opacity">
-                    {isExternal ? 'Acessar sistema' : hasLanding ? 'Conhecer e orçar' : 'Ver projeto'}
-                    <ExternalLink className="w-3.5 h-3.5" />
-                  </div>
+                )
+              })}
+            </div>
+          </section>
+        )}
+
+        {/* ================= SOBRE ================= */}
+        <section id="sobre" data-reveal className="container relative py-16 md:py-24 scroll-mt-20">
+          <div className="grid gap-12 lg:grid-cols-2 lg:items-center">
+            <div>
+              <span className="eyebrow">Sobre a FocoDev</span>
+              <h2 className="section-title mt-5">
+                Tecnologia de ponta, <span className="text-gradient">atendimento de perto</span>
+              </h2>
+              <div className="space-y-4 text-lg leading-relaxed text-slate-400">
+                {ABOUT_PARAGRAPHS.slice(0, 2).map((paragraph) => (
+                  <p key={paragraph.slice(0, 32)}>{paragraph}</p>
+                ))}
+              </div>
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              {[
+                { icon: MapPin, title: 'Franca/SP', text: 'Atendimento presencial na região e remoto para todo o Brasil.' },
+                { icon: Zap, title: 'Entrega ágil', text: 'Ciclos curtos com sistema funcionando desde as primeiras semanas.' },
+                { icon: ShieldCheck, title: 'Segurança', text: 'HTTPS, backups, controle de acesso e boas práticas desde o início.' },
+                { icon: PackageOpen, title: 'Você é dono', text: 'Código, domínio e dados do projeto ficam com você.' },
+              ].map(({ icon: Icon, title, text }) => (
+                <div key={title} className="rounded-3xl border border-white/10 bg-ink-900/60 p-6">
+                  <Icon className="h-6 w-6 text-neon-cyan" />
+                  <div className="mt-4 font-display text-lg font-bold text-white">{title}</div>
+                  <p className="mt-2 text-sm leading-relaxed text-slate-400">{text}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <div data-reveal>
+          <FaqSection />
+        </div>
+
+        {/* ================= CONTATO ================= */}
+        <section id="contato" data-reveal className="container relative py-16 md:py-24 scroll-mt-20">
+          <div className="relative overflow-hidden rounded-[2.5rem] border border-white/10 bg-ink-900/70 p-6 sm:p-10 lg:p-14">
+            <div className="pointer-events-none absolute -top-32 -left-32 h-96 w-96 rounded-full bg-neon-cyan/20 blur-[110px]" />
+            <div className="pointer-events-none absolute -bottom-32 -right-32 h-96 w-96 rounded-full bg-neon-pink/20 blur-[110px]" />
+            <div className="relative grid gap-12 lg:grid-cols-2 lg:items-center">
+              <div>
+                <span className="eyebrow">Contato</span>
+                <h2 className="mt-5 text-4xl md:text-6xl font-bold text-white leading-[1.05]">
+                  Vamos tirar seu projeto <span className="text-gradient animate-gradient-x">do papel?</span>
+                </h2>
+                <p className="mt-6 max-w-md text-lg text-slate-400">
+                  Conte o que você precisa. Respondemos rápido, com um caminho claro e orçamento sem compromisso.
+                </p>
+                <div className="mt-8 flex flex-col gap-3 sm:flex-row lg:flex-col xl:flex-row">
+                  <TrackedAnchor
+                    kind="whatsapp"
+                    source="home_contact_whatsapp"
+                    href={whatsappHref}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center justify-center gap-2 rounded-2xl bg-emerald-500 px-6 py-4 font-semibold text-white transition hover:bg-emerald-400"
+                  >
+                    <MessageCircle className="h-5 w-5" />
+                    Chamar no WhatsApp
+                  </TrackedAnchor>
                 </div>
               </div>
-            )
-
-            if (isExternal) {
-              return (
-                <a
-                  key={p.id}
-                  href={href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="group block"
-                  style={{ animationDelay: `${index * 100}ms` }}
-                >
-                  {card}
-                </a>
-              )
-            }
-
-            return (
-              <Link
-                key={p.id}
-                href={href}
-                className="group block"
-                style={{ animationDelay: `${index * 100}ms` }}
-              >
-                {card}
-              </Link>
-            )
-          })}
-        </div>
-      </section>
-
-      {/* Contact Section */}
-      <section id="contato" data-reveal className="container py-20 scroll-mt-24">
-        <div className="max-w-2xl mx-auto">
-          <div className="text-center mb-12">
-            <h2 className="section-title">
-              <span className="inline-flex items-center gap-3">
-                <span className="h-10 w-10 rounded-xl bg-gradient-to-r from-brand/20 to-brand-dark/20 flex items-center justify-center ring-1 ring-brand/30">
-                  <MessageSquare className="w-6 h-6 text-brand" />
-                </span>
-                <span className="text-gray-900 dark:text-white font-extrabold">Contato</span>
-              </span>
-            </h2>
-            <p className="text-xl md:text-2xl text-gray-800 dark:text-gray-200 font-semibold">Fale com nossa equipe</p>
+              <ContactForm trackingSource="home" />
+            </div>
           </div>
-          <ContactForm trackingSource="home" />
-        </div>
-      </section>
-    </div>
+        </section>
+      </div>
     </>
   )
 }

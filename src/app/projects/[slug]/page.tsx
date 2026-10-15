@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import { getShowcaseCover } from '@/lib/showcase'
 import { notFound, redirect } from 'next/navigation'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -16,7 +17,7 @@ import {
 
 function getProjectFallbackImage(slug: string) {
   const p = DEFAULT_PROJECTS.find((x) => x.slug === slug)
-  return p?.coverImageUrl || '/portfolio/default.svg'
+  return getShowcaseCover(slug) || p?.coverImageUrl || '/portfolio/default.svg'
 }
 
 interface Props { params: { slug: string } }
@@ -50,7 +51,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   }
 
   const image =
-    project.coverImageUrl || getProjectFallbackImage(params.slug)
+    (project.coverImageUrl && !project.coverImageUrl.endsWith('.svg') ? project.coverImageUrl : getProjectFallbackImage(params.slug))
 
   return buildMetadata({
     title: project.title,
@@ -67,7 +68,7 @@ export default async function ProjectDetail({ params }: Props) {
   const project = await getProjectBySlug(params.slug)
   if (!project) return notFound()
 
-  const coverUrl = project.coverImageUrl || (project.images[0]?.url) || getProjectFallbackImage(params.slug)
+  const coverUrl = (project.coverImageUrl && !project.coverImageUrl.endsWith('.svg') ? project.coverImageUrl : null) || getShowcaseCover(params.slug) || project.images[0]?.url || getProjectFallbackImage(params.slug)
   const galleryImages = project.images.length > 0 ? project.images : []
   const path = `/projects/${project.slug}`
 

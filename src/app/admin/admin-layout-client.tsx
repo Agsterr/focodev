@@ -3,8 +3,23 @@ import { usePathname } from 'next/navigation'
 import { useEffect } from 'react'
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
+import AdminLayoutContent from './admin-layout-content'
 
-export default function AdminLayoutClient({ children }: { children: React.ReactNode }) {
+type NavItem = { href: string; label: string; icon: string }
+
+/**
+ * Decide o que mostrar no /admin: login e logout aparecem sozinhos (sem menu);
+ * as demais páginas exigem sessão e ganham cabeçalho + menu lateral.
+ */
+export default function AdminLayoutClient({
+  children,
+  header,
+  navItems,
+}: {
+  children: React.ReactNode
+  header: React.ReactNode
+  navItems: NavItem[]
+}) {
   const { data: session, status } = useSession()
   const pathname = usePathname()
   const router = useRouter()
@@ -43,7 +58,12 @@ export default function AdminLayoutClient({ children }: { children: React.ReactN
     return null
   }
 
-  return <>{children}</>
+  return (
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-950">
+      {header}
+      <AdminLayoutContent navItems={navItems}>{children}</AdminLayoutContent>
+    </div>
+  )
 }
 
 

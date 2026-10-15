@@ -75,7 +75,7 @@ export default function ContactForm({
   }
 
   return (
-    <form onSubmit={handleSubmit} className="relative card p-8 md:p-10 space-y-6 ring-1 ring-brand/20 hover:ring-brand/40">
+    <form onSubmit={handleSubmit} className="relative rounded-3xl border border-white/10 bg-ink-950/60 backdrop-blur-xl p-6 md:p-8 space-y-4 shadow-2xl shadow-black/40">
       {success && (
         <div className="p-4 rounded-xl bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 flex items-center gap-3">
           <CheckCircle2 className="w-5 h-5 text-green-600 dark:text-green-400 flex-shrink-0" />
@@ -101,7 +101,7 @@ export default function ContactForm({
       </div>
 
       <div className="relative">
-        <User className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-brand pointer-events-none" />
+        <User className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-neon-cyan pointer-events-none" />
         <input
           name="name"
           value={formData.name}
@@ -113,12 +113,12 @@ export default function ContactForm({
           maxLength={120}
           required
           disabled={loading}
-          className="w-full border-2 border-gray-400 dark:border-gray-600 bg-white dark:bg-gray-900 p-4 pl-12 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand focus:border-brand transition-colors text-gray-900 dark:text-white hover:text-brand dark:hover:text-brand hover:border-brand dark:hover:border-brand placeholder-gray-600 dark:placeholder-gray-400 shadow-soft hover:shadow-glow disabled:opacity-50 disabled:cursor-not-allowed"
+          className="w-full rounded-xl border border-gray-300 dark:border-white/10 bg-white dark:bg-white/[0.04] p-4 pl-12 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-slate-500 transition focus:outline-none focus:border-neon-violet focus:ring-2 focus:ring-neon-violet/40 disabled:opacity-50 disabled:cursor-not-allowed"
         />
       </div>
 
       <div className="relative">
-        <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-brand pointer-events-none" />
+        <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-neon-cyan pointer-events-none" />
         <input
           name="email"
           type="email"
@@ -131,12 +131,12 @@ export default function ContactForm({
           maxLength={254}
           required
           disabled={loading}
-          className="w-full border-2 border-gray-400 dark:border-gray-600 bg-white dark:bg-gray-900 p-4 pl-12 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand focus:border-brand transition-colors text-gray-900 dark:text-white hover:text-brand dark:hover:text-brand hover:border-brand dark:hover:border-brand placeholder-gray-600 dark:placeholder-gray-400 shadow-soft hover:shadow-glow disabled:opacity-50 disabled:cursor-not-allowed"
+          className="w-full rounded-xl border border-gray-300 dark:border-white/10 bg-white dark:bg-white/[0.04] p-4 pl-12 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-slate-500 transition focus:outline-none focus:border-neon-violet focus:ring-2 focus:ring-neon-violet/40 disabled:opacity-50 disabled:cursor-not-allowed"
         />
       </div>
 
       <div className="relative">
-        <Phone className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-brand pointer-events-none" />
+        <Phone className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-neon-cyan pointer-events-none" />
         <input
           name="phone"
           type="tel"
@@ -148,12 +148,12 @@ export default function ContactForm({
           autoComplete="tel"
           maxLength={40}
           disabled={loading}
-          className="w-full border-2 border-gray-400 dark:border-gray-600 bg-white dark:bg-gray-900 p-4 pl-12 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand focus:border-brand transition-colors text-gray-900 dark:text-white hover:text-brand dark:hover:text-brand hover:border-brand dark:hover:border-brand placeholder-gray-600 dark:placeholder-gray-400 shadow-soft hover:shadow-glow disabled:opacity-50 disabled:cursor-not-allowed"
+          className="w-full rounded-xl border border-gray-300 dark:border-white/10 bg-white dark:bg-white/[0.04] p-4 pl-12 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-slate-500 transition focus:outline-none focus:border-neon-violet focus:ring-2 focus:ring-neon-violet/40 disabled:opacity-50 disabled:cursor-not-allowed"
         />
       </div>
 
       <div className="relative">
-        <MessageSquare className="absolute left-4 top-4 w-5 h-5 text-brand pointer-events-none" />
+        <MessageSquare className="absolute left-4 top-4 w-5 h-5 text-neon-cyan pointer-events-none" />
         <textarea
           name="message"
           value={formData.message}
@@ -166,15 +166,16 @@ export default function ContactForm({
           required
           rows={6}
           disabled={loading}
-          className="w-full border-2 border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 p-4 pl-12 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent transition-all text-gray-900 dark:text-white placeholder-gray-600 dark:placeholder-gray-400 resize-none shadow-soft hover:shadow-glow disabled:opacity-50 disabled:cursor-not-allowed"
+          className="w-full rounded-xl border border-gray-300 dark:border-white/10 bg-white dark:bg-white/[0.04] p-4 pl-12 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-slate-500 transition focus:outline-none focus:border-neon-violet focus:ring-2 focus:ring-neon-violet/40 disabled:opacity-50 disabled:cursor-not-allowed"
         />
       </div>
 
       <Button
         type="submit"
         size="lg"
+        variant="gradient"
         disabled={loading}
-        className="w-full text-base py-6 rounded-xl disabled:opacity-50 disabled:cursor-not-allowed"
+        className="w-full text-base py-6 rounded-xl hover:scale-100 disabled:opacity-50 disabled:cursor-not-allowed"
       >
         <span className="inline-flex items-center gap-2">
           {loading ? (

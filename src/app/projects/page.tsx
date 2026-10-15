@@ -6,6 +6,7 @@ import JsonLd from '@/components/JsonLd'
 import { DEFAULT_PROJECTS } from '@/lib/site-content'
 import { PROJECT_EXTERNAL_URLS } from '@/lib/system-links'
 import { getProjectHref } from '@/lib/product-landings'
+import { getShowcaseCover } from '@/lib/showcase'
 import { breadcrumbJsonLd, buildMetadata } from '@/lib/seo'
 
 export const metadata: Metadata = buildMetadata({
@@ -61,7 +62,8 @@ export default async function ProjectsPage() {
       ) : (
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
           {projects.map((p: typeof projects[number], index: number) => {
-            const coverImageUrl = p.coverImageUrl || (p.images && p.images.length > 0 ? p.images[0].url : null)
+            const ownCover = p.coverImageUrl && !p.coverImageUrl.endsWith('.svg') ? p.coverImageUrl : null
+            const coverImageUrl = ownCover || getShowcaseCover(p.slug) || p.coverImageUrl || (p.images && p.images.length > 0 ? p.images[0].url : null)
             const landingHref = getProjectHref(p.slug)
             const hasLanding = landingHref !== `/projects/${p.slug}`
             const externalUrl = !hasLanding ? PROJECT_EXTERNAL_URLS[p.slug] : undefined

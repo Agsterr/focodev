@@ -37,21 +37,21 @@ export const DEFAULT_PROJECTS = [
     slug: 'gerenciamento-estoque',
     title: 'Gerenciamento de Estoque',
     description: 'Plataforma completa para controle de produtos, vendas e estoque online — em produção em focodev.com.br.',
-    coverImageUrl: '/portfolio/focomarket.svg',
+    coverImageUrl: '/portfolio/estoque/painel.webp',
   },
   {
     id: 'proj-mercado',
     slug: 'mercado-digital',
     title: 'Mercado Digital',
     description: 'PWA de mercado com catálogo, promoções, pedidos com entrega e painel do dono — em produção em mercado.focodev.com.br.',
-    coverImageUrl: '/portfolio/focomarket.svg',
+    coverImageUrl: '/portfolio/mercado/loja-desktop.webp',
   },
   {
     id: 'proj-barbearia',
     slug: 'barbearia',
     title: 'Barbearia',
     description: 'Agendamentos online, fila de atendimento e painel administrativo para barbearias — em produção em barbearia.focodev.com.br.',
-    coverImageUrl: '/portfolio/fastburger.svg',
+    coverImageUrl: '/portfolio/barbearia/painel-admin.webp',
   },
   {
     id: 'proj-academia',
@@ -72,7 +72,26 @@ export const DEFAULT_PROJECTS = [
 export const HERO_STATS = [
   { value: '10+', label: 'Projetos entregues' },
   { value: '5', label: 'Sistemas em produção' },
-  { value: '100%', label: 'Foco em resultado' },
+  { value: 'Web + App', label: 'Do site ao celular' },
+] as const
+
+export const PROCESS_STEPS = [
+  {
+    title: 'Diagnóstico',
+    description: 'Entendemos sua operação, os gargalos e o que precisa sair do papel — sem jargão técnico.',
+  },
+  {
+    title: 'Protótipo',
+    description: 'Você vê as telas antes do código. Ajustamos juntos até ficar do jeito do seu negócio.',
+  },
+  {
+    title: 'Desenvolvimento',
+    description: 'Entregas curtas, com acesso ao sistema em andamento para acompanhar e validar.',
+  },
+  {
+    title: 'No ar e suporte',
+    description: 'Deploy com domínio, HTTPS e backup. Seguimos junto para evoluir e dar suporte.',
+  },
 ] as const
 
 export const TECH_STACK = [
