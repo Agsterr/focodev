@@ -1,8 +1,7 @@
 import { NextRequest } from 'next/server'
 import { jsonResponse, errorResponse } from '@/lib/api'
 import { prisma } from '@/lib/db'
-import { sendEmail, formatContactEmail } from '@/lib/email'
-import { sendWhatsAppNotification } from '@/lib/whatsapp'
+import { notifyNewContact } from '@/lib/contact-notify'
 import { sanitize } from '@/lib/sanitize'
 import { rateLimit } from '@/lib/rate-limit'
 
@@ -74,65 +73,26 @@ export async function POST(req: NextRequest) {
       },
     })
 
-    const now = new Date()
-
-    // Enviar e-mail (não bloqueia se falhar)
-    const formattedEmail = formatContactEmail({
+    // Avisa por e-mail e WhatsApp (falhas não impedem o envio do formulário)
+    const { email: emailResult, whatsapp: whatsappResult } = await notifyNewContact({
       name,
       email,
       phone,
       message,
-      date: now,
+      date: new Date(),
     })
 
-    const to =
-      process.env.CONTACT_RECEIVER_EMAIL ||
-      process.env.CONTACT_EMAIL ||
-      'focodevsistemas@gmail.com'
-
-    const emailResult = await sendEmail({
-      to,
-      subject: formattedEmail.subject,
-      html: formattedEmail.html,
-    }).catch((error) => {
-      console.error('[Contact API] Erro ao enviar e-mail:', error)
-      return { success: false, error: error?.message }
-    })
-
-    if (!emailResult.success) {
-      console.warn('[Contact API] E-mail não enviado:', emailResult.error)
-      // Logar no banco para debug
-      await prisma.logs.create({
-        data: {
-          action: 'contact_email_failed',
-          message: `Falha ao enviar e-mail para contato ${contactMessage.id}`,
-          meta: { contactId: contactMessage.id, error: emailResult.error },
-        },
-      }).catch(() => {}) // Não falhar se log falhar
-    }
-
-    // Enviar notificação WhatsApp (não bloqueia se falhar)
-    const whatsappResult = await sendWhatsAppNotification({
-      name,
-      email,
-      phone,
-      message,
-      date: now,
-    }).catch((error) => {
-      console.error('[Contact API] Erro ao enviar WhatsApp:', error)
-      return { success: false, error: error?.message }
-    })
-
-    if (!whatsappResult.success) {
-      console.warn('[Contact API] WhatsApp não enviado:', whatsappResult.error)
-      // Logar no banco para debug
-      await prisma.logs.create({
-        data: {
-          action: 'contact_whatsapp_failed',
-          message: `Falha ao enviar WhatsApp para contato ${contactMessage.id}`,
-          meta: { contactId: contactMessage.id, error: whatsappResult.error },
-        },
-      }).catch(() => {}) // Não falhar se log falhar
+    for (const [channel, result] of [['email', emailResult], ['whatsapp', whatsappResult]] as const) {
+      if (!result.success) {
+        console.warn(`[Contact API] Aviso por ${channel} falhou:`, result.error)
+        await prisma.logs.create({
+          data: {
+            action: `contact_${channel}_failed`,
+            message: `Falha ao avisar por ${channel} sobre o contato ${contactMessage.id}`,
+            meta: { contactId: contactMessage.id, error: result.error },
+          },
+        }).catch(() => {})
+      }
     }
 
     // Log de sucesso

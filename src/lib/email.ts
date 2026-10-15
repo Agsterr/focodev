@@ -1,121 +1,105 @@
+import nodemailer from 'nodemailer'
+
 /**
- * Serviço de envio de e-mail
- * Suporta SMTP e Resend API
+ * Serviço de envio de e-mail.
+ * Usa Resend (RESEND_API_KEY) ou SMTP (SMTP_HOST/SMTP_USER/SMTP_PASSWORD, ex: Gmail
+ * com senha de app). Se os dois estiverem configurados, tenta Resend e cai para SMTP.
  */
 
 interface EmailData {
-  to: string
+  to: string | string[]
   subject: string
   html: string
   from?: string
+  replyTo?: string
 }
 
-export async function sendEmail(data: EmailData): Promise<{ success: boolean; error?: string }> {
-  try {
-    // Verificar se Resend está configurado
-    const resendApiKey = process.env.RESEND_API_KEY
-    if (resendApiKey) {
-      console.log('[Email] Resend API Key encontrada, usando Resend')
-      return await sendEmailViaResend(data, resendApiKey)
-    }
+type EmailResult = { success: boolean; error?: string; provider?: string }
 
-    console.warn('[Email] RESEND_API_KEY não encontrada')
+/** Destinatários das notificações de contato (CONTACT_RECEIVER_EMAIL aceita lista separada por vírgula). */
+export function getContactRecipients(): string[] {
+  const configured = (process.env.CONTACT_RECEIVER_EMAIL || process.env.CONTACT_EMAIL || '')
+    .split(',')
+    .map((e) => e.trim().toLowerCase())
+    .filter(Boolean)
+  return Array.from(new Set([...configured, 'agster.santos01@gmail.com']))
+}
 
-    // Fallback para SMTP
-    const smtpHost = process.env.SMTP_HOST
-    const smtpUser = process.env.SMTP_USER
-    const smtpPassword = process.env.SMTP_PASSWORD
+export function isEmailConfigured() {
+  return Boolean(process.env.RESEND_API_KEY || (process.env.SMTP_HOST && process.env.SMTP_USER && process.env.SMTP_PASSWORD))
+}
 
-    if (smtpHost && smtpUser && smtpPassword) {
-      console.log('[Email] Configuração SMTP encontrada')
-      const smtpConfig = {
-        host: smtpHost,
-        port: Number(process.env.SMTP_PORT || '587'),
-        secure: process.env.SMTP_SECURE === 'true',
-        user: smtpUser,
-        password: smtpPassword,
-      }
-      return await sendEmailViaSMTP(data, smtpConfig)
-    }
+export async function sendEmail(data: EmailData): Promise<EmailResult> {
+  const errors: string[] = []
 
-    // Se nenhum serviço estiver configurado, apenas logar
-    console.warn('[Email] Nenhum serviço de e-mail configurado. Configure RESEND_API_KEY ou SMTP_*')
-    return { success: false, error: 'Serviço de e-mail não configurado. Configure RESEND_API_KEY no Vercel.' }
-  } catch (error: any) {
-    console.error('[Email] Erro ao enviar e-mail:', error)
-    return { success: false, error: error?.message || 'Erro desconhecido' }
+  if (process.env.RESEND_API_KEY) {
+    const r = await sendEmailViaResend(data, process.env.RESEND_API_KEY)
+    if (r.success) return r
+    errors.push(`Resend: ${r.error}`)
   }
+
+  if (process.env.SMTP_HOST && process.env.SMTP_USER && process.env.SMTP_PASSWORD) {
+    const r = await sendEmailViaSMTP(data)
+    if (r.success) return r
+    errors.push(`SMTP: ${r.error}`)
+  }
+
+  if (errors.length === 0) {
+    return { success: false, error: 'Nenhum serviço de e-mail configurado (defina SMTP_* ou RESEND_API_KEY)' }
+  }
+  return { success: false, error: errors.join(' | ') }
 }
 
-async function sendEmailViaResend(
-  data: EmailData,
-  apiKey: string
-): Promise<{ success: boolean; error?: string }> {
+async function sendEmailViaResend(data: EmailData, apiKey: string): Promise<EmailResult> {
   try {
     const fromEmail = data.from || process.env.RESEND_FROM_EMAIL
-    
-    if (!fromEmail) {
-      console.error('[Email] RESEND_FROM_EMAIL não configurado')
-      return { success: false, error: 'RESEND_FROM_EMAIL não configurado. Configure no Vercel.' }
-    }
-
-    console.log('[Email] Enviando via Resend:', {
-      from: fromEmail,
-      to: data.to,
-      subject: data.subject,
-    })
+    if (!fromEmail) return { success: false, error: 'RESEND_FROM_EMAIL não configurado' }
 
     const response = await fetch('https://api.resend.com/emails', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${apiKey}`,
-      },
+      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${apiKey}` },
       body: JSON.stringify({
         from: fromEmail,
         to: data.to,
         subject: data.subject,
         html: data.html,
+        reply_to: data.replyTo,
       }),
+      signal: AbortSignal.timeout(15_000),
     })
-
-    const responseData = await response.json()
-
     if (!response.ok) {
-      console.error('[Email] Erro da API Resend:', {
-        status: response.status,
-        statusText: response.statusText,
-        error: responseData,
-      })
-      throw new Error(`Resend API error (${response.status}): ${JSON.stringify(responseData)}`)
+      const body = await response.text().catch(() => '')
+      return { success: false, error: `HTTP ${response.status} ${body.slice(0, 300)}` }
     }
-
-    console.log('[Email] E-mail enviado com sucesso via Resend:', responseData)
-    return { success: true }
+    return { success: true, provider: 'resend' }
   } catch (error: any) {
-    console.error('[Email] Erro ao enviar via Resend:', error)
-    return { success: false, error: error?.message || 'Erro desconhecido ao enviar e-mail' }
+    return { success: false, error: error?.message || 'Erro desconhecido' }
   }
 }
 
-async function sendEmailViaSMTP(
-  _data: EmailData,
-  config: {
-    host: string
-    port: number
-    secure: boolean
-    user: string
-    password: string
+async function sendEmailViaSMTP(data: EmailData): Promise<EmailResult> {
+  try {
+    const port = Number(process.env.SMTP_PORT || '587')
+    const transporter = nodemailer.createTransport({
+      host: process.env.SMTP_HOST,
+      port,
+      secure: process.env.SMTP_SECURE ? process.env.SMTP_SECURE === 'true' : port === 465,
+      auth: { user: process.env.SMTP_USER, pass: process.env.SMTP_PASSWORD },
+      connectionTimeout: 15_000,
+      greetingTimeout: 15_000,
+      socketTimeout: 20_000,
+    })
+    await transporter.sendMail({
+      from: data.from || process.env.SMTP_FROM || `"Site FocoDev" <${process.env.SMTP_USER}>`,
+      to: data.to,
+      subject: data.subject,
+      html: data.html,
+      replyTo: data.replyTo,
+    })
+    return { success: true, provider: 'smtp' }
+  } catch (error: any) {
+    return { success: false, error: error?.message || 'Erro desconhecido' }
   }
-): Promise<{ success: boolean; error?: string }> {
-  // Para SMTP, precisaríamos do nodemailer
-  // Por enquanto, vamos apenas logar que seria enviado
-  console.log('[Email] SMTP não implementado ainda. Use Resend ou instale nodemailer', {
-    host: config.host,
-    port: config.port,
-    user: config.user,
-  })
-  return { success: false, error: 'SMTP não implementado. Use Resend API' }
 }
 
 /**
@@ -130,7 +114,8 @@ export function formatContactEmail(data: {
 }): { subject: string; html: string } {
   const formattedDate = new Intl.DateTimeFormat('pt-BR', {
     dateStyle: 'full',
-    timeStyle: 'medium',
+    timeStyle: 'short',
+    timeZone: 'America/Sao_Paulo',
   }).format(data.date)
 
   const subject = `🔔 Novo contato no site - ${data.name}`
