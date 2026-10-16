@@ -296,7 +296,7 @@ export default async function HomePage() {
 
                     <div className="relative">
                       {item.desktop ? (
-                        <div className={`relative ${item.mobile ? 'pb-10 sm:pb-12 ' + (reverse ? 'pl-10 sm:pl-14' : 'pr-10 sm:pr-14') : ''}`}>
+                        <div className={`relative ${item.mobile ? 'pt-10 sm:pt-16 pb-12 sm:pb-16 ' + (reverse ? 'pl-16 sm:pl-24' : 'pr-16 sm:pr-24') : ''}`}>
                           <BrowserFrame
                             src={item.desktop}
                             alt={`Tela do sistema ${item.title}`}
@@ -307,7 +307,8 @@ export default async function HomePage() {
                             <PhoneFrame
                               src={item.mobile}
                               alt={`${item.title} no celular`}
-                              className={`absolute bottom-0 w-[28%] ${reverse ? 'left-0 -rotate-3' : 'right-0 rotate-3'} transition-transform duration-700 group-hover:-translate-y-2`}
+                              sizes="(max-width: 640px) 40vw, 260px"
+                              className={`absolute bottom-0 w-[38%] max-w-[220px] ${reverse ? 'left-0 -rotate-3' : 'right-0 rotate-3'} transition-transform duration-700 group-hover:-translate-y-2`}
                             />
                           )}
                         </div>
