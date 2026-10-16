@@ -100,7 +100,8 @@ export default async function ProjectDetail({ params }: Props) {
             </svg>
             Voltar ao portfólio
           </Link>
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 text-gray-900 dark:text-white">
+          <span className="eyebrow">Projeto</span>
+          <h1 className="mt-5 text-4xl md:text-5xl lg:text-6xl font-bold mb-6 text-white">
             {project.title}
           </h1>
           <p className="text-xl md:text-2xl text-gray-600 dark:text-gray-400 leading-relaxed max-w-3xl">
@@ -109,42 +110,40 @@ export default async function ProjectDetail({ params }: Props) {
         </div>
 
         <div className="mb-12">
-          <div className="relative aspect-[21/9] max-h-96 rounded-3xl overflow-hidden shadow-2xl ring-1 ring-gray-200 dark:ring-gray-800 mb-8">
-            <Image
-              src={coverUrl}
-              unoptimized={String(coverUrl).endsWith('.svg')}
-              alt={project.title}
-              fill
-              className="object-cover"
-              sizes="100vw"
-              priority
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
+          {/* Print inteiro (sem corte) sobre fundo com brilho — serve para tela de celular ou de computador */}
+          <div className="relative mb-8 h-[22rem] md:h-[30rem] overflow-hidden rounded-[2rem] border border-white/10 bg-ink-900/70">
+            <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-neon-cyan/15 via-neon-violet/15 to-neon-pink/10" />
+            <div className="absolute inset-6 md:inset-10">
+              <Image
+                src={coverUrl}
+                unoptimized={String(coverUrl).endsWith('.svg')}
+                alt={project.title}
+                fill
+                className="object-contain drop-shadow-2xl"
+                sizes="100vw"
+                priority
+              />
+            </div>
           </div>
           {galleryImages.length > 0 && (
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
               {galleryImages.map((img: typeof project.images[number], index: number) => (
                 <div
                   key={img.id}
-                  className="relative group overflow-hidden rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:scale-[1.02]"
+                  className="group overflow-hidden rounded-2xl border border-white/10 bg-ink-900/70 transition-all duration-500 hover:-translate-y-1 hover:border-neon-violet/40 hover:shadow-neon"
                   style={{ animationDelay: `${index * 100}ms` }}
                 >
-                  <div className="aspect-[4/3] relative">
+                  <div className="relative aspect-[4/3] bg-gradient-to-br from-ink-800 to-ink-950">
                     <Image
                       src={img.url}
                       unoptimized={String(img.url).endsWith('.svg')}
                       alt={img.alt || project.title}
                       fill
-                      className="object-cover group-hover:scale-110 transition-transform duration-700"
+                      className="object-contain p-4"
                       sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                    {img.alt && (
-                      <div className="absolute bottom-0 left-0 right-0 p-4 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                        <p className="text-sm font-medium">{img.alt}</p>
-                      </div>
-                    )}
                   </div>
+                  {img.alt && <p className="border-t border-white/10 p-4 text-sm text-slate-400">{img.alt}</p>}
                 </div>
               ))}
             </div>

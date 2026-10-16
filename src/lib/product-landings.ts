@@ -4,6 +4,10 @@ export type GalleryCategory = {
   tag: string
   title: string
   description: string
+  /** Moldura dos prints: celular (app) ou navegador (sistema web) */
+  frame: 'phone' | 'browser'
+  /** Endereço exibido na barra do navegador (só para frame 'browser') */
+  url?: string
   /** Prints padrão em /public (usados se ainda não houver fotos no admin) */
   defaultImages?: { url: string; alt: string }[]
 }
@@ -19,6 +23,13 @@ export type FeatureBlock = {
   description: string
 }
 
+export type HeroChip = {
+  /** Ícone: chave de HERO_CHIP_ICONS no componente */
+  icon: 'check' | 'route' | 'timer' | 'map' | 'user' | 'chart'
+  label: string
+  value: string
+}
+
 export type ProductLandingContent = {
   slug: string
   projectSlug: string
@@ -27,6 +38,15 @@ export type ProductLandingContent = {
   headline: string
   subheadline: string
   coverImage: string
+  /** Números de destaque abaixo dos botões do topo */
+  highlights: { value: string; label: string }[]
+  /** Prints do topo (padrão: primeiros prints das galerias) */
+  heroDesktop?: string
+  /** Endereço exibido na barra do navegador do print do topo */
+  heroDesktopUrl?: string
+  heroPhones?: string[]
+  /** Cartões flutuantes sobre os prints do topo */
+  heroChips: HeroChip[]
   whatsappMessage: string
   contactDefaultMessage: string
   problemTitle: string
@@ -52,6 +72,18 @@ export const PRODUCT_LANDINGS: Record<'fitlife' | 'rotas', ProductLandingContent
     subheadline:
       'O Foco Academia une app mobile, painel do instrutor e portal do aluno. Ficha semanal com séries, treino outdoor com GPS, evolução de peso, sync offline e mídia nos exercícios. Para academias, personals e quem treina por conta própria.',
     coverImage: '/portfolio/fitlife/app-menu.png',
+    highlights: [
+      { value: 'App + Web', label: 'aluno e instrutor' },
+      { value: 'GPS', label: 'treino outdoor' },
+      { value: 'Offline', label: 'sincroniza depois' },
+    ],
+    heroDesktop: '/portfolio/fitlife/web-aluno-treinos.webp',
+    heroDesktopUrl: 'academia.focodev.com.br',
+    heroPhones: ['/portfolio/fitlife/app-exercicio.png', '/portfolio/fitlife/app-treino-outdoor.png'],
+    heroChips: [
+      { icon: 'check', label: 'Supino reto', value: 'Série 3 de 3 concluída' },
+      { icon: 'route', label: 'Corrida intervalada', value: '5,2 km · 6\'12" /km' },
+    ],
     whatsappMessage:
       'Olá! Quero fazer um orçamento do Foco Academia (app de academia/treinos).',
     contactDefaultMessage:
@@ -133,6 +165,7 @@ export const PRODUCT_LANDINGS: Record<'fitlife' | 'rotas', ProductLandingContent
       {
         id: 'app',
         tag: 'app',
+        frame: 'phone',
         title: 'App mobile — Foco Academia',
         description: 'Telas reais: menu, musculação, execução de séries e treino outdoor com GPS.',
         defaultImages: [
@@ -157,49 +190,53 @@ export const PRODUCT_LANDINGS: Record<'fitlife' | 'rotas', ProductLandingContent
       {
         id: 'instrutor',
         tag: 'instrutor',
+        frame: 'browser',
+        url: 'instrutor-academia.focodev.com.br',
         title: 'Painel do instrutor',
         description:
           'Login por código da academia, visão geral, cadastro de alunos, fichas semanais e montagem de treino com biblioteca de exercícios, séries, reps e mídia.',
         defaultImages: [
           {
-            url: '/portfolio/fitlife/web-instrutor-login.png',
-            alt: 'Login do Painel do Instrutor — código da academia, e-mail e senha',
+            url: '/portfolio/fitlife/web-instrutor-montar-treino.webp',
+            alt: 'Montar treino do dia — exercícios, séries, reps e biblioteca',
           },
           {
-            url: '/portfolio/fitlife/web-instrutor-inicio.png',
+            url: '/portfolio/fitlife/web-instrutor-inicio.webp',
             alt: 'Visão geral — alunos, treinos ativos e sugestões pendentes',
           },
           {
-            url: '/portfolio/fitlife/web-instrutor-alunos.png',
+            url: '/portfolio/fitlife/web-instrutor-alunos.webp',
             alt: 'Cadastro e lista de alunos no painel',
           },
           {
-            url: '/portfolio/fitlife/web-instrutor-fichas.png',
+            url: '/portfolio/fitlife/web-instrutor-fichas.webp',
             alt: 'Fichas semanais ativas e inativas por aluno',
           },
           {
-            url: '/portfolio/fitlife/web-instrutor-montar-treino.png',
-            alt: 'Montar treino do dia — exercícios, séries, reps e biblioteca',
+            url: '/portfolio/fitlife/web-instrutor-login.webp',
+            alt: 'Login do Painel do Instrutor — código da academia, e-mail e senha',
           },
         ],
       },
       {
         id: 'aluno',
         tag: 'aluno',
+        frame: 'browser',
+        url: 'academia.focodev.com.br',
         title: 'Portal web do aluno',
         description:
           'Ficha semanal, evolução de peso, balança Bluetooth, sugestões para a academia e acesso pelo navegador.',
         defaultImages: [
           {
-            url: '/portfolio/fitlife/web-aluno-treinos.png',
+            url: '/portfolio/fitlife/web-aluno-treinos.webp',
             alt: 'Portal do aluno — minha ficha semanal com dias feitos',
           },
           {
-            url: '/portfolio/fitlife/web-aluno-evolucao.png',
+            url: '/portfolio/fitlife/web-aluno-evolucao.webp',
             alt: 'Evolução de peso — gráfico, alerta do instrutor e balança Bluetooth',
           },
           {
-            url: '/portfolio/fitlife/web-aluno-sugestoes.png',
+            url: '/portfolio/fitlife/web-aluno-sugestoes.webp',
             alt: 'Sugestões — aluno envia ideias para a academia',
           },
         ],
@@ -218,6 +255,20 @@ export const PRODUCT_LANDINGS: Record<'fitlife' | 'rotas', ProductLandingContent
     subheadline:
       'Cadastre clientes com CEP e GPS, crie e simule rotas, compartilhe com outros motoristas e faça backup local. Feito para quem vive a operação na rua — e para quem organiza no painel web.',
     coverImage: '/portfolio/rotas/app-inicio.png',
+    highlights: [
+      { value: 'CEP + GPS', label: 'cadastro de cliente' },
+      { value: 'Simulação', label: 'rota antes de sair' },
+      { value: 'Backup', label: 'no próprio celular' },
+    ],
+    heroPhones: [
+      '/portfolio/rotas/app-inicio.png',
+      '/portfolio/rotas/app-rota-simulada.png',
+      '/portfolio/rotas/app-novo-cliente.png',
+    ],
+    heroChips: [
+      { icon: 'map', label: 'Rota simulada', value: '8 paradas · 23 km' },
+      { icon: 'user', label: 'Cliente salvo', value: 'Endereço com GPS' },
+    ],
     whatsappMessage:
       'Olá! Quero fazer um orçamento do App Rotas (planejamento e gestão de entregas).',
     contactDefaultMessage:
@@ -297,6 +348,7 @@ export const PRODUCT_LANDINGS: Record<'fitlife' | 'rotas', ProductLandingContent
       {
         id: 'app',
         tag: 'app',
+        frame: 'phone',
         title: 'App mobile',
         description: 'Telas reais do App Rotas: início, clientes, rotas, backup e compartilhamento entre motoristas.',
         defaultImages: [
@@ -317,6 +369,7 @@ export const PRODUCT_LANDINGS: Record<'fitlife' | 'rotas', ProductLandingContent
       {
         id: 'painel',
         tag: 'painel',
+        frame: 'browser',
         title: 'Painel web — criar e gerenciar rotas',
         description: 'Área do cliente/gestor para montar rotas, organizar entregas e acompanhar a operação.',
       },
