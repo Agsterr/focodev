@@ -50,6 +50,12 @@ const PROJECTS = [
     coverImageUrl: '/portfolio/fastburger.svg',
   },
   {
+    slug: 'salao-max',
+    title: 'Salão Max',
+    description: 'Gestão de salão de beleza: agenda por profissional, agendamento online, comissões, estoque, precificação e financeiro — site e apps Android/iOS em salaomax.focodev.com.br.',
+    coverImageUrl: '/portfolio/salao-max/gestao-agenda.webp',
+  },
+  {
     slug: 'foco-academia',
     title: 'Foco Academia',
     description: 'App de academia com musculação, treino outdoor (GPS), evolução de peso, painel do instrutor e portal do aluno.',

@@ -12,7 +12,7 @@ import { breadcrumbJsonLd, buildMetadata } from '@/lib/seo'
 export const metadata: Metadata = buildMetadata({
   title: 'Portfólio',
   description:
-    'Conheça projetos da FocoDev: sistemas web, apps mobile, estoque, mercado, barbearia, academia e rotas — cases reais em produção.',
+    'Conheça projetos da FocoDev: sistemas web, apps mobile, estoque, mercado, barbearia, salão de beleza, academia e rotas — cases reais em produção.',
   path: '/projects',
   keywords: [
     'portfólio',
