@@ -54,6 +54,13 @@ export const DEFAULT_PROJECTS = [
     coverImageUrl: '/portfolio/barbearia/painel-admin.webp',
   },
   {
+    id: 'proj-salao-max',
+    slug: 'salao-max',
+    title: 'Salão Max',
+    description: 'Gestão de salão de beleza: agenda por profissional, agendamento online, comissões, estoque, precificação e financeiro — site e apps Android/iOS em salaomax.focodev.com.br.',
+    coverImageUrl: '/portfolio/salao-max/gestao-agenda.webp',
+  },
+  {
     id: 'proj-academia',
     slug: 'foco-academia',
     title: 'Foco Academia',
@@ -71,7 +78,7 @@ export const DEFAULT_PROJECTS = [
 
 export const HERO_STATS = [
   { value: '10+', label: 'Projetos entregues' },
-  { value: '5', label: 'Sistemas em produção' },
+  { value: '6', label: 'Sistemas em produção' },
   { value: 'Web + App', label: 'Do site ao celular' },
 ] as const
 
@@ -172,7 +179,7 @@ export const TESTIMONIALS = [
 
 export const ABOUT_PARAGRAPHS = [
   'A FocoDev Sistemas é uma empresa de sistemas em Franca/SP, especializada em desenvolvimento de software sob medida: sites, sistemas web, aplicativos mobile, PWAs e automações que entram em produção de verdade. Atendemos clientes em Franca e em todo o Brasil.',
-  'Trabalhamos com Next.js, React, Flutter, Java Spring, Python e infraestrutura com Docker e Cloudflare. Do diagnóstico ao deploy, entregamos soluções rápidas, seguras e alinhadas ao processo do cliente — estoque, academia, rotas, mercado, barbearia e projetos sob demanda.',
+  'Trabalhamos com Next.js, React, Flutter, Java Spring, Python e infraestrutura com Docker e Cloudflare. Do diagnóstico ao deploy, entregamos soluções rápidas, seguras e alinhadas ao processo do cliente — estoque, academia, rotas, mercado, barbearia, salão de beleza e projetos sob demanda.',
   'Se você precisa de um sistema sob medida, um app para o time de campo ou um site que gera orçamentos, fale conosco. Orçamento sem compromisso e foco em resultado — com atendimento local em Franca/SP e remoto para o Brasil todo.',
 ] as const
 
@@ -200,6 +207,6 @@ export const FAQ_ITEMS = [
   {
     question: 'Quais produtos a FocoDev já tem em produção?',
     answer:
-      'Temos sistemas em produção como gerenciamento de estoque, Mercado Digital e Barbearia, além das landings de Foco Academia e App Rotas para orçamento. Confira o portfólio e as páginas /fitlife e /rotas.',
+      'Temos sistemas em produção como gerenciamento de estoque, Mercado Digital, Barbearia e Salão Max, além das landings de Foco Academia e App Rotas para orçamento. Confira o portfólio e as páginas /fitlife e /rotas.',
   },
 ] as const

@@ -20,6 +20,11 @@ export const SYSTEM_LINKS = {
     description: 'Agendamentos, fila e painel administrativo para barbearias.',
     href: 'https://barbearia.focodev.com.br',
   },
+  salaoMax: {
+    label: 'Salão Max',
+    description: 'Gestão de salão de beleza com agendamento online, comissões, estoque e financeiro.',
+    href: 'https://salaomax.focodev.com.br',
+  },
   academia: {
     label: 'Foco Academia',
     description: 'App de academia com musculação, outdoor, painel do instrutor e portal do aluno.',
@@ -32,6 +37,7 @@ export const PRODUCTION_SYSTEMS: SystemLink[] = [
   SYSTEM_LINKS.estoque,
   SYSTEM_LINKS.mercado,
   SYSTEM_LINKS.barbearia,
+  SYSTEM_LINKS.salaoMax,
 ]
 
 /** URL externa por slug do portfólio (quando o projeto está online). */
@@ -39,6 +45,7 @@ export const PROJECT_EXTERNAL_URLS: Record<string, string> = {
   'gerenciamento-estoque': SYSTEM_LINKS.estoque.href,
   'mercado-digital': SYSTEM_LINKS.mercado.href,
   barbearia: SYSTEM_LINKS.barbearia.href,
+  'salao-max': SYSTEM_LINKS.salaoMax.href,
 }
 
 /** Produtos com landing própria no site (contato primeiro — sem login aberto). */
