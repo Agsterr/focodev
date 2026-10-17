@@ -61,6 +61,7 @@ export default function Footer() {
                   </a>
                 </li>
               ))}
+              <li><Link className="text-slate-400 hover:text-white transition-colors" href={SYSTEM_LINKS.estoque.href}>{SYSTEM_LINKS.estoque.label}</Link></li>
               <li><Link className="text-slate-400 hover:text-white transition-colors" href={SYSTEM_LINKS.academia.href}>{SYSTEM_LINKS.academia.label}</Link></li>
               <li><Link className="text-slate-400 hover:text-white transition-colors" href={SHOWCASE_PROJECTS.rotas.href}>{SHOWCASE_PROJECTS.rotas.label}</Link></li>
             </ul>
