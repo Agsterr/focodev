@@ -45,12 +45,14 @@ export default async function ProjectsPage() {
           { name: 'Portfólio', path: '/projects' },
         ])}
       />
-    <div className="container py-12 md:py-20">
-      <div className="mb-16 text-center">
-        <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 text-gray-900 dark:text-white">
-          Nosso Portfólio
+    <div className="container relative py-12 md:py-20">
+      <div className="pointer-events-none absolute -top-24 left-1/2 h-72 w-[40rem] -translate-x-1/2 rounded-full bg-neon-violet/20 blur-[120px]" />
+      <div className="relative mb-16 text-center">
+        <span className="eyebrow">Portfólio</span>
+        <h1 className="mt-5 text-4xl md:text-5xl lg:text-6xl font-bold mb-6 text-white">
+          Nosso <span className="text-gradient">portfólio</span>
         </h1>
-        <p className="text-xl text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
+        <p className="text-xl text-slate-400 max-w-2xl mx-auto">
           Conheça alguns dos projetos que desenvolvemos com dedicação e excelência
         </p>
       </div>

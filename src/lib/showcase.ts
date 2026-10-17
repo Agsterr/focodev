@@ -90,7 +90,7 @@ export const SHOWCASE: ShowcaseItem[] = [
     description: SHOWCASE_PROJECTS.fitlife.description,
     features: [...SHOWCASE_PROJECTS.fitlife.features],
     tech: ['Flutter', 'Next.js', 'GPS'],
-    desktop: '/portfolio/fitlife/web-instrutor-montar-treino.png',
+    desktop: '/portfolio/fitlife/web-instrutor-montar-treino.webp',
     mobile: '/portfolio/fitlife/app-menu.png',
     href: SHOWCASE_PROJECTS.fitlife.href,
     external: false,

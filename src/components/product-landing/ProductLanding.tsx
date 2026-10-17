@@ -1,25 +1,43 @@
-import Image from 'next/image'
 import Link from 'next/link'
 import {
-  CheckCircle2,
   ArrowRight,
-  MessageSquare,
-  Smartphone,
-  Users,
+  BarChart3,
   Building2,
+  Check,
+  CheckCircle2,
+  MapPin,
+  MessageSquare,
+  Route,
+  Smartphone,
   Sparkles,
+  Timer,
+  UserCheck,
+  Users,
+  XCircle,
 } from 'lucide-react'
-import { Button } from '@/components/ui/button'
 import ContactForm from '@/components/ContactForm'
+import ScrollReveal from '@/components/ScrollReveal'
 import TrackedAnchor from '@/components/TrackedAnchor'
+import { BrowserFrame, PhoneFrame } from '@/components/home/DeviceFrames'
 import { getWhatsAppHref } from '@/lib/whatsapp'
 import {
-  type ProductLandingContent,
+  type GalleryCategory,
   type GalleryImage,
+  type HeroChip,
+  type ProductLandingContent,
   groupImagesByGallery,
 } from '@/lib/product-landings'
 
 const audienceIcons = [Building2, Users, Smartphone]
+
+const HERO_CHIP_ICONS: Record<HeroChip['icon'], typeof Check> = {
+  check: CheckCircle2,
+  route: Route,
+  timer: Timer,
+  map: MapPin,
+  user: UserCheck,
+  chart: BarChart3,
+}
 
 type Props = {
   content: ProductLandingContent
@@ -30,109 +48,187 @@ export default function ProductLanding({ content, images }: Props) {
   const grouped = groupImagesByGallery(images, content.galleries)
   const waHref = getWhatsAppHref(content.whatsappMessage)
 
+  const phoneGallery = content.galleries.find((g) => g.frame === 'phone')
+  const browserGallery = content.galleries.find(
+    (g) => g.frame === 'browser' && (grouped[g.id] || []).length > 0,
+  )
+  const heroPhones =
+    content.heroPhones ?? (phoneGallery ? grouped[phoneGallery.id].map((img) => img.url) : [])
+  const heroDesktop =
+    content.heroDesktop ?? (browserGallery ? grouped[browserGallery.id][0]?.url : undefined)
+  const heroDesktopUrl =
+    content.heroDesktopUrl ??
+    content.galleries.find((g) => g.frame === 'browser' && g.url)?.url ??
+    'focodev.com.br'
+
   return (
     <div className="overflow-x-clip">
-      {/* Hero */}
-      <section className="relative min-h-[88vh] flex items-end md:items-center">
-        <div className="absolute inset-0 pointer-events-none">
-          <Image
-            src={content.coverImage}
-            unoptimized={String(content.coverImage).endsWith('.svg')}
-            alt={content.brand}
-            fill
-            priority
-            className="object-cover"
-            sizes="100vw"
-          />
-          <div className="absolute inset-0 bg-gradient-to-r from-slate-950/95 via-slate-950/80 to-slate-900/55" />
-          <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-transparent to-slate-950/40" />
-        </div>
+      <ScrollReveal />
 
-        <div className="container relative z-10 py-20 md:py-28">
-          <div className="max-w-3xl animate-fade-in">
-            <p className="text-brand text-sm md:text-base font-semibold tracking-wide uppercase mb-4">
-              FocoDev · {content.badge}
-            </p>
-            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-white leading-[1.05] mb-4">
-              {content.brand}
-            </h1>
-            <p className="text-xl md:text-2xl text-sky-100/95 font-medium leading-snug mb-4">
-              {content.headline}
-            </p>
-            <p className="text-base md:text-lg text-slate-300 leading-relaxed max-w-2xl mb-8">
-              {content.subheadline}
-            </p>
-            <div className="flex flex-wrap gap-4">
-              <Button asChild size="lg" variant="gradient" className="text-base px-8 py-6 rounded-xl">
+      {/* ================= HERO ================= */}
+      <section className="relative -mt-16 md:-mt-20 pt-28 md:pt-36 pb-20 md:pb-28">
+        <div className="pointer-events-none absolute inset-0 bg-grid opacity-60" />
+        <div className="pointer-events-none absolute -top-40 -left-40 h-[36rem] w-[36rem] rounded-full bg-neon-cyan/25 blur-[120px] animate-aurora" />
+        <div className="pointer-events-none absolute top-10 -right-40 h-[32rem] w-[32rem] rounded-full bg-neon-violet/30 blur-[120px] animate-aurora-slow" />
+        <div className="pointer-events-none absolute bottom-0 left-1/3 h-[24rem] w-[24rem] rounded-full bg-neon-pink/20 blur-[120px] animate-aurora" />
+
+        <div className="container relative">
+          <div className="grid items-center gap-16 lg:grid-cols-[1.05fr_1fr]">
+            <div className="animate-fade-in">
+              <span className="eyebrow">FocoDev · {content.badge}</span>
+              <h1 className="mt-6 text-[2.6rem] leading-[1.05] sm:text-6xl lg:text-7xl font-bold text-white">
+                {content.brand}
+              </h1>
+              <p className="mt-5 text-2xl md:text-3xl font-semibold leading-snug">
+                <span className="text-gradient animate-gradient-x">{content.headline}</span>
+              </p>
+              <p className="mt-6 max-w-xl text-lg leading-relaxed text-slate-400">{content.subheadline}</p>
+
+              <div className="mt-9 flex flex-col gap-3 sm:flex-row">
                 <TrackedAnchor
                   kind="cta"
                   source={`${content.slug}_hero_orcamento`}
                   href="#orcamento"
-                  className="inline-flex items-center gap-1"
+                  className="group inline-flex items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-neon-cyan via-neon-violet to-neon-pink bg-[length:200%_auto] bg-left px-7 py-4 text-base font-semibold text-white shadow-neon transition-[background-position,transform] duration-500 hover:bg-right hover:-translate-y-0.5"
                 >
                   Faça seu orçamento
-                  <ArrowRight className="w-5 h-5" />
+                  <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" />
                 </TrackedAnchor>
-              </Button>
-              <Button
-                asChild
-                size="lg"
-                variant="outline"
-                className="text-base px-8 py-6 rounded-xl border-white/40 text-white hover:bg-white/10 hover:text-white"
-              >
                 <TrackedAnchor
                   kind="whatsapp"
                   source={`${content.slug}_hero_whatsapp`}
                   href={waHref}
                   target="_blank"
                   rel="noopener noreferrer"
+                  className="inline-flex items-center justify-center gap-2 rounded-2xl border border-white/15 bg-white/5 px-7 py-4 text-base font-semibold text-white backdrop-blur transition hover:bg-white/10"
                 >
                   Falar no WhatsApp
                 </TrackedAnchor>
-              </Button>
+              </div>
+
+              <dl className="mt-12 grid max-w-lg grid-cols-3 gap-6 border-t border-white/10 pt-8">
+                {content.highlights.map((item) => (
+                  <div key={item.label}>
+                    <dt className="sr-only">{item.label}</dt>
+                    <dd className="font-display whitespace-nowrap text-lg sm:text-2xl font-bold text-white">
+                      {item.value}
+                    </dd>
+                    <dd className="mt-1 text-xs md:text-sm text-slate-500">{item.label}</dd>
+                  </div>
+                ))}
+              </dl>
+            </div>
+
+            <HeroDevices
+              brand={content.brand}
+              desktop={heroDesktop}
+              desktopUrl={heroDesktopUrl}
+              phones={heroPhones}
+              chips={content.heroChips}
+            />
+          </div>
+        </div>
+      </section>
+
+      {/* ================= PROBLEMA → SOLUÇÃO ================= */}
+      <section className="container py-16 md:py-24">
+        <div className="grid gap-6 md:grid-cols-2">
+          <div
+            data-reveal
+            className="relative overflow-hidden rounded-[2rem] border border-white/10 bg-ink-900/60 p-8 md:p-10"
+          >
+            <div className="pointer-events-none absolute -top-20 -right-20 h-56 w-56 rounded-full bg-rose-500/15 blur-[90px]" />
+            <span className="inline-flex items-center gap-2 rounded-full bg-rose-500/10 px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em] text-rose-300">
+              <XCircle className="h-3.5 w-3.5" /> O problema
+            </span>
+            <h2 className="mt-5 text-2xl md:text-3xl font-bold text-white">{content.problemTitle}</h2>
+            <p className="mt-4 text-lg leading-relaxed text-slate-400">{content.problemText}</p>
+          </div>
+          <div
+            data-reveal
+            className="relative overflow-hidden rounded-[2rem] border border-neon-violet/30 bg-ink-900/60 p-8 md:p-10 shadow-neon"
+          >
+            <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-neon-cyan/10 via-neon-violet/10 to-transparent" />
+            <div className="relative">
+              <span className="inline-flex items-center gap-2 rounded-full bg-emerald-500/10 px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em] text-emerald-300">
+                <CheckCircle2 className="h-3.5 w-3.5" /> A solução
+              </span>
+              <h2 className="mt-5 text-2xl md:text-3xl font-bold text-white">{content.solutionTitle}</h2>
+              <p className="mt-4 text-lg leading-relaxed text-slate-300">{content.solutionText}</p>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Problema → Solução */}
-      <section className="container py-20 md:py-24">
-        <div className="grid md:grid-cols-2 gap-10 md:gap-16 items-start">
-          <div className="animate-slide-in-left">
-            <h2 className="section-title">{content.problemTitle}</h2>
-            <p className="text-lg text-gray-700 dark:text-gray-300 leading-relaxed">{content.problemText}</p>
-          </div>
-          <div className="animate-slide-in-right">
-            <h2 className="section-title">{content.solutionTitle}</h2>
-            <p className="text-lg text-gray-700 dark:text-gray-300 leading-relaxed">{content.solutionText}</p>
-          </div>
+      {/* ================= GALERIAS (prints em moldura de celular / navegador) ================= */}
+      {content.galleries.map((gallery, index) => (
+        <GallerySection
+          key={gallery.id}
+          gallery={gallery}
+          images={grouped[gallery.id] || []}
+          eyebrow={index === 0 ? 'Telas reais' : 'Por dentro do sistema'}
+        />
+      ))}
+
+      {/* ================= RECURSOS ================= */}
+      <section className="container py-16 md:py-24">
+        <Heading
+          eyebrow="Recursos"
+          title={
+            <>
+              O que o {content.brand} <span className="text-gradient">entrega</span>
+            </>
+          }
+          subtitle="Funcionalidades pensadas para o dia a dia — não para demonstração."
+        />
+        <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          {content.features.map((feature) => (
+            <div key={feature.title} data-reveal>
+              <div className="card h-full p-7">
+                <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br from-neon-cyan/20 to-neon-violet/30 text-neon-cyan ring-1 ring-white/10">
+                  <Sparkles className="h-5 w-5" />
+                </span>
+                <h3 className="mt-5 text-lg font-bold text-white">{feature.title}</h3>
+                <p className="mt-2 text-sm leading-relaxed text-slate-400">{feature.description}</p>
+              </div>
+            </div>
+          ))}
         </div>
       </section>
 
-      {/* Para quem */}
-      <section className="relative py-20 md:py-24 bg-sky-50/80 dark:bg-slate-900/40">
+      {/* ================= PARA QUEM ================= */}
+      <section className="relative border-y border-white/10 bg-white/[0.02] py-16 md:py-24">
         <div className="container">
-          <div className="text-center mb-14 max-w-2xl mx-auto">
-            <h2 className="section-title">Para quem é o {content.brand}?</h2>
-            <p className="section-subtitle mb-0">
-              {content.audiencesSubtitle}
-            </p>
-          </div>
-          <div className="grid md:grid-cols-3 gap-8">
+          <Heading
+            eyebrow="Para quem é"
+            title={
+              <>
+                Para quem é o <span className="text-gradient">{content.brand}</span>?
+              </>
+            }
+            subtitle={content.audiencesSubtitle}
+          />
+          <div className="grid gap-6 md:grid-cols-3">
             {content.audiences.map((audience, i) => {
               const Icon = audienceIcons[i % audienceIcons.length]
               return (
-                <div key={audience.title} className="p-8 rounded-2xl bg-white/90 dark:bg-gray-900/90 ring-1 ring-brand/15">
-                  <div className="h-12 w-12 rounded-xl bg-brand/10 text-brand flex items-center justify-center ring-1 ring-brand/20 mb-5">
-                    <Icon className="w-6 h-6" />
-                  </div>
-                  <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3">{audience.title}</h3>
-                  <p className="text-gray-600 dark:text-gray-400 leading-relaxed mb-5">{audience.description}</p>
-                  <ul className="space-y-2">
+                <div
+                  key={audience.title}
+                  data-reveal
+                  className="relative overflow-hidden rounded-[1.75rem] border border-white/10 bg-ink-900/70 p-8"
+                >
+                  <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-neon-cyan via-neon-violet to-neon-pink text-white shadow-neon">
+                    <Icon className="h-6 w-6" />
+                  </span>
+                  <h3 className="mt-6 text-xl font-bold text-white">{audience.title}</h3>
+                  <p className="mt-3 leading-relaxed text-slate-400">{audience.description}</p>
+                  <ul className="mt-6 space-y-3">
                     {audience.points.map((point) => (
-                      <li key={point} className="flex gap-2 text-sm text-gray-700 dark:text-gray-300">
-                        <CheckCircle2 className="w-4 h-4 text-brand shrink-0 mt-0.5" />
-                        <span>{point}</span>
+                      <li key={point} className="flex gap-3 text-sm text-slate-200">
+                        <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-white/10">
+                          <Check className="h-3 w-3 text-neon-cyan" />
+                        </span>
+                        {point}
                       </li>
                     ))}
                   </ul>
@@ -143,158 +239,270 @@ export default function ProductLanding({ content, images }: Props) {
         </div>
       </section>
 
-      {/* O que o produto faz */}
-      <section className="container py-20 md:py-24">
-        <div className="text-center mb-14 max-w-2xl mx-auto">
-          <h2 className="section-title">O que o {content.brand} entrega</h2>
-          <p className="section-subtitle mb-0">Funcionalidades pensadas para o dia a dia — não para demonstração.</p>
-        </div>
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {content.features.map((feature) => (
-            <div
-              key={feature.title}
-              className="p-6 rounded-2xl border border-gray-200 dark:border-gray-800 bg-white/80 dark:bg-gray-900/80"
+      {/* ================= BENEFÍCIOS ================= */}
+      <section className="container py-16 md:py-24">
+        <Heading
+          eyebrow="Por que contratar agora"
+          title={
+            <>
+              Benefícios que <span className="text-gradient">viram resultado</span>
+            </>
+          }
+          subtitle="Para sua academia, sua operação ou seu treino."
+        />
+        <ul className="mx-auto grid max-w-5xl gap-4 md:grid-cols-2">
+          {content.benefits.map((benefit) => (
+            <li
+              key={benefit}
+              data-reveal
+              className="flex items-start gap-4 rounded-2xl border border-white/10 bg-ink-900/60 p-5"
             >
-              <div className="inline-flex items-center gap-2 text-brand mb-3">
-                <Sparkles className="w-4 h-4" />
-                <span className="text-xs font-semibold uppercase tracking-wide">Recurso</span>
-              </div>
-              <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-2">{feature.title}</h3>
-              <p className="text-gray-600 dark:text-gray-400 leading-relaxed text-sm">{feature.description}</p>
-            </div>
+              <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-emerald-500/15 text-emerald-300">
+                <Check className="h-4 w-4" />
+              </span>
+              <span className="font-medium leading-relaxed text-slate-200">{benefit}</span>
+            </li>
           ))}
-        </div>
+        </ul>
       </section>
 
-      {/* Benefícios / gatilhos */}
-      <section className="relative py-20 md:py-24">
-        <div className="absolute inset-0 bg-gradient-to-br from-brand/10 via-transparent to-brand-dark/10" />
-        <div className="container relative">
-          <div className="max-w-3xl mx-auto">
-            <h2 className="section-title text-center">Por que contratar agora</h2>
-            <p className="section-subtitle text-center">
-              Benefícios reais que viram argumento de venda — para sua academia, sua operação ou seu treino.
-            </p>
-            <ul className="space-y-4 mt-10">
-              {content.benefits.map((benefit) => (
-                <li
-                  key={benefit}
-                  className="flex gap-4 p-4 rounded-xl bg-white/90 dark:bg-gray-900/90 ring-1 ring-brand/15"
+      {/* ================= CTA + CONTATO ================= */}
+      <section id="orcamento" className="container scroll-mt-24 pb-20 md:pb-28">
+        <div className="relative overflow-hidden rounded-[2rem] border border-white/10 bg-ink-900/70 p-6 sm:p-10 lg:p-14">
+          <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-neon-cyan/15 via-neon-violet/15 to-neon-pink/10" />
+          <div className="pointer-events-none absolute -top-24 -right-24 h-72 w-72 rounded-full bg-neon-violet/30 blur-[110px]" />
+          <div className="relative grid items-start gap-12 lg:grid-cols-2">
+            <div>
+              <span className="eyebrow">Orçamento sem compromisso</span>
+              <h2 className="mt-5 text-3xl md:text-4xl font-bold leading-tight text-white">{content.ctaTitle}</h2>
+              <p className="mt-4 text-lg leading-relaxed text-slate-300">{content.ctaText}</p>
+              <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+                <TrackedAnchor
+                  kind="whatsapp"
+                  source={`${content.slug}_cta_whatsapp`}
+                  href={waHref}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center justify-center gap-2 rounded-xl bg-white px-6 py-3.5 font-semibold text-ink-950 transition hover:bg-slate-200"
                 >
-                  <CheckCircle2 className="w-6 h-6 text-brand shrink-0" />
-                  <span className="text-gray-800 dark:text-gray-200 font-medium leading-relaxed">{benefit}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
-        </div>
-      </section>
-
-      {/* Galerias */}
-      {content.galleries.map((gallery) => {
-        const pics = grouped[gallery.id] || []
-        return (
-          <section key={gallery.id} id={`galeria-${gallery.id}`} className="container py-16 md:py-20 scroll-mt-24">
-            <div className="mb-10 max-w-2xl">
-              <h2 className="section-title">{gallery.title}</h2>
-              <p className="section-subtitle mb-0">{gallery.description}</p>
-            </div>
-            {pics.length > 0 ? (
-              <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                {pics.map((img, index) => (
-                  <div
-                    key={img.id}
-                    className="relative group overflow-hidden rounded-2xl shadow-lg ring-1 ring-gray-200 dark:ring-gray-800"
-                    style={{ animationDelay: `${index * 80}ms` }}
-                  >
-                    <div className="aspect-[4/3] relative bg-slate-100 dark:bg-slate-900">
-                      <Image
-                        src={img.url}
-                        unoptimized={String(img.url).endsWith('.svg')}
-                        alt={cleanAlt(img.alt) || gallery.title}
-                        fill
-                        className="object-cover group-hover:scale-105 transition-transform duration-700"
-                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                      />
-                    </div>
-                    {cleanAlt(img.alt) && (
-                      <div className="p-3 text-sm text-gray-600 dark:text-gray-400 bg-white dark:bg-gray-900">
-                        {cleanAlt(img.alt)}
-                      </div>
-                    )}
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <div className="rounded-2xl border border-dashed border-brand/30 bg-sky-50/50 dark:bg-slate-900/50 p-10 md:p-14 text-center">
-                <Smartphone className="w-10 h-10 text-brand mx-auto mb-4 opacity-70" />
-                <p className="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-2">
-                  Galeria em atualização
-                </p>
-                <p className="text-gray-600 dark:text-gray-400 max-w-md mx-auto">
-                  Em breve, prints reais de {gallery.title.toLowerCase()}. Enquanto isso, fale conosco para ver uma demonstração ao vivo.
-                </p>
-                <div className="mt-6">
-                  <Button asChild variant="outline" className="rounded-xl">
-                    <a href="#orcamento">Quero ver na prática</a>
-                  </Button>
-                </div>
-              </div>
-            )}
-          </section>
-        )
-      })}
-
-      {/* CTA + Contato */}
-      <section id="orcamento" className="relative py-20 md:py-24 scroll-mt-24">
-        <div className="absolute inset-0 bg-gradient-to-r from-brand to-brand-dark opacity-95 pointer-events-none" />
-        <div className="container relative z-10">
-          <div className="grid lg:grid-cols-2 gap-12 items-start">
-            <div className="text-white">
-              <h2 className="text-3xl md:text-4xl font-bold mb-4 leading-tight">{content.ctaTitle}</h2>
-              <p className="text-lg text-white/90 leading-relaxed mb-8">{content.ctaText}</p>
-              <div className="flex flex-wrap gap-4 mb-8">
-                <Button
-                  asChild
-                  size="lg"
-                  className="rounded-xl bg-white text-brand hover:bg-white/90 font-semibold px-8 py-6"
+                  Contratar pelo WhatsApp
+                  <ArrowRight className="h-4 w-4" />
+                </TrackedAnchor>
+                <Link
+                  href="/#contato"
+                  className="inline-flex items-center justify-center gap-2 rounded-xl border border-white/15 bg-white/5 px-6 py-3.5 font-semibold text-white transition hover:bg-white/10"
                 >
-                  <TrackedAnchor
-                    kind="whatsapp"
-                    source={`${content.slug}_cta_whatsapp`}
-                    href={waHref}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    Entre em contato para contratar
-                  </TrackedAnchor>
-                </Button>
-                <Button
-                  asChild
-                  size="lg"
-                  variant="outline"
-                  className="rounded-xl border-white/50 text-white hover:bg-white/10 hover:text-white px-8 py-6"
-                >
-                  <Link href="/#contato" className="inline-flex items-center">
-                    <MessageSquare className="w-5 h-5 mr-2" />
-                    Contato geral do site
-                  </Link>
-                </Button>
+                  <MessageSquare className="h-4 w-4" />
+                  Contato geral do site
+                </Link>
               </div>
-              <p className="text-sm text-white/75">
+              <p className="mt-6 text-sm text-slate-500">
                 Sem cadastro aberto na internet: o acesso é liberado após contratação e configuração com a FocoDev.
               </p>
             </div>
-            <div>
-              <ContactForm
-                defaultMessage={content.contactDefaultMessage}
-                trackingSource={content.slug}
-              />
-            </div>
+            <ContactForm defaultMessage={content.contactDefaultMessage} trackingSource={content.slug} />
           </div>
         </div>
       </section>
     </div>
+  )
+}
+
+function Heading({ eyebrow, title, subtitle }: { eyebrow: string; title: React.ReactNode; subtitle?: string }) {
+  return (
+    <div className="mx-auto mb-12 max-w-3xl text-center md:mb-14">
+      <span className="eyebrow">{eyebrow}</span>
+      <h2 className="section-title mt-5">{title}</h2>
+      {subtitle && <p className="section-subtitle mb-0">{subtitle}</p>}
+    </div>
+  )
+}
+
+/** Composição do topo: navegador + celulares, ou leque de celulares quando não há print web. */
+function HeroDevices({
+  brand,
+  desktop,
+  desktopUrl,
+  phones,
+  chips,
+}: {
+  brand: string
+  desktop?: string
+  desktopUrl: string
+  phones: string[]
+  chips: HeroChip[]
+}) {
+  const [chipTop, chipBottom] = chips
+
+  return (
+    <div className="relative mx-auto w-full max-w-xl lg:max-w-none animate-fade-in-delay">
+      <div className="absolute -inset-6 rounded-[2.5rem] bg-gradient-to-tr from-neon-cyan/20 via-neon-violet/20 to-neon-pink/20 blur-2xl" />
+      {desktop ? (
+        <div className="relative pb-16 pl-6 sm:pb-20 sm:pl-16">
+          <BrowserFrame
+            src={desktop}
+            alt={`${brand} no navegador`}
+            url={desktopUrl}
+            priority
+            className="lg:rotate-[1.5deg]"
+          />
+          {phones[0] && (
+            <PhoneFrame
+              src={phones[0]}
+              alt={`${brand} no celular`}
+              priority
+              sizes="(max-width: 640px) 34vw, 220px"
+              className="absolute bottom-0 left-0 w-[34%] sm:w-[30%] -rotate-6 animate-float"
+            />
+          )}
+          {phones[1] && (
+            <PhoneFrame
+              src={phones[1]}
+              alt={`${brand} no celular — outra tela`}
+              sizes="(max-width: 640px) 30vw, 200px"
+              className="absolute -bottom-6 right-[6%] hidden w-[26%] rotate-6 animate-float-delay md:block"
+            />
+          )}
+        </div>
+      ) : (
+        <div className="relative flex items-end justify-center gap-3 px-2 pb-6 pt-4 sm:gap-5 sm:pb-24">
+          {phones.slice(0, 3).map((src, i, list) => {
+            const center = list.length === 3 ? i === 1 : i === 0
+            return (
+              <PhoneFrame
+                key={src}
+                src={src}
+                alt={`${brand} — tela ${i + 1}`}
+                priority={center}
+                sizes="(max-width: 640px) 38vw, 250px"
+                className={
+                  center
+                    ? 'relative z-10 w-[38%] max-w-[250px] animate-float'
+                    : `w-[30%] max-w-[200px] opacity-90 translate-y-6 ${i === 0 ? '-rotate-6' : 'rotate-6'}`
+                }
+              />
+            )
+          })}
+        </div>
+      )}
+
+      {chipTop && (
+        <FloatingChip
+          chip={chipTop}
+          color="bg-emerald-500/20 text-emerald-300"
+          className="-top-5 right-2 sm:-right-4 animate-float-delay"
+        />
+      )}
+      {chipBottom && (
+        <FloatingChip
+          chip={chipBottom}
+          color="bg-neon-violet/25 text-violet-200"
+          className={`${desktop ? 'bottom-2 left-[33%]' : 'bottom-0 left-[4%]'} animate-float`}
+        />
+      )}
+    </div>
+  )
+}
+
+function FloatingChip({ chip, color, className }: { chip: HeroChip; color: string; className: string }) {
+  const Icon = HERO_CHIP_ICONS[chip.icon]
+  return (
+    <div
+      className={`absolute z-20 hidden sm:block rounded-2xl border border-white/10 bg-ink-900/90 px-4 py-3 shadow-xl shadow-black/50 backdrop-blur-xl ${className}`}
+    >
+      <div className="flex items-center gap-3">
+        <span className={`flex h-9 w-9 items-center justify-center rounded-xl ${color}`}>
+          <Icon className="h-4 w-4" />
+        </span>
+        <div className="text-left">
+          <div className="text-xs text-slate-400">{chip.label}</div>
+          <div className="whitespace-nowrap text-sm font-semibold text-white">{chip.value}</div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+function GallerySection({
+  gallery,
+  images,
+  eyebrow,
+}: {
+  gallery: GalleryCategory
+  images: GalleryImage[]
+  eyebrow: string
+}) {
+  return (
+    <section id={`galeria-${gallery.id}`} className="relative scroll-mt-24 py-16 md:py-24">
+      {gallery.frame === 'phone' && (
+        <div className="pointer-events-none absolute inset-x-0 top-1/3 mx-auto h-72 max-w-4xl rounded-full bg-neon-violet/15 blur-[120px]" />
+      )}
+      <div className="container relative">
+        <Heading eyebrow={eyebrow} title={gallery.title} subtitle={gallery.description} />
+
+        {images.length === 0 ? (
+          <div
+            data-reveal
+            className="mx-auto max-w-2xl rounded-[2rem] border border-dashed border-white/15 bg-ink-900/50 p-10 text-center md:p-14"
+          >
+            <Smartphone className="mx-auto mb-4 h-10 w-10 text-neon-cyan opacity-80" />
+            <p className="mb-2 text-lg font-semibold text-white">Galeria em atualização</p>
+            <p className="mx-auto max-w-md text-slate-400">
+              Em breve, prints reais de {gallery.title.toLowerCase()}. Enquanto isso, fale conosco para ver uma
+              demonstração ao vivo.
+            </p>
+            <a
+              href="#orcamento"
+              className="mt-6 inline-flex items-center gap-2 rounded-xl border border-white/15 bg-white/5 px-5 py-3 text-sm font-semibold text-white transition hover:bg-white/10"
+            >
+              Quero ver na prática
+            </a>
+          </div>
+        ) : gallery.frame === 'phone' ? (
+          // Celulares lado a lado; no celular vira carrossel com rolagem lateral
+          <div className="-mx-4 flex snap-x snap-mandatory gap-6 overflow-x-auto px-4 pb-6 sm:mx-0 sm:grid sm:grid-cols-2 sm:overflow-visible sm:px-0 sm:pb-0 lg:grid-cols-4 lg:gap-8">
+            {images.map((img, i) => (
+              <figure key={img.id} data-reveal className="w-[68%] shrink-0 snap-center sm:w-auto">
+                <div className={i % 2 === 1 ? 'lg:translate-y-10' : ''}>
+                  <PhoneFrame
+                    src={img.url}
+                    alt={cleanAlt(img.alt) || gallery.title}
+                    sizes="(max-width: 640px) 70vw, (max-width: 1024px) 45vw, 280px"
+                    className="mx-auto max-w-[280px] transition-transform duration-500 hover:-translate-y-2"
+                  />
+                  {cleanAlt(img.alt) && (
+                    <figcaption className="mx-auto mt-5 max-w-[260px] text-center text-sm leading-snug text-slate-400">
+                      {cleanAlt(img.alt)}
+                    </figcaption>
+                  )}
+                </div>
+              </figure>
+            ))}
+          </div>
+        ) : (
+          <div className="grid gap-x-8 gap-y-10 lg:grid-cols-2">
+            {images.map((img, i) => (
+              <figure
+                key={img.id}
+                data-reveal
+                className={i === 0 && images.length % 2 === 1 ? 'lg:col-span-2 lg:mx-auto lg:w-4/5' : ''}
+              >
+                <BrowserFrame
+                  src={img.url}
+                  alt={cleanAlt(img.alt) || gallery.title}
+                  url={gallery.url}
+                  sizes="(max-width: 1024px) 100vw, 900px"
+                  className="transition-transform duration-500 hover:-translate-y-1"
+                />
+                {cleanAlt(img.alt) && (
+                  <figcaption className="mt-4 text-center text-sm text-slate-400">{cleanAlt(img.alt)}</figcaption>
+                )}
+              </figure>
+            ))}
+          </div>
+        )}
+      </div>
+    </section>
   )
 }
 
