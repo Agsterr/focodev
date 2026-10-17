@@ -8,7 +8,7 @@ export const SYSTEM_LINKS = {
   estoque: {
     label: 'Gerenciamento de Estoque',
     description: 'Controle de produtos, vendas e estoque online.',
-    href: 'https://focodev.com.br',
+    href: '/estoque',
   },
   mercado: {
     label: 'Mercado Digital',
@@ -34,7 +34,6 @@ export const SYSTEM_LINKS = {
 
 /** Sistemas em produção com link externo (exibidos na seção "Nossos Sistemas"). */
 export const PRODUCTION_SYSTEMS: SystemLink[] = [
-  SYSTEM_LINKS.estoque,
   SYSTEM_LINKS.mercado,
   SYSTEM_LINKS.barbearia,
   SYSTEM_LINKS.salaoMax,
@@ -42,7 +41,6 @@ export const PRODUCTION_SYSTEMS: SystemLink[] = [
 
 /** URL externa por slug do portfólio (quando o projeto está online). */
 export const PROJECT_EXTERNAL_URLS: Record<string, string> = {
-  'gerenciamento-estoque': SYSTEM_LINKS.estoque.href,
   'mercado-digital': SYSTEM_LINKS.mercado.href,
   barbearia: SYSTEM_LINKS.barbearia.href,
   'salao-max': SYSTEM_LINKS.salaoMax.href,

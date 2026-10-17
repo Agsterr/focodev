@@ -39,6 +39,14 @@ const HERO_CHIP_ICONS: Record<HeroChip['icon'], typeof Check> = {
   chart: BarChart3,
 }
 
+/** Colunas da galeria de celulares conforme a quantidade de prints (poucos ficam centralizados). */
+const PHONE_GRID: Record<number, string> = {
+  1: 'sm:max-w-xs sm:grid-cols-1',
+  2: 'sm:max-w-2xl sm:grid-cols-2',
+  3: 'sm:max-w-4xl sm:grid-cols-3',
+  4: 'sm:grid-cols-2 lg:grid-cols-4',
+}
+
 type Props = {
   content: ProductLandingContent
   images: GalleryImage[]
@@ -248,7 +256,7 @@ export default function ProductLanding({ content, images }: Props) {
               Benefícios que <span className="text-gradient">viram resultado</span>
             </>
           }
-          subtitle="Para sua academia, sua operação ou seu treino."
+          subtitle={content.benefitsSubtitle ?? 'Para sua academia, sua operação ou seu treino.'}
         />
         <ul className="mx-auto grid max-w-5xl gap-4 md:grid-cols-2">
           {content.benefits.map((benefit) => (
@@ -460,9 +468,15 @@ function GallerySection({
           </div>
         ) : gallery.frame === 'phone' ? (
           // Celulares lado a lado; no celular vira carrossel com rolagem lateral
-          <div className="-mx-4 flex snap-x snap-mandatory gap-6 overflow-x-auto px-4 pb-6 sm:mx-0 sm:grid sm:grid-cols-2 sm:overflow-visible sm:px-0 sm:pb-0 lg:grid-cols-4 lg:gap-8">
+          <div
+            className={`-mx-4 flex snap-x snap-mandatory gap-6 overflow-x-auto px-4 pb-6 sm:mx-auto sm:grid sm:overflow-visible sm:px-0 sm:pb-0 lg:gap-8 ${PHONE_GRID[Math.min(images.length, 4)]}`}
+          >
             {images.map((img, i) => (
-              <figure key={img.id} data-reveal className="w-[68%] shrink-0 snap-center sm:w-auto">
+              <figure
+                key={img.id}
+                data-reveal
+                className={`shrink-0 snap-center sm:w-auto ${images.length === 1 ? 'mx-auto w-[75%]' : 'w-[68%]'}`}
+              >
                 <div className={i % 2 === 1 ? 'lg:translate-y-10' : ''}>
                   <PhoneFrame
                     src={img.url}

@@ -57,12 +57,14 @@ export type ProductLandingContent = {
   audiences: AudienceBlock[]
   features: FeatureBlock[]
   benefits: string[]
+  /** Subtítulo da seção de benefícios */
+  benefitsSubtitle?: string
   galleries: GalleryCategory[]
   ctaTitle: string
   ctaText: string
 }
 
-export const PRODUCT_LANDINGS: Record<'fitlife' | 'rotas', ProductLandingContent> = {
+export const PRODUCT_LANDINGS: Record<'fitlife' | 'rotas' | 'estoque', ProductLandingContent> = {
   fitlife: {
     slug: 'fitlife',
     projectSlug: 'foco-academia',
@@ -378,6 +380,140 @@ export const PRODUCT_LANDINGS: Record<'fitlife' | 'rotas', ProductLandingContent
     ctaText:
       'Fale com a FocoDev, peça um orçamento e veja como o App Rotas se encaixa na sua operação de entregas.',
   },
+  estoque: {
+    slug: 'estoque',
+    projectSlug: 'gerenciamento-estoque',
+    brand: 'Gerenciamento de Estoque',
+    badge: 'ERP de estoque e vendas',
+    headline: 'Estoque, vendas e compras sob controle — de qualquer lugar.',
+    subheadline:
+      'Sistema online para lojas, distribuidoras e depósitos: produtos, clientes, vendas, compras, fornecedores e movimentações num só painel. Alerta de estoque baixo, inventário, relatórios de faturamento e acesso pelo computador ou celular.',
+    coverImage: '/portfolio/estoque/painel.webp',
+    highlights: [
+      { value: 'Online', label: 'computador e celular' },
+      { value: 'Alertas', label: 'estoque baixo' },
+      { value: 'Relatórios', label: 'faturamento e giro' },
+    ],
+    heroDesktop: '/portfolio/estoque/painel.webp',
+    heroDesktopUrl: 'focodev.com.br',
+    heroPhones: ['/portfolio/estoque/painel-celular.webp'],
+    heroChips: [
+      { icon: 'chart', label: 'Faturamento do mês', value: 'R$ 48.230,50' },
+      { icon: 'check', label: 'Pedido de venda #87', value: 'Confirmado · baixa no estoque' },
+    ],
+    whatsappMessage:
+      'Olá! Quero fazer um orçamento do sistema de Gerenciamento de Estoque.',
+    contactDefaultMessage:
+      'Olá! Tenho interesse no sistema de Gerenciamento de Estoque. Gostaria de um orçamento e de entender como contratar para o meu negócio.',
+    problemTitle: 'Planilha não avisa quando o produto acaba',
+    problemText:
+      'Estoque controlado no caderno ou em planilhas gera divergência, venda de produto que não existe, compra em excesso e horas de conferência. Sem números confiáveis, o dono decide no escuro — e o dinheiro fica parado na prateleira.',
+    solutionTitle: 'Um painel com o estoque real, atualizado a cada venda',
+    solutionText:
+      'Cada venda, compra e movimentação atualiza o estoque na hora. O sistema avisa o que está acabando, mostra o que mais vende e quanto vale o seu estoque, e a equipe acessa de qualquer lugar com o próprio login.',
+    audiencesSubtitle:
+      'Para quem vende produtos e precisa saber, a qualquer momento, o que tem, o que vendeu e o que precisa comprar.',
+    audiences: [
+      {
+        title: 'Lojas e comércio',
+        description: 'Venda com segurança sabendo exatamente o que tem na prateleira e no depósito.',
+        points: [
+          'Pedidos de venda com baixa automática',
+          'Cadastro de clientes e histórico de compras',
+          'Alerta de estoque mínimo por produto',
+        ],
+      },
+      {
+        title: 'Distribuidoras e depósitos',
+        description: 'Controle entradas, saídas e transferências entre depósitos sem perder nada no caminho.',
+        points: [
+          'Vários depósitos e movimentações',
+          'Pedidos de compra e fornecedores',
+          'Inventário e auditoria das alterações',
+        ],
+      },
+      {
+        title: 'Gestores e donos',
+        description: 'Números confiáveis para decidir compra, preço e promoção.',
+        points: [
+          'Faturamento dos últimos meses',
+          'Produtos mais vendidos e valor em estoque',
+          'Acessos por usuário e por empresa',
+        ],
+      },
+    ],
+    features: [
+      {
+        title: 'Produtos e categorias',
+        description: 'Cadastro completo com preço, quantidade, estoque mínimo e categoria — com busca e paginação para catálogos grandes.',
+      },
+      {
+        title: 'Vendas e clientes',
+        description: 'Pedidos de venda que dão baixa no estoque automaticamente e histórico por cliente.',
+      },
+      {
+        title: 'Compras e fornecedores',
+        description: 'Pedidos de compra, cadastro de fornecedores e pesquisa de preço antes de repor.',
+      },
+      {
+        title: 'Movimentações e depósitos',
+        description: 'Entradas, saídas e transferências entre depósitos com rastreabilidade de quem fez e quando.',
+      },
+      {
+        title: 'Alertas e inventário',
+        description: 'Aviso de estoque baixo no painel e contagem de inventário para manter o físico igual ao sistema.',
+      },
+      {
+        title: 'Relatórios e painel',
+        description: 'Faturamento do mês, valor em estoque (custo e venda), top produtos vendidos e evolução dos últimos meses.',
+      },
+    ],
+    benefits: [
+      'Estoque atualizado a cada venda, compra e movimentação',
+      'Aviso antes de faltar produto — sem venda perdida',
+      'Saiba quanto dinheiro está parado no estoque',
+      'Equipe acessa pelo computador ou celular, cada um com seu login',
+      'Auditoria de quem alterou o quê',
+      'Implantação e suporte com a FocoDev, sob medida para o seu negócio',
+    ],
+    benefitsSubtitle: 'Menos conferência manual, mais controle sobre o dinheiro do seu negócio.',
+    galleries: [
+      {
+        id: 'sistema',
+        tag: 'sistema',
+        frame: 'browser',
+        url: 'focodev.com.br',
+        title: 'Por dentro do sistema',
+        description: 'Telas reais: painel com indicadores e gráficos, e a lista de produtos com estoque e estoque mínimo.',
+        defaultImages: [
+          {
+            url: '/portfolio/estoque/painel.webp',
+            alt: 'Painel — faturamento, valor em estoque, estoque baixo e produtos mais vendidos',
+          },
+          {
+            url: '/portfolio/estoque/produtos.webp',
+            alt: 'Produtos — quantidade, estoque mínimo, preço e ações',
+          },
+        ],
+      },
+      {
+        id: 'celular',
+        tag: 'celular',
+        frame: 'phone',
+        title: 'Também no celular',
+        description: 'O mesmo sistema adaptado para a tela do celular, com menu inferior e atalhos.',
+        defaultImages: [
+          {
+            url: '/portfolio/estoque/painel-celular.webp',
+            alt: 'Painel no celular — atalhos e indicadores do mês',
+          },
+        ],
+      },
+    ],
+    ctaTitle: 'Quer o estoque da sua empresa sob controle?',
+    ctaText:
+      'Fale com a FocoDev, peça um orçamento e veja como o sistema se adapta aos seus produtos, depósitos e equipe.',
+  },
 }
 
 /** Mapeia slug de portfólio → rota da landing */
@@ -385,6 +521,7 @@ export const PROJECT_LANDING_HREFS: Record<string, string> = {
   fitlife: '/fitlife',
   'foco-academia': '/fitlife',
   'app-rotas': '/rotas',
+  'gerenciamento-estoque': '/estoque',
 }
 
 export function getProjectHref(slug: string) {
