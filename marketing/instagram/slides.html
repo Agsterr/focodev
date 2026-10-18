@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>FocoDev — slides Instagram</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root { --bg:#081120; --bg2:#0d1b33; --brand:#0EA5E9; --brand2:#0284C7; --ink:#F1F5F9; --mute:#94A3B8; --ok:#22C55E; }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  html,body { width:1080px; height:1350px; overflow:hidden; background:var(--bg); }
+  body { font-family:Inter, "Segoe UI", system-ui, sans-serif; color:var(--ink); }
+  .slide { position:relative; width:1080px; height:1350px; padding:90px 84px; display:flex; flex-direction:column;
+    background: radial-gradient(1100px 700px at 85% -10%, rgba(14,165,233,.28), transparent 60%),
+                radial-gradient(900px 600px at -10% 110%, rgba(2,132,199,.25), transparent 60%), var(--bg); }
+  .slide.light { background: linear-gradient(160deg,#E0F2FE 0%, #F8FAFC 55%); color:#0B1220; }
+  .slide.light .mute { color:#475569; }
+  .grid { position:absolute; inset:0; background-image:linear-gradient(rgba(148,163,184,.07) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(148,163,184,.07) 1px,transparent 1px); background-size:54px 54px; pointer-events:none; }
+  .top { display:flex; align-items:center; justify-content:space-between; position:relative; z-index:1; }
+  .logo { display:flex; align-items:center; gap:14px; font-weight:800; font-size:34px; }
+  .logo small { display:block; font-size:13px; letter-spacing:4px; color:var(--brand); font-weight:700; }
+  .page { font-size:24px; color:var(--mute); font-weight:600; }
+  .tag { align-self:flex-start; display:inline-block; padding:12px 22px; border-radius:999px; background:rgba(14,165,233,.15); color:var(--brand);
+    border:1px solid rgba(14,165,233,.4); font-weight:700; font-size:24px; letter-spacing:.5px; }
+  h1 { font-size:92px; line-height:1.02; font-weight:900; letter-spacing:-2.5px; }
+  h2 { font-size:66px; line-height:1.06; font-weight:900; letter-spacing:-1.5px; }
+  .hl { color:var(--brand); }
+  p.lead { font-size:36px; line-height:1.38; color:var(--mute); font-weight:500; }
+  .mute { color:var(--mute); }
+  .body { margin:28px 0 20px; position:relative; z-index:1; flex:1; display:flex; flex-direction:column; justify-content:center; gap:40px; }
+  .list { display:flex; flex-direction:column; gap:22px; }
+  .item { display:flex; gap:24px; align-items:flex-start; font-size:34px; line-height:1.3; font-weight:600; }
+  .item b { color:var(--brand); }
+  .dot { flex:0 0 52px; height:52px; border-radius:16px; background:rgba(14,165,233,.16); border:1px solid rgba(14,165,233,.45);
+    display:flex; align-items:center; justify-content:center; font-size:28px; }
+  .cards { display:grid; grid-template-columns:1fr 1fr; gap:24px; }
+  .card { padding:34px 30px; border-radius:28px; background:rgba(15,23,42,.7); border:1px solid rgba(148,163,184,.18); }
+  .card .ic { font-size:46px; } .card h3 { font-size:32px; margin:14px 0 8px; font-weight:800; } .card p { font-size:24px; color:var(--mute); line-height:1.35; }
+  .shot { position:relative; border-radius:28px; overflow:hidden; border:2px solid rgba(148,163,184,.25);
+    box-shadow:0 40px 90px rgba(0,0,0,.55); background:#0f172a; }
+  .shot img { display:block; width:100%; }
+  .browser .bar { height:44px; background:#1e293b; display:flex; gap:10px; align-items:center; padding:0 18px; }
+  .browser .bar i { width:14px; height:14px; border-radius:50%; background:#475569; display:block; }
+  .browser .bar span { margin-left:16px; font-size:18px; color:var(--mute); }
+  .phone { width:330px; border-radius:48px; border:10px solid #0b1220; outline:2px solid rgba(148,163,184,.35); }
+  .phone img { width:100%; display:block; }
+  .duo { position:relative; height:640px; }
+  .duo .browser { position:absolute; left:0; top:0; width:820px; }
+  .duo .phone { position:absolute; right:0; bottom:0; }
+  .cta { position:relative; z-index:1; display:flex; align-items:center; justify-content:space-between; gap:20px;
+    padding:30px 36px; border-radius:26px; background:linear-gradient(90deg,var(--brand),var(--brand2)); color:#fff; font-size:30px; font-weight:800; }
+  .cta span { font-weight:600; font-size:24px; opacity:.95; }
+  .swipe { position:relative; z-index:1; text-align:right; font-size:28px; font-weight:700; color:var(--brand); }
+  .big-num { font-size:200px; font-weight:900; line-height:.9; color:var(--brand); letter-spacing:-6px; }
+  .strike { text-decoration:line-through; text-decoration-color:#ef4444; text-decoration-thickness:6px; color:var(--mute); }
+  .chips { display:flex; flex-wrap:wrap; gap:14px; } .chips span { padding:12px 20px; border-radius:14px; background:rgba(148,163,184,.12); font-size:24px; font-weight:700; }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script>
+const LOGO = `<svg width="64" height="64" viewBox="0 0 48 48"><circle cx="22" cy="22" r="14" fill="none" stroke="#0EA5E9" stroke-width="3.4"/><circle cx="17" cy="17" r="5" fill="#0EA5E9"/><line x1="32" y1="32" x2="42" y2="42" stroke="#0EA5E9" stroke-width="4" stroke-linecap="round"/></svg>`;
+const hdr = (page) => `<div class="top"><div class="logo">${LOGO}<div>FocoDev<small>SISTEMAS</small></div></div>${page ? `<div class="page">${page}</div>` : ''}</div>`;
+const cta = (t = 'Fale com a gente', s = 'Link na bio · WhatsApp (16) 99118-3292') => `<div class="cta">${t}<span>${s}</span></div>`;
+const swipe = `<div class="swipe">arrasta pro lado →</div>`;
+const img = (p) => `../../public/portfolio/${p}`;
+const browser = (src, url) => `<div class="shot browser"><div class="bar"><i></i><i></i><i></i><span>${url}</span></div><img src="${img(src)}"></div>`;
+const phone = (src) => `<div class="shot phone"><img src="${img(src)}"></div>`;
+
+const S = {
+  // ===== POST 1 — Apresentação (carrossel) =====
+  'p1-1': () => `${hdr('1/4')}<div class="body"><span class="tag">👋 Prazer, FocoDev</span>
+    <h1>Sistemas feitos <span class="hl">do jeito do seu negócio.</span></h1>
+    <p class="lead">Nada de software genérico que você precisa se adaptar. A gente cria o sistema que se adapta a você.</p></div>${swipe}`,
+  'p1-2': () => `${hdr('2/4')}<div class="body"><h2>O que a gente <span class="hl">faz</span></h2>
+    <div class="cards">
+      <div class="card"><div class="ic">💻</div><h3>Sites e painéis</h3><p>Sistemas web pra controlar vendas, estoque e clientes.</p></div>
+      <div class="card"><div class="ic">📱</div><h3>Apps de celular</h3><p>Android e iOS, ou app instalável direto do navegador.</p></div>
+      <div class="card"><div class="ic">⚙️</div><h3>Automação</h3><p>Fim das tarefas repetidas e das planilhas na mão.</p></div>
+      <div class="card"><div class="ic">☁️</div><h3>No ar 24h</h3><p>Domínio, HTTPS, backup e suporte depois da entrega.</p></div>
+    </div></div>${swipe}`,
+  'p1-3': () => `${hdr('3/4')}<div class="body"><h2>6 sistemas <span class="hl">rodando agora</span></h2>
+    <div class="list">
+      <div class="item"><div class="dot">🛒</div><div><b>Mercado Digital</b> — pedidos e entregas pelo celular</div></div>
+      <div class="item"><div class="dot">📦</div><div><b>Gestão de Estoque</b> — produtos, vendas e relatórios</div></div>
+      <div class="item"><div class="dot">💈</div><div><b>Barbearia</b> — agendamento online e fila</div></div>
+      <div class="item"><div class="dot">💇‍♀️</div><div><b>Salão Max</b> — agenda, comissões e financeiro</div></div>
+      <div class="item"><div class="dot">🏋️</div><div><b>Foco Academia</b> — treinos e evolução do aluno</div></div>
+      <div class="item"><div class="dot">🚚</div><div><b>App Rotas</b> — entregas com GPS</div></div>
+    </div></div>${swipe}`,
+  'p1-4': () => `${hdr('4/4')}<div class="body"><h2>Tem um processo que <span class="hl">te toma tempo?</span></h2>
+    <p class="lead">Conta pra gente. O diagnóstico é gratuito e sem jargão técnico — você vê as telas antes de qualquer código.</p>
+    <div class="chips"><span>Diagnóstico</span><span>Protótipo</span><span>Desenvolvimento</span><span>No ar + suporte</span></div></div>
+    ${cta('Chama no direct 💬')}`,
+
+  // ===== POST 2 — Mercado Digital =====
+  'p2-1': () => `${hdr('1/3')}<div class="body" style="gap:30px"><span class="tag">🛒 Para mercados e mercearias</span>
+    <h2>Seu mercado <span class="hl">vendendo pelo celular</span> — sem pagar taxa de app.</h2>
+    <div class="duo">${browser('mercado/loja-desktop.webp','mercado.focodev.com.br')}${phone('mercado/loja-celular.webp')}</div></div>`,
+  'p2-2': () => `${hdr('2/3')}<div class="body"><h2>Como funciona</h2><div class="list">
+      <div class="item"><div class="dot">1</div><div>Cliente abre o link e vê o <b>catálogo com preços e promoções</b></div></div>
+      <div class="item"><div class="dot">2</div><div>Monta o carrinho e faz o <b>pedido com entrega</b></div></div>
+      <div class="item"><div class="dot">3</div><div>O pedido chega no <b>painel do dono</b> na hora</div></div>
+      <div class="item"><div class="dot">4</div><div>Instala como app no celular — <b>sem Play Store</b></div></div></div>
+    ${browser('mercado/painel-pedidos.webp','Painel de pedidos')}</div>`,
+  'p2-3': () => `${hdr('3/3')}<div class="body"><h2>Quer ver <span class="hl">funcionando?</span></h2>
+    <p class="lead">Está no ar em mercado.focodev.com.br. Personalizamos com a sua marca, seus produtos e sua área de entrega.</p></div>
+    ${cta('Comenta "MERCADO" 👇','que a gente te manda o link')}`,
+
+  // ===== POST 3 — Estoque =====
+  'p3-1': () => `${hdr()}<div class="body" style="gap:34px"><span class="tag">📦 Controle de estoque</span>
+    <h2>Pare de descobrir que o produto acabou <span class="hl">só quando o cliente pede.</span></h2>
+    ${browser('estoque/painel.webp','focodev.com.br')}</div>${cta('Teste grátis a demonstração','Link na bio')}`,
+
+  // ===== POST 4 — Agendamento (barbearia/salão) =====
+  'p4-1': () => `${hdr('1/2')}<div class="body" style="gap:34px"><span class="tag">💈 Barbearias e salões</span>
+    <h2>Agenda cheia <span class="hl">sem ficar preso no WhatsApp.</span></h2>
+    <div style="display:flex;gap:30px;justify-content:center">${phone('barbearia/app-horarios.webp')}${phone('salao-max/cliente-horarios.webp')}</div></div>`,
+  'p4-2': () => `${hdr('2/2')}<div class="body"><h2>O cliente agenda sozinho. <span class="hl">Você só atende.</span></h2><div class="list">
+      <div class="item"><div class="dot">📅</div><div>Agenda por profissional, 24h por dia</div></div>
+      <div class="item"><div class="dot">💰</div><div>Comissões e financeiro calculados</div></div>
+      <div class="item"><div class="dot">🧴</div><div>Estoque de produtos e precificação</div></div>
+      <div class="item"><div class="dot">📲</div><div>App Android/iOS com a sua marca</div></div></div></div>
+    ${cta('Comenta "AGENDA" 👇','e te mostramos a demo')}`,
+
+  // ===== POST 5 — Dor: planilha =====
+  'p5-1': () => `${hdr()}<div class="body"><span class="tag">🧾 Sinceridade</span>
+    <h1>Seu negócio ainda roda em <span class="strike">planilha</span><br><span class="hl">caderninho?</span></h1>
+    <p class="lead">Tudo bem — todo mundo começa assim. Mas se você perde tempo conferindo, refazendo conta ou procurando informação, já passou da hora de ter um sistema.</p></div>
+    ${cta('Diagnóstico gratuito','Chama no direct')}`,
+
+  // ===== POST 6 — Academia + Rotas =====
+  'p6-1': () => `${hdr('1/2')}<div class="body" style="gap:34px"><span class="tag">🏋️ Academias e personal</span>
+    <h2>Treino no app, <span class="hl">evolução no gráfico.</span></h2>
+    <div style="display:flex;gap:30px;justify-content:center">${phone('fitlife/app-musculacao.png')}${phone('fitlife/app-treino-outdoor.png')}</div></div>`,
+  'p6-2': () => `${hdr('2/2')}<div class="body" style="gap:34px"><span class="tag">🚚 Entregas e equipe de campo</span>
+    <h2>Rota certa, <span class="hl">menos tempo no trânsito.</span></h2>
+    <div style="display:flex;gap:30px;justify-content:center">${phone('rotas/app-inicio.png')}${phone('rotas/app-rota-simulada.png')}</div></div>
+    ${cta('Seu segmento não apareceu?','A gente faz sob medida')}`,
+
+  // ===== Capas de Reels (1080x1920 recortado em 4:5 no feed) =====
+  'r1': () => `${hdr()}<div class="body"><span class="tag">🎬 Reels</span><div class="big-num">5 min</div>
+    <h2>pra ver um pedido sair do celular do cliente e <span class="hl">chegar no painel do mercado</span></h2></div>`,
+  'r2': () => `${hdr()}<div class="body"><span class="tag">🎬 Reels</span>
+    <h1>Quanto custa <span class="hl">um sistema</span> pro meu negócio?</h1><p class="lead">A resposta honesta, em 30 segundos.</p></div>`,
+  'r3': () => `${hdr()}<div class="body"><span class="tag">🎬 Reels</span>
+    <h1>3 sinais de que você <span class="hl">precisa de um sistema</span></h1></div>`,
+};
+
+const id = decodeURIComponent(location.hash.slice(1)) || 'p1-1';
+document.getElementById('root').innerHTML = `<div class="slide"><div class="grid"></div>${S[id]()}</div>`;
+</script>
+</body>
+</html>
