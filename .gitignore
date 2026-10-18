@@ -20,3 +20,6 @@ pnpm-debug.log*
 # editor
 .vscode/
 .idea/
+
+# prospeccao com dados de terceiros (nao versionar)
+marketing/linkedin/
