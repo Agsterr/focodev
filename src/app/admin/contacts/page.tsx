@@ -4,7 +4,8 @@ import useSWR from 'swr'
 import { useState } from 'react'
 import { Button } from '@/components/ui/button'
 import NotificationStatus from '@/components/admin/notification-status'
-import { Mail, Phone, MessageSquare, User, Calendar, CheckCircle2, Circle, Eye, EyeOff } from 'lucide-react'
+import { Mail, Phone, MessageSquare, User, Calendar, CheckCircle2, Circle, Eye, EyeOff, Megaphone } from 'lucide-react'
+import { describeAttribution } from '@/lib/attribution'
 
 const fetcher = (url: string) => fetch(url).then((r) => r.json())
 
@@ -297,6 +298,16 @@ export default function AdminContactsPage() {
                     dateStyle: 'full',
                     timeStyle: 'short',
                   })}
+                </p>
+              </div>
+
+              <div>
+                <label className="text-sm font-medium text-gray-500 dark:text-gray-400 flex items-center gap-2 mb-1">
+                  <Megaphone className="w-4 h-4" />
+                  Origem
+                </label>
+                <p className="text-gray-900 dark:text-white">
+                  {describeAttribution(selectedContact.attribution)}
                 </p>
               </div>
 

@@ -115,7 +115,7 @@ export default async function HomePage() {
       <ScrollReveal />
       <div className="overflow-hidden">
         {/* ================= HERO ================= */}
-        <section className="relative -mt-16 md:-mt-20 pt-28 md:pt-36 pb-20 md:pb-28">
+        <section data-section="hero" className="relative -mt-16 md:-mt-20 pt-28 md:pt-36 pb-20 md:pb-28">
           <div className="pointer-events-none absolute inset-0 bg-grid opacity-60" />
           <div className="pointer-events-none absolute -top-40 -left-40 h-[36rem] w-[36rem] rounded-full bg-neon-cyan/25 blur-[120px] animate-aurora" />
           <div className="pointer-events-none absolute top-10 -right-40 h-[32rem] w-[32rem] rounded-full bg-neon-violet/30 blur-[120px] animate-aurora-slow" />

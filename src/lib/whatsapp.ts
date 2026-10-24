@@ -16,6 +16,7 @@ interface WhatsAppNotificationData {
   phone?: string
   message: string
   date: Date
+  origin?: string
 }
 
 type WhatsAppResult = { success: boolean; error?: string; provider?: string }
@@ -105,14 +106,18 @@ function formatWhatsAppMessage(data: WhatsAppNotificationData): string {
   message += `*Nome:* ${data.name}\n`
   message += `*Email:* ${data.email}\n`
   if (data.phone) message += `*Telefone:* ${data.phone}\n`
-  message += `*Data/Hora:* ${formattedDate}\n\n`
+  message += `*Data/Hora:* ${formattedDate}\n`
+  if (data.origin) message += `*Origem:* ${data.origin}\n`
+  message += `\n`
   message += `*Mensagem:*\n${data.message}`
   return message
 }
 
+/** Número para links wa.me: sempre com DDI (sem 55, o WhatsApp entende como número de outro país). */
 export function getWhatsAppNumber() {
   const raw = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || '16991183292'
-  return raw.replace(/\D/g, '')
+  const digits = raw.replace(/\D/g, '')
+  return digits.length <= 11 ? `55${digits}` : digits
 }
 
 export function getWhatsAppHref(message: string) {

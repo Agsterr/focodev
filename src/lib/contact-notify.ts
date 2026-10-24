@@ -7,6 +7,8 @@ export type ContactNotification = {
   phone?: string
   message: string
   date: Date
+  /** Resumo da origem (campanha, UTM, página de entrada) */
+  origin?: string
 }
 
 /** Envia o aviso de novo contato por e-mail e WhatsApp ao mesmo tempo. */

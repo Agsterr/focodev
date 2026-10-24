@@ -4,6 +4,7 @@ import { prisma } from '@/lib/db'
 import { notifyNewContact } from '@/lib/contact-notify'
 import { sanitize } from '@/lib/sanitize'
 import { rateLimit } from '@/lib/rate-limit'
+import { describeAttribution, parseAttribution } from '@/lib/attribution'
 
 /**
  * API de contato - Processa formulário de contato do site
@@ -38,6 +39,8 @@ export async function POST(req: NextRequest) {
     const email = String(form.get('email') || '').trim().toLowerCase()
     const phone = sanitize(String(form.get('phone') || '')) || undefined
     const message = sanitize(String(form.get('message') || ''))
+    const attribution = parseAttribution(form.get('attribution'), sanitize(String(form.get('source') || '')))
+    const origin = describeAttribution(attribution)
 
     // Validação básica
     if (!name || !email || !message) {
@@ -69,6 +72,7 @@ export async function POST(req: NextRequest) {
         email,
         phone,
         message,
+        attribution: attribution ?? undefined,
         status: 'NOVO',
       },
     })
@@ -80,6 +84,7 @@ export async function POST(req: NextRequest) {
       phone,
       message,
       date: new Date(),
+      origin,
     })
 
     for (const [channel, result] of [['email', emailResult], ['whatsapp', whatsappResult]] as const) {
@@ -104,6 +109,7 @@ export async function POST(req: NextRequest) {
           contactId: contactMessage.id,
           emailSent: emailResult.success,
           whatsappSent: whatsappResult.success,
+          origin,
         },
       },
     }).catch(() => {}) // Não falhar se log falhar

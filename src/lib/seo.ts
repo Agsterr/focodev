@@ -40,8 +40,8 @@ export const SITE_CITY = 'Franca'
 export const SITE_REGION = 'SP'
 export const SITE_AREA = 'Franca, SP e todo o Brasil'
 
-/** Imagem padrão OG/Twitter em PNG (SVG rende mal em redes sociais). */
-export const DEFAULT_OG_IMAGE = `${SITE_URL}/portfolio/fitlife/app-menu.png`
+/** Imagem padrão OG/Twitter 1200x630 em PNG (gerada por src/app/opengraph-image.tsx). */
+export const DEFAULT_OG_IMAGE = `${SITE_URL}/opengraph-image`
 
 export function absoluteUrl(path = '/') {
   if (!path || path === '/') return SITE_URL
@@ -119,7 +119,7 @@ export function organizationJsonLd() {
     '@type': ['Organization', 'ProfessionalService'],
     name: SITE_NAME,
     url: SITE_URL,
-    logo: absoluteUrl('/logo.svg'),
+    logo: absoluteUrl('/apple-icon'),
     image: DEFAULT_OG_IMAGE,
     email: SITE_EMAIL,
     telephone: SITE_PHONE,
