@@ -36,7 +36,7 @@ const TrackedAnchor = forwardRef<HTMLAnchorElement, Props>(function TrackedAncho
   }
 
   return (
-    <a ref={ref} href={href} onClick={handleClick} {...rest}>
+    <a ref={ref} href={href} onClick={handleClick} data-tracked="" {...rest}>
       {children}
     </a>
   )

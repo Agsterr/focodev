@@ -7,6 +7,7 @@ import SessionProviderWrapper from '@/components/session-provider-wrapper'
 import ConditionalLayout from '@/components/conditional-layout'
 import JsonLd from '@/components/JsonLd'
 import GoogleAdsTag from '@/components/GoogleAdsTag'
+import ClickTracker from '@/components/ClickTracker'
 import {
   SITE_DESCRIPTION,
   SITE_KEYWORDS,
@@ -47,7 +48,7 @@ export const metadata: Metadata = {
     description: SITE_DESCRIPTION,
     images: [
       {
-        url: '/portfolio/fitlife/app-menu.png',
+        url: '/opengraph-image',
         width: 1200,
         height: 630,
         alt: SITE_NAME,
@@ -58,7 +59,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: `${SITE_NAME} — ${SITE_TAGLINE}`,
     description: SITE_DESCRIPTION,
-    images: ['/portfolio/fitlife/app-menu.png'],
+    images: ['/opengraph-image'],
   },
   robots: {
     index: true,
@@ -70,11 +71,6 @@ export const metadata: Metadata = {
       'max-snippet': -1,
       'max-video-preview': -1,
     },
-  },
-  icons: {
-    icon: '/favicon.ico',
-    shortcut: '/favicon.ico',
-    apple: '/logo.svg',
   },
   manifest: '/manifest.webmanifest',
   appleWebApp: {
@@ -108,6 +104,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body>
         <JsonLd data={[organizationJsonLd(), websiteJsonLd()]} />
         <GoogleAdsTag />
+        <ClickTracker />
         <SessionProviderWrapper>
           <ThemeProvider attribute="class" defaultTheme="dark" forcedTheme="dark" enableSystem={false}>
             <ConditionalLayout>

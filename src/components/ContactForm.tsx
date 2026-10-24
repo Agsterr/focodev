@@ -4,6 +4,7 @@ import { useRef, useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { User, Mail, MessageSquare, Send, Phone, Loader2, CheckCircle2, AlertCircle } from 'lucide-react'
 import { trackFormStart, trackLeadSubmit } from '@/lib/analytics'
+import { getAttribution } from '@/lib/attribution'
 
 type ContactFormProps = {
   defaultMessage?: string
@@ -46,6 +47,9 @@ export default function ContactForm({
       formDataToSend.append('phone', formData.phone)
       formDataToSend.append('message', formData.message)
       formDataToSend.append('website', website)
+      formDataToSend.append('source', trackingSource)
+      const attribution = getAttribution()
+      if (attribution) formDataToSend.append('attribution', JSON.stringify(attribution))
 
       const response = await fetch('/api/contact', {
         method: 'POST',
@@ -58,7 +62,7 @@ export default function ContactForm({
         throw new Error(data.error?.message || 'Erro ao enviar mensagem. Tente novamente.')
       }
 
-      trackLeadSubmit(trackingSource)
+      trackLeadSubmit(trackingSource, data.id)
 
       setSuccess(true)
       setFormData({ name: '', email: '', phone: '', message: defaultMessage })

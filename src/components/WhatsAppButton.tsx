@@ -1,13 +1,10 @@
 'use client'
 
 import TrackedAnchor from '@/components/TrackedAnchor'
+import { getWhatsAppHref } from '@/lib/whatsapp'
 
 export default function WhatsAppButton() {
-  const defaultNumber = '16991183292'
-  const rawNumber = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || defaultNumber
-  const number = rawNumber.replace(/\D/g, '')
-  const message = encodeURIComponent('Olá, gostaria de fazer um orçamento')
-  const href = number ? `https://wa.me/${number}?text=${message}` : 'https://wa.me/'
+  const href = getWhatsAppHref('Olá, gostaria de fazer um orçamento')
 
   return (
     <TrackedAnchor

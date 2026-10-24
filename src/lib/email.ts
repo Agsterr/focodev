@@ -111,6 +111,7 @@ export function formatContactEmail(data: {
   phone?: string
   message: string
   date: Date
+  origin?: string
 }): { subject: string; html: string } {
   const formattedDate = new Intl.DateTimeFormat('pt-BR', {
     dateStyle: 'full',
@@ -164,6 +165,12 @@ export function formatContactEmail(data: {
             <div class="label">Data/Hora:</div>
             <div class="value">${formattedDate}</div>
           </div>
+          ${data.origin ? `
+          <div class="field">
+            <div class="label">Origem:</div>
+            <div class="value">${escapeHtml(data.origin)}</div>
+          </div>
+          ` : ''}
         </div>
       </div>
     </body>

@@ -20,6 +20,13 @@ function getProjectFallbackImage(slug: string) {
   return getShowcaseCover(slug) || p?.coverImageUrl || '/portfolio/default.svg'
 }
 
+/** Títulos com a palavra-chave do segmento (o título do banco é só o nome do produto). */
+const SEO_TITLES: Record<string, string> = {
+  'salao-max': 'Salão Max — Sistema para salão de beleza com agenda online',
+  barbearia: 'Sistema para barbearia com agendamento online e fila',
+  'mercado-digital': 'Mercado Digital — App de delivery para mercado e loja',
+}
+
 interface Props { params: { slug: string } }
 
 export const dynamic = 'force-dynamic'
@@ -54,7 +61,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     (project.coverImageUrl && !project.coverImageUrl.endsWith('.svg') ? project.coverImageUrl : getProjectFallbackImage(params.slug))
 
   return buildMetadata({
-    title: project.title,
+    title: SEO_TITLES[project.slug] || project.title,
     description: project.description,
     path: `/projects/${project.slug}`,
     image,

@@ -108,6 +108,8 @@ model ContactMessage {
   email     String
   phone     String?
   message   String
+  /// Formulário de origem e campanha (UTM, gclid, página de entrada)
+  attribution Json?
   status    ContactStatus @default(NOVO)
   createdAt DateTime      @default(now())
   updatedAt DateTime      @updatedAt
