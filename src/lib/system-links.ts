@@ -27,7 +27,7 @@ export const SYSTEM_LINKS = {
   },
   academia: {
     label: 'Foco Academia',
-    description: 'App de academia com musculação, outdoor, painel do instrutor e portal do aluno.',
+    description: 'App de treinos com painel da academia, treinos prontos, GPS e convite de alunos por link.',
     href: '/fitlife',
   },
 } as const satisfies Record<string, SystemLink>
@@ -61,11 +61,11 @@ export const SHOWCASE_PROJECTS = {
   fitlife: {
     label: 'Foco Academia',
     description:
-      'App de academia com musculação, treino outdoor (GPS), evolução de peso, painel do instrutor e portal do aluno.',
+      'App de treinos para alunos, personais e academias: ficha da semana, treinos prontos, corrida com GPS, painel da academia com gráficos e convite por link.',
     badge: 'App + painéis web',
     tech: 'Mobile + Web',
-    image: '/portfolio/fitlife/app-menu.png',
-    features: ['Musculação e séries', 'Outdoor com GPS', 'Painel do instrutor'],
+    image: '/portfolio/fitlife/app-inicio.webp',
+    features: ['Ficha, séries e treinos prontos', 'Painel da academia com gráficos', 'Convite de alunos por link'],
     href: '/fitlife',
   },
 } as const
