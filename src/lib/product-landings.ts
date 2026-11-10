@@ -10,6 +10,8 @@ export type GalleryCategory = {
   url?: string
   /** Prints padrão em /public (usados se ainda não houver fotos no admin) */
   defaultImages?: { url: string; alt: string }[]
+  /** Sempre mostra os prints padrão, mesmo com fotos antigas cadastradas no admin. */
+  alwaysDefaults?: boolean
 }
 
 export type AudienceBlock = {
@@ -69,124 +71,125 @@ export const PRODUCT_LANDINGS: Record<'fitlife' | 'rotas' | 'estoque', ProductLa
     slug: 'fitlife',
     projectSlug: 'foco-academia',
     brand: 'Foco Academia',
-    badge: 'App de academia e treinos',
-    headline: 'Musculação, outdoor e evolução — tudo no celular.',
+    badge: 'App de treinos · academias · personais',
+    headline: 'Treino colorido no celular. Academia na palma da mão.',
     subheadline:
-      'O Foco Academia une app mobile, painel do instrutor e portal do aluno. Ficha semanal com séries, treino outdoor com GPS, evolução de peso, sync offline e mídia nos exercícios. Para academias, personals e quem treina por conta própria.',
-    coverImage: '/portfolio/fitlife/app-menu.png',
+      'O Foco Academia é um app só para quem treina e para quem ensina. O aluno segue a ficha, marca as séries, faz corrida com GPS e escolhe treinos prontos. A academia e o personal acompanham alunos, notas, recados e gráficos — e convidam alunos com um link.',
+    coverImage: '/portfolio/fitlife/app-inicio.webp',
     highlights: [
-      { value: 'App + Web', label: 'aluno e instrutor' },
-      { value: 'GPS', label: 'treino outdoor' },
-      { value: 'Offline', label: 'sincroniza depois' },
+      { value: '1 app', label: 'aluno, personal e academia' },
+      { value: '12', label: 'treinos prontos por nível' },
+      { value: 'GPS', label: 'corrida e bike' },
     ],
     heroDesktop: '/portfolio/fitlife/web-aluno-treinos.webp',
     heroDesktopUrl: 'academia.focodev.com.br',
-    heroPhones: ['/portfolio/fitlife/app-exercicio.png', '/portfolio/fitlife/app-treino-outdoor.png'],
+    heroPhones: ['/portfolio/fitlife/app-inicio.webp', '/portfolio/fitlife/app-painel-academia.webp'],
     heroChips: [
-      { icon: 'check', label: 'Supino reto', value: 'Série 3 de 3 concluída' },
-      { icon: 'route', label: 'Corrida intervalada', value: '5,2 km · 6\'12" /km' },
+      { icon: 'check', label: 'Agachamento livre', value: 'Série 4 de 4 concluída' },
+      { icon: 'chart', label: 'Academia Força Total', value: '71% dos alunos treinaram na semana' },
     ],
     whatsappMessage:
-      'Olá! Quero fazer um orçamento do Foco Academia (app de academia/treinos).',
+      'Olá! Quero conhecer o Foco Academia (app de treinos para academia/personal).',
     contactDefaultMessage:
-      'Olá! Tenho interesse no Foco Academia (app de academia). Gostaria de receber um orçamento e entender como contratar.',
+      'Olá! Tenho interesse no Foco Academia. Gostaria de entender os planos e como começar.',
     problemTitle: 'Treino no papel (ou no WhatsApp) trava o crescimento',
     problemText:
-      'Planilhas, fotos de fichas e mensagens perdidas geram retrabalho, aluno desmotivado e instrutor sem tempo. Sem um sistema, a academia perde organização — e o aluno perde resultado.',
+      'Fichas em foto, planilhas e mensagens perdidas geram retrabalho, aluno desmotivado e instrutor sem tempo. Sem números, a academia não sabe quem está treinando, quem sumiu e o que os alunos acham.',
     solutionTitle: 'Uma plataforma completa para quem treina e quem ensina',
     solutionText:
-      'No app o aluno marca séries, acompanha progresso, faz treino outdoor com GPS e sincroniza dados offline. No painel, o instrutor monta a ficha. No portal web, o aluno consulta quando quiser. Menos atrito. Mais evolução.',
+      'O aluno abre o app e já sabe o que fazer: ficha do dia, séries para marcar, cronômetro e calorias. O instrutor monta a ficha pelo celular. A academia vê o painel com engajamento, notas, recados e ranking da equipe. Para entrar, basta um link de convite.',
     audiencesSubtitle:
-      'Academia, profissional autônomo ou uso pessoal — qualquer um pode contratar.',
+      'Academia, personal autônomo ou quem treina sozinho — cada um escolhe o perfil ao criar a conta.',
     audiences: [
       {
         title: 'Academias',
-        description: 'Padronize treinos, reduza fila no balcão e ofereça uma experiência digital que fideliza.',
+        description: 'Painel completo da academia com vários instrutores, cada um com seus alunos.',
         points: [
-          'Painel para a equipe de instrutores',
-          'Portal web do aluno + app mobile',
-          'Escalável para várias unidades ou modalidades',
+          'Alunos ativos, treinos do mês, nota média e gráficos',
+          'Ranking dos instrutores e recados para responder',
+          'Convide instrutores e alunos com um link',
         ],
       },
       {
-        title: 'Instrutores e personals',
-        description: 'Atenda alunos com profissionalismo sem depender de planilha ou print de treino.',
+        title: 'Personal trainers',
+        description: 'Tudo o que a academia tem, para quem atende sozinho.',
         points: [
-          'Monte fichas e planos em minutos',
-          'Acompanhe evolução e adesão',
-          'Trabalhe como autônomo com sua própria base',
+          'Monte a ficha de cada aluno no celular',
+          'Veja quem está treinando e quem sumiu',
+          'Mande o convite e o aluno já entra com tudo pronto',
         ],
       },
       {
-        title: 'Aluno ou usuário final',
-        description: 'Contrate para uso pessoal: organize seus treinos e evolua com clareza, do seu jeito.',
+        title: 'Quem treina sozinho',
+        description: 'Crie a conta grátis e treine do seu jeito, sem precisar de academia.',
         points: [
-          'Musculação com ficha semanal e séries no app',
-          'Treino outdoor com GPS, ritmo e splits',
-          'Evolução de peso com balança Bluetooth e relógio',
+          'Treinos prontos de musculação, corrida, spinning e bike',
+          'Monte seus próprios treinos com 70+ exercícios',
+          'Corrida com GPS, calorias, histórico e evolução do peso',
         ],
       },
     ],
     features: [
       {
-        title: 'Musculação com ficha semanal',
-        description: 'Treinos por dia, exercícios, séries e mídia. O aluno marca cada série concluída e vê o progresso em tempo real.',
+        title: 'Ficha da semana e séries',
+        description: 'Cada dia com sua cor, exercícios, séries e repetições. O aluno marca série por série e vê o progresso e as calorias.',
       },
       {
-        title: 'Treino outdoor com GPS',
-        description: 'Caminhada, corrida e intervalos com mapa, ritmo, distância, elevação, splits e exportação GPX/TCX.',
+        title: 'Treinos prontos por nível',
+        description: 'Musculação, corrida, spinning e bike — iniciante, intermediário e avançado. Um toque e o treino vira a ficha ativa.',
       },
       {
-        title: 'Evolução e peso',
-        description: 'Gráficos de evolução, balança Bluetooth e importação do relógio — o progresso fica visível.',
+        title: 'Corrida e bike com GPS',
+        description: 'Mapa, ritmo, distância, intervalos com aviso por voz, splits e histórico com replay da rota.',
       },
       {
-        title: 'Sincronização offline',
-        description: 'Treine sem internet e envie os dados depois com um toque.',
+        title: 'Painel da academia',
+        description: 'Alunos ativos, engajamento semanal, nota média dos treinos, gráfico de 6 meses e ranking dos instrutores.',
       },
       {
-        title: 'Painel do instrutor',
-        description:
-          'Cadastre alunos, crie fichas semanais, monte o treino do dia com biblioteca de exercícios, séries, reps e vídeo/foto.',
+        title: 'Convite por link',
+        description: 'O instrutor manda o link pelo WhatsApp e a conta do aluno já entra ligada a ele. Cada link vale uma vez.',
       },
       {
-        title: 'Portal web do aluno',
-        description:
-          'Ficha semanal, evolução de peso, balança Bluetooth e canal de sugestões — tudo pelo navegador.',
+        title: 'Uma conta, um aparelho',
+        description: 'Contas da academia funcionam em um celular por vez — nada de login repassado. Trocou de celular? O instrutor libera.',
       },
     ],
     benefits: [
-      'Aluno sabe o que fazer no treino e marca série a série no celular',
-      'Outdoor com GPS de verdade — ritmo, distância e fases intervaladas',
-      'Evolução de peso e sync com balança/relógio',
+      'Visual moderno e colorido que dá vontade de treinar',
+      'Aluno sabe o que fazer e marca série a série no celular',
+      'Academia vê engajamento, notas e reclamações em números',
+      'Convite por link: o aluno entra sem digitar código nenhum',
+      'Treinos prontos para quem treina sozinho',
       'Funciona offline e sincroniza depois',
-      'Academia, personal autônomo ou uso individual',
-      'Contratação sob medida — contato primeiro, acesso depois',
     ],
     galleries: [
       {
         id: 'app',
         tag: 'app',
         frame: 'phone',
-        title: 'App mobile — Foco Academia',
-        description: 'Telas reais: menu, musculação, execução de séries e treino outdoor com GPS.',
+        alwaysDefaults: true,
+        title: 'App do aluno',
+        description: 'Telas reais do app: início com o resumo do dia, ficha da semana, treino com séries e treinos prontos.',
         defaultImages: [
-          {
-            url: '/portfolio/fitlife/app-menu.png',
-            alt: 'Menu Foco Academia — evolução, outdoor, sync e musculação',
-          },
-          {
-            url: '/portfolio/fitlife/app-musculacao.png',
-            alt: 'Musculação — ficha semanal com dias feitos e progresso',
-          },
-          {
-            url: '/portfolio/fitlife/app-exercicio.png',
-            alt: 'Execução do treino — séries, progresso e cronômetro',
-          },
-          {
-            url: '/portfolio/fitlife/app-treino-outdoor.png',
-            alt: 'Treino outdoor — GPS, ritmo, fases e mapa',
-          },
+          { url: '/portfolio/fitlife/app-inicio.webp', alt: 'Início — resumo do dia e atalhos coloridos' },
+          { url: '/portfolio/fitlife/app-ficha.webp', alt: 'Ficha da semana — cada dia com sua cor e status' },
+          { url: '/portfolio/fitlife/app-treino-series.webp', alt: 'Treino do dia — cronômetro, calorias e séries marcadas' },
+          { url: '/portfolio/fitlife/app-treinos-prontos.webp', alt: 'Treinos prontos — musculação, corrida, spinning e bike' },
+        ],
+      },
+      {
+        id: 'gestao',
+        tag: 'gestao',
+        frame: 'phone',
+        alwaysDefaults: true,
+        title: 'Academia e personal',
+        description: 'No mesmo app: painel com números da academia, alunos de cada instrutor e convite por link.',
+        defaultImages: [
+          { url: '/portfolio/fitlife/app-painel-academia.webp', alt: 'Painel da academia — alunos, treinos, notas e engajamento' },
+          { url: '/portfolio/fitlife/app-alunos.webp', alt: 'Alunos — atividade, nota média e quem está sem treinar' },
+          { url: '/portfolio/fitlife/app-convite.webp', alt: 'Convite por link — código pronto para mandar no WhatsApp' },
+          { url: '/portfolio/fitlife/app-aceitar-convite.webp', alt: 'Aluno aceita o convite e a conta já vem pronta' },
         ],
       },
       {
@@ -194,9 +197,9 @@ export const PRODUCT_LANDINGS: Record<'fitlife' | 'rotas' | 'estoque', ProductLa
         tag: 'instrutor',
         frame: 'browser',
         url: 'instrutor-academia.focodev.com.br',
-        title: 'Painel do instrutor',
+        title: 'Painel web do instrutor',
         description:
-          'Login por código da academia, visão geral, cadastro de alunos, fichas semanais e montagem de treino com biblioteca de exercícios, séries, reps e mídia.',
+          'Também pelo computador: visão geral, cadastro de alunos, fichas semanais e montagem de treino com biblioteca de exercícios, séries, reps e vídeo.',
         defaultImages: [
           {
             url: '/portfolio/fitlife/web-instrutor-montar-treino.webp',
@@ -214,10 +217,6 @@ export const PRODUCT_LANDINGS: Record<'fitlife' | 'rotas' | 'estoque', ProductLa
             url: '/portfolio/fitlife/web-instrutor-fichas.webp',
             alt: 'Fichas semanais ativas e inativas por aluno',
           },
-          {
-            url: '/portfolio/fitlife/web-instrutor-login.webp',
-            alt: 'Login do Painel do Instrutor — código da academia, e-mail e senha',
-          },
         ],
       },
       {
@@ -227,7 +226,7 @@ export const PRODUCT_LANDINGS: Record<'fitlife' | 'rotas' | 'estoque', ProductLa
         url: 'academia.focodev.com.br',
         title: 'Portal web do aluno',
         description:
-          'Ficha semanal, evolução de peso, balança Bluetooth, sugestões para a academia e acesso pelo navegador.',
+          'Ficha semanal, evolução de peso, balança Bluetooth e sugestões para a academia — pelo navegador.',
         defaultImages: [
           {
             url: '/portfolio/fitlife/web-aluno-treinos.webp',
@@ -246,7 +245,7 @@ export const PRODUCT_LANDINGS: Record<'fitlife' | 'rotas' | 'estoque', ProductLa
     ],
     ctaTitle: 'Pronto para levar sua academia (ou seus treinos) para o próximo nível?',
     ctaText:
-      'Fale com a FocoDev, peça um orçamento e veja como o Foco Academia se encaixa no seu cenário — academia, personal ou uso pessoal.',
+      'Fale com a FocoDev e veja como o Foco Academia se encaixa no seu cenário — academia, personal ou uso pessoal.',
   },
   rotas: {
     slug: 'rotas',
@@ -556,9 +555,9 @@ export function groupImagesByGallery(
     }
   }
 
-  // Se a galeria ficou vazia, usa prints padrão do produto
+  // Se a galeria ficou vazia (ou pede os prints padrão), usa os prints do produto
   for (const g of galleries) {
-    if (result[g.id].length === 0 && g.defaultImages?.length) {
+    if ((g.alwaysDefaults || result[g.id].length === 0) && g.defaultImages?.length) {
       result[g.id] = g.defaultImages.map((img, i) => ({
         id: `default-${g.id}-${i}`,
         url: img.url,
