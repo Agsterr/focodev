@@ -74,16 +74,16 @@ export const PRODUCT_LANDINGS: Record<'fitlife' | 'rotas' | 'estoque', ProductLa
     badge: 'App de treinos · academias · personais',
     headline: 'Treino colorido no celular. Academia na palma da mão.',
     subheadline:
-      'O Foco Academia é um app só para quem treina e para quem ensina. O aluno segue a ficha, marca as séries, faz corrida com GPS e escolhe treinos prontos. A academia e o personal acompanham alunos, notas, recados e gráficos — e convidam alunos com um link.',
+      'O Foco Academia é um app só para quem treina e para quem ensina. O aluno segue a ficha, marca as séries, treina em casa sem equipamento, faz corrida com GPS e escolhe treinos prontos. A academia e o personal acompanham alunos, notas, recados e gráficos — e convidam alunos com um link.',
     coverImage: '/portfolio/fitlife/app-inicio.webp',
     highlights: [
       { value: '1 app', label: 'aluno, personal e academia' },
-      { value: '12', label: 'treinos prontos por nível' },
+      { value: '4 níveis', label: 'de treino em casa, do leve ao extremo' },
       { value: 'GPS', label: 'corrida e bike' },
     ],
     heroDesktop: '/portfolio/fitlife/web-aluno-treinos.webp',
     heroDesktopUrl: 'academia.focodev.com.br',
-    heroPhones: ['/portfolio/fitlife/app-inicio.webp', '/portfolio/fitlife/app-painel-academia.webp'],
+    heroPhones: ['/portfolio/fitlife/app-inicio.webp', '/portfolio/fitlife/app-treino-em-casa-exercicio.webp'],
     heroChips: [
       { icon: 'check', label: 'Agachamento livre', value: 'Série 4 de 4 concluída' },
       { icon: 'chart', label: 'Academia Força Total', value: '71% dos alunos treinaram na semana' },
@@ -97,7 +97,7 @@ export const PRODUCT_LANDINGS: Record<'fitlife' | 'rotas' | 'estoque', ProductLa
       'Fichas em foto, planilhas e mensagens perdidas geram retrabalho, aluno desmotivado e instrutor sem tempo. Sem números, a academia não sabe quem está treinando, quem sumiu e o que os alunos acham.',
     solutionTitle: 'Uma plataforma completa para quem treina e quem ensina',
     solutionText:
-      'O aluno abre o app e já sabe o que fazer: ficha do dia, séries para marcar, cronômetro e calorias. O instrutor monta a ficha pelo celular. A academia vê o painel com engajamento, notas, recados e ranking da equipe. Para entrar, basta um link de convite.',
+      'O aluno abre o app e já sabe o que fazer: ficha do dia, séries para marcar, cronômetro e calorias — ou um treino em casa, com cada exercício desenhado, tempo certo e conquistas a cada treino. O instrutor monta a ficha pelo celular. A academia vê o painel com engajamento, notas, recados e ranking da equipe. Para entrar, basta um link de convite.',
     audiencesSubtitle:
       'Academia, personal autônomo ou quem treina sozinho — cada um escolhe o perfil ao criar a conta.',
     audiences: [
@@ -123,6 +123,7 @@ export const PRODUCT_LANDINGS: Record<'fitlife' | 'rotas' | 'estoque', ProductLa
         title: 'Quem treina sozinho',
         description: 'Crie a conta grátis e treine do seu jeito, sem precisar de academia.',
         points: [
+          'Treino em casa sem equipamento, do leve ao extremo',
           'Treinos prontos de musculação, corrida, spinning e bike',
           'Monte seus próprios treinos com 70+ exercícios',
           'Corrida com GPS, calorias, histórico e evolução do peso',
@@ -133,6 +134,21 @@ export const PRODUCT_LANDINGS: Record<'fitlife' | 'rotas' | 'estoque', ProductLa
       {
         title: 'Ficha da semana e séries',
         description: 'Cada dia com sua cor, exercícios, séries e repetições. O aluno marca série por série e vê o progresso e as calorias.',
+      },
+      {
+        title: 'Treino em casa sem equipamento',
+        description:
+          '12 treinos do leve ao extremo, com cada exercício desenhado, cronômetro, descanso e Tabata. Dá para treinar sem ir à academia.',
+      },
+      {
+        title: 'Calorias, nível e conquistas',
+        description:
+          'Calorias pelo peso e pela intensidade, XP, nível, sequência de dias, meta da semana e medalhas a cada treino.',
+      },
+      {
+        title: 'Voz e bipes no treino',
+        description:
+          'Contagem regressiva em cada exercício, aviso do próximo no descanso e a tela sempre ligada durante o treino.',
       },
       {
         title: 'Treinos prontos por nível',
@@ -160,7 +176,9 @@ export const PRODUCT_LANDINGS: Record<'fitlife' | 'rotas' | 'estoque', ProductLa
       'Aluno sabe o que fazer e marca série a série no celular',
       'Academia vê engajamento, notas e reclamações em números',
       'Convite por link: o aluno entra sem digitar código nenhum',
-      'Treinos prontos para quem treina sozinho',
+      'Treinos prontos e treino em casa para quem treina sozinho',
+      'Cada exercício desenhado, com cronômetro e descanso',
+      'Calorias, nível e conquistas que dão vontade de voltar amanhã',
       'Funciona offline e sincroniza depois',
     ],
     galleries: [
@@ -170,12 +188,27 @@ export const PRODUCT_LANDINGS: Record<'fitlife' | 'rotas' | 'estoque', ProductLa
         frame: 'phone',
         alwaysDefaults: true,
         title: 'App do aluno',
-        description: 'Telas reais do app: início com o resumo do dia, ficha da semana, treino com séries e treinos prontos.',
+        description: 'Telas reais do app: início com o resumo do dia e o treino em casa, ficha da semana, treino com séries e treinos prontos.',
         defaultImages: [
           { url: '/portfolio/fitlife/app-inicio.webp', alt: 'Início — resumo do dia e atalhos coloridos' },
           { url: '/portfolio/fitlife/app-ficha.webp', alt: 'Ficha da semana — cada dia com sua cor e status' },
           { url: '/portfolio/fitlife/app-treino-series.webp', alt: 'Treino do dia — cronômetro, calorias e séries marcadas' },
           { url: '/portfolio/fitlife/app-treinos-prontos.webp', alt: 'Treinos prontos — musculação, corrida, spinning e bike' },
+        ],
+      },
+      {
+        id: 'casa',
+        tag: 'casa',
+        frame: 'phone',
+        alwaysDefaults: true,
+        title: 'Treino em casa',
+        description:
+          'Sem equipamento e do leve ao extremo: escolha a intensidade, veja o exercício desenhado, siga o cronômetro e ganhe XP e conquistas.',
+        defaultImages: [
+          { url: '/portfolio/fitlife/app-treino-em-casa.webp', alt: 'Treino em casa — nível, meta da semana e treinos por intensidade' },
+          { url: '/portfolio/fitlife/app-treino-em-casa-previa.webp', alt: 'Prévia do treino — exercícios desenhados com tempo e descanso' },
+          { url: '/portfolio/fitlife/app-treino-em-casa-exercicio.webp', alt: 'Exercício em andamento — desenho animado e cronômetro' },
+          { url: '/portfolio/fitlife/app-treino-em-casa-resumo.webp', alt: 'Resumo do treino — calorias, XP, sequência e nova conquista' },
         ],
       },
       {

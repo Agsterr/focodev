@@ -64,7 +64,7 @@ export const DEFAULT_PROJECTS = [
     id: 'proj-academia',
     slug: 'foco-academia',
     title: 'Foco Academia',
-    description: 'App de treinos para alunos, personais e academias: ficha, treinos prontos, GPS, painel com gráficos e convite por link.',
+    description: 'App de treinos para alunos, personais e academias: treino em casa, ficha, treinos prontos, GPS, painel com gráficos e convite por link.',
     coverImageUrl: '/portfolio/fitlife/app-inicio.webp',
   },
   {
